@@ -1,0 +1,80 @@
+@import "tailwindcss";
+
+@source "../views/**/*.blade.php";
+@source "../js/**/*.js";
+
+.field-input {
+    @apply w-full rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-sm text-slate-900 shadow-sm outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100;
+}
+
+.btn-primary {
+    @apply inline-flex items-center justify-center rounded-lg bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-700 disabled:cursor-not-allowed disabled:opacity-50;
+}
+
+.btn-secondary {
+    @apply inline-flex items-center justify-center rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 shadow-sm hover:bg-slate-50;
+}
+
+.file-picker {
+    @apply relative isolate overflow-hidden rounded-2xl;
+}
+
+.file-picker__target {
+    @apply flex min-h-64 w-full cursor-pointer flex-col items-center justify-center gap-3 rounded-2xl border-2 border-dashed border-slate-300 bg-gradient-to-b from-white to-slate-50 px-5 py-9 text-center shadow-sm transition duration-200 hover:border-indigo-400 hover:from-indigo-50/60 hover:to-white focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-indigo-100;
+}
+
+.file-picker[data-dragging="true"] .file-picker__target {
+    @apply scale-[1.01] border-indigo-500 from-indigo-50 to-indigo-100/60 ring-4 ring-indigo-100;
+}
+
+.file-picker__icon {
+    @apply grid size-14 place-items-center rounded-2xl bg-indigo-600 text-white shadow-lg shadow-indigo-600/20 transition duration-200;
+}
+
+.file-picker__icon svg {
+    @apply size-7;
+}
+
+.file-picker__target:hover .file-picker__icon,
+.file-picker[data-dragging="true"] .file-picker__icon {
+    @apply -translate-y-0.5 bg-indigo-700;
+}
+
+.file-picker__title {
+    @apply mt-1 text-base font-bold tracking-tight text-slate-900 sm:text-lg;
+}
+
+.file-picker__description {
+    @apply text-sm text-slate-500;
+}
+
+.file-picker__browse {
+    @apply font-semibold text-indigo-700 underline decoration-indigo-300 underline-offset-4;
+}
+
+.file-picker__types {
+    @apply text-xs font-semibold uppercase tracking-wide text-slate-400;
+}
+
+.file-picker__hint {
+    @apply max-w-xl text-xs leading-5 text-slate-500;
+}
+
+.file-picker__limits {
+    @apply mt-1 flex flex-wrap justify-center gap-2;
+}
+
+.file-picker__limit {
+    @apply rounded-full border border-slate-200 bg-white px-2.5 py-1 text-xs font-medium text-slate-600;
+}
+
+.file-picker__input {
+    @apply sr-only;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .file-picker__target,
+    .file-picker__icon {
+        transition-duration: 0.01ms;
+    }
+}
