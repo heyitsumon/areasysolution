@@ -14,7 +14,9 @@
     </div>
     <p class="muted">Metrics are aggregated asynchronously; recent activity may take a short time to appear.</p>
     <section class="stats" aria-label="Summary metrics">
-        <article class="card stat"><span>Page hits · selected range</span><strong>{{ number_format($routeHits) }}</strong></article>
+        <article class="card stat"><span>Website page views · today</span><strong>{{ number_format($pageViews['today']) }}</strong></article>
+        <article class="card stat"><span>Website page views · this week</span><strong>{{ number_format($pageViews['week']) }}</strong></article>
+        <article class="card stat"><span>Website page views · this month</span><strong>{{ number_format($pageViews['month']) }}</strong></article>
         <article class="card stat"><span>New accounts · selected range</span><strong>{{ number_format($newUsers) }}</strong></article>
         <article class="card stat"><span>Active members · selected range</span><strong>{{ number_format($activeUsers) }}</strong></article>
         <article class="card stat"><span>Successful tool sessions · selected range</span><strong>{{ number_format($completedRuns) }}</strong></article>

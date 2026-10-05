@@ -187,7 +187,11 @@ final class AccountAndAnalyticsTest extends TestCase
 
         $this->actingAs($admin)
             ->get(route('admin.dashboard', ['period' => 'today']))
-            ->assertViewHas('routeHits', 2)
+            ->assertViewHas('pageViews', fn (array $pageViews): bool => (
+                $pageViews['today'] === 2
+                && $pageViews['week'] === 2
+                && $pageViews['month'] === 2
+            ))
             ->assertViewHas('completedRuns', 2)
             ->assertViewHas('activeUsers', 1)
             ->assertViewHas('completedUsers', 1);

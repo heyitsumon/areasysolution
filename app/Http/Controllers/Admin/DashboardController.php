@@ -27,13 +27,20 @@ final class DashboardController extends Controller
         };
         $from = $start->toDateString();
         $through = $now->toDateString();
+        $today = $now->toDateString();
+        $weekStart = $now->startOfWeek()->toDateString();
+        $monthStart = $now->startOfMonth()->toDateString();
 
         $routeMetrics = DB::table('route_daily_metrics')
             ->whereBetween('metric_date', [$from, $through]);
         $toolMetrics = DB::table('tool_daily_metrics')
             ->whereBetween('metric_date', [$from, $through]);
 
-        $routeHits = (clone $routeMetrics)->sum('hits');
+        $pageViews = [
+            'today' => DB::table('route_daily_metrics')->where('metric_date', $today)->sum('hits'),
+            'week' => DB::table('route_daily_metrics')->whereBetween('metric_date', [$weekStart, $today])->sum('hits'),
+            'month' => DB::table('route_daily_metrics')->whereBetween('metric_date', [$monthStart, $today])->sum('hits'),
+        ];
         $completedRuns = (clone $toolMetrics)->sum('completed_runs');
         $activeUsers = $this->distinctUsers('active_user_days', $from, $through);
         $completedUsers = $this->distinctUsers('tool_user_days', $from, $through);
@@ -70,7 +77,7 @@ final class DashboardController extends Controller
 
         return view('admin.dashboard', [
             'period' => $period,
-            'routeHits' => $routeHits,
+            'pageViews' => $pageViews,
             'completedRuns' => $completedRuns,
             'activeUsers' => $activeUsers,
             'completedUsers' => $completedUsers,
