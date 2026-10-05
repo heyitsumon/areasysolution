@@ -48,13 +48,14 @@
         .bar-row{display:grid;grid-template-columns:70px 1fr 48px;align-items:center;gap:10px;font-size:12px;color:#68748a;margin:9px 0}.bar{height:9px;background:#eef0ff;border-radius:99px;overflow:hidden}.bar i{display:block;height:100%;background:#5364df;border-radius:99px}
         .periods{display:flex;gap:8px;flex-wrap:wrap}.periods a{padding:8px 12px;border-radius:8px;background:#fff;border:1px solid #e1e6ef;color:#667187;font-size:13px}.periods a.active{background:#4658df;color:white;border-color:#4658df}
         .footer{border-top:1px solid #e6eaf1;color:#8992a2;font-size:12px;padding:22px 24px;text-align:center}
+        .asset-warning{padding:14px 16px;border:1px solid #f1c879;border-radius:10px;background:#fff8df;color:#72520c;font-size:14px;line-height:1.6}
         @media(max-width:650px){.nav{align-items:flex-start}.links{gap:10px;flex-wrap:wrap;justify-content:flex-end}.container{padding-top:28px}.card{padding:18px}}
     </style>
 </head>
 <body>
     <header class="topbar">
         <nav class="nav" aria-label="Main navigation">
-            <a class="brand" href="{{ route('home') }}">MyTools</a>
+            <a class="brand" href="{{ route('home') }}">ArEasySolution</a>
             <div class="links">
                 <a href="{{ route('tools.index') }}">Tools</a>
                 @auth

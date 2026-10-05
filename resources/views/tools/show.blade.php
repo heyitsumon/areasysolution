@@ -62,7 +62,14 @@
              data-max-files="{{ $limits['max_files_per_run'] }}"
              data-engine="client"
              class="min-h-36">
-            <div class="animate-pulse rounded-xl bg-slate-100 p-6 text-sm text-slate-500">Loading tool…</div>
+            @if (file_exists(public_path('build/manifest.json')) || file_exists(public_path('hot')))
+                <div class="animate-pulse rounded-xl bg-slate-100 p-6 text-sm text-slate-500">Loading tool…</div>
+            @else
+                <div class="asset-warning" role="alert">
+                    The tool interface is unavailable because its production assets are missing. Run <code>npm run build</code>
+                    and upload the complete <code>public/build</code> directory to your server.
+                </div>
+            @endif
         </div>
         <p id="tool-status" class="sr-only" aria-live="polite"></p>
     </section>
