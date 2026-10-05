@@ -117,7 +117,7 @@ final class AccountAndAnalyticsTest extends TestCase
 
         $this->get(route('tools.index'))
             ->assertOk()
-            ->assertSee('20 free browser tools')
+            ->assertSee('26 free browser tools')
             ->assertSee('Image Compressor');
 
         $this->get(route('tools.show', ['tool' => 'qr-code-generator']))
