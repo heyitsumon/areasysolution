@@ -8,6 +8,7 @@ use App\Jobs\RecordRouteHit;
 use App\Jobs\RecordToolCompletion;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Queue;
 use Tests\TestCase;
@@ -119,6 +120,21 @@ final class AccountAndAnalyticsTest extends TestCase
         ));
     }
 
+    public function test_web_requests_record_online_visitors_with_hashed_session_ids(): void
+    {
+        Queue::fake();
+
+        $this->get(route('home'))->assertOk();
+
+        $this->assertDatabaseCount('online_visitors', 1);
+        $visitor = DB::table('online_visitors')->first();
+
+        $this->assertNotNull($visitor);
+        $this->assertMatchesRegularExpression('/\A[a-f0-9]{64}\z/', $visitor->visitor_hash);
+        $this->assertNull($visitor->user_id);
+        $this->assertGreaterThanOrEqual(now()->subMinute()->timestamp, strtotime($visitor->last_seen_at));
+    }
+
     public function test_the_tool_catalog_opens_real_tools_and_rejects_unknown_slugs(): void
     {
         Queue::fake();
@@ -208,6 +224,8 @@ final class AccountAndAnalyticsTest extends TestCase
             ->getJson(route('admin.analytics.data', ['period' => 'today']))
             ->assertOk()
             ->assertJsonPath('pageViews.today', 2)
+            ->assertJsonPath('onlineStats.visitors', 1)
+            ->assertJsonPath('onlineStats.members', 1)
             ->assertJsonPath('completedRuns', 2)
             ->assertJsonPath('dailyVisits.13.value', 2)
             ->assertJsonPath('dailyRuns.13.value', 2)

@@ -3,6 +3,7 @@
 use App\Http\Middleware\CachePublicResponse;
 use App\Http\Middleware\EnsureUserIsAdmin;
 use App\Http\Middleware\SecurityHeaders;
+use App\Http\Middleware\TrackOnlineVisitor;
 use App\Http\Middleware\TrackRouteHit;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
@@ -49,6 +50,7 @@ return Application::configure(basePath: dirname(__DIR__))
          * HTML and can store it, serve 304s and set CDN-friendly headers.
          */
         $middleware->web(append: [
+            TrackOnlineVisitor::class,
             CachePublicResponse::class,
         ]);
     })

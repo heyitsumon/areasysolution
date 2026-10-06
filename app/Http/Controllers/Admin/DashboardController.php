@@ -26,6 +26,7 @@ final class DashboardController extends Controller
         return response()->json([
             'period' => $data['period'],
             'pageViews' => $data['pageViews'],
+            'onlineStats' => $data['onlineStats'],
             'completedRuns' => $data['completedRuns'],
             'activeUsers' => $data['activeUsers'],
             'completedUsers' => $data['completedUsers'],
@@ -80,6 +81,13 @@ final class DashboardController extends Controller
             'week' => DB::table('route_daily_metrics')->whereBetween('metric_date', [$weekStart, $today])->sum('hits'),
             'month' => DB::table('route_daily_metrics')->whereBetween('metric_date', [$monthStart, $today])->sum('hits'),
         ];
+        $onlineCutoff = now()->subMinutes(5);
+        $onlineVisitors = DB::table('online_visitors')
+            ->where('last_seen_at', '>=', $onlineCutoff);
+        $onlineStats = [
+            'visitors' => (clone $onlineVisitors)->count(),
+            'members' => (clone $onlineVisitors)->whereNotNull('user_id')->distinct()->count('user_id'),
+        ];
         $completedRuns = (clone $toolMetrics)->sum('completed_runs');
         $activeUsers = $this->distinctUsers('active_user_days', $from, $through);
         $completedUsers = $this->distinctUsers('tool_user_days', $from, $through);
@@ -125,6 +133,7 @@ final class DashboardController extends Controller
         return [
             'period' => $period,
             'pageViews' => $pageViews,
+            'onlineStats' => $onlineStats,
             'completedRuns' => $completedRuns,
             'activeUsers' => $activeUsers,
             'completedUsers' => $completedUsers,

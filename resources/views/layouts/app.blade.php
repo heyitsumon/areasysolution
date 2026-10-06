@@ -83,6 +83,10 @@
         .analytics-refresh-button{margin-left:auto;border:1px solid #e1e6ef;border-radius:8px;background:#fff;padding:8px 11px;color:#4c5870;font:inherit;font-size:12px;cursor:pointer}
         .analytics-refresh-button:hover{border-color:#b7c0d1;background:#f8f9fc}
         .analytics-refresh-button:disabled{opacity:.55;cursor:wait}
+        .online-stat{position:relative;overflow:hidden}
+        .online-stat:first-child{border-color:#bbefda;background:linear-gradient(145deg,#fff,#f1fcf7)}
+        .online-stat:first-child:after{position:absolute;top:20px;right:20px;width:9px;height:9px;border-radius:50%;background:#10a875;box-shadow:0 0 0 5px #10a8751c;content:""}
+        .online-stat small{display:block;margin-top:5px;color:#7a8799;font-size:11px}
         .analytics-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin:20px 0}
         .analytics-card{min-width:0}
         .analytics-trend-card{grid-column:1/-1}

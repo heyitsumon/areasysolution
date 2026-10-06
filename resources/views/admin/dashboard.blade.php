@@ -26,6 +26,16 @@
     </div>
     <p class="muted">Data refreshes every 30 seconds. New events appear after the analytics queue worker processes them.</p>
     <section class="stats" aria-label="Summary metrics">
+        <article class="card stat online-stat">
+            <span>Visitors online · last 5 minutes</span>
+            <strong data-metric="onlineStats.visitors">{{ number_format($onlineStats['visitors']) }}</strong>
+            <small>Includes guests and signed-in visitors</small>
+        </article>
+        <article class="card stat online-stat">
+            <span>Members online · last 5 minutes</span>
+            <strong data-metric="onlineStats.members">{{ number_format($onlineStats['members']) }}</strong>
+            <small>Unique signed-in accounts</small>
+        </article>
         <article class="card stat"><span>Website page views · today</span><strong data-metric="pageViews.today">{{ number_format($pageViews['today']) }}</strong></article>
         <article class="card stat"><span>Website page views · this week</span><strong data-metric="pageViews.week">{{ number_format($pageViews['week']) }}</strong></article>
         <article class="card stat"><span>Website page views · this month</span><strong data-metric="pageViews.month">{{ number_format($pageViews['month']) }}</strong></article>

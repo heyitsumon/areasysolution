@@ -153,6 +153,8 @@ function updateMetrics(data) {
         'pageViews.today': data.pageViews.today,
         'pageViews.week': data.pageViews.week,
         'pageViews.month': data.pageViews.month,
+        'onlineStats.visitors': data.onlineStats.visitors,
+        'onlineStats.members': data.onlineStats.members,
         newUsers: data.newUsers,
         activeUsers: data.activeUsers,
         completedRuns: data.completedRuns,
