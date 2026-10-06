@@ -4,11 +4,16 @@ declare(strict_types=1);
 
 namespace Tests\Feature;
 
+use App\Models\User;
+use App\Support\Seo\SiteSeo;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Queue;
 use Tests\TestCase;
 
 final class SeoTest extends TestCase
 {
+    use RefreshDatabase;
+
     public function test_public_pages_have_unique_metadata_canonicals_and_structured_data(): void
     {
         Queue::fake();
@@ -27,7 +32,7 @@ final class SeoTest extends TestCase
 
         $this->get(route('tools.show', ['tool' => 'qr-code-generator']))
             ->assertOk()
-            ->assertSee('<title>QR Code Generator · MyTools</title>', false)
+            ->assertSee('<title>QR Code Generator · ArEasySolution</title>', false)
             ->assertSee('"@type":"WebApplication"', false)
             ->assertSee('"@type":"BreadcrumbList"', false);
     }
@@ -67,5 +72,72 @@ final class SeoTest extends TestCase
         $this->get(route('login'))
             ->assertOk()
             ->assertSee('<meta name="robots" content="noindex,follow">', false);
+    }
+
+    public function test_an_admin_can_manage_site_and_per_page_seo_settings(): void
+    {
+        Queue::fake();
+
+        $this->get(route('home'))->assertOk();
+        $this->get(route('admin.site-settings.edit'))->assertRedirect(route('login'));
+        $this->actingAs(User::factory()->create())
+            ->get(route('admin.site-settings.edit'))
+            ->assertForbidden();
+
+        $admin = User::factory()->create(['is_admin' => true]);
+        $this->actingAs($admin)
+            ->get(route('admin.site-settings.edit'))
+            ->assertOk()
+            ->assertSee('Site & SEO settings')
+            ->assertSee('Page-by-page SEO')
+            ->assertSee('pages[tool:qr-code-generator][title]', false);
+
+        $settings = app(SiteSeo::class);
+        $pages = collect($settings->editablePages())
+            ->mapWithKeys(static fn (array $page): array => [
+                $page['key'] => [
+                    'title' => $page['title'],
+                    'description' => $page['description'],
+                    'robots' => $page['robots'],
+                    'og_image' => '',
+                ],
+            ])
+            ->all();
+        $pages['home']['title'] = 'Custom Homepage Title';
+        $pages['home']['description'] = 'A custom homepage search description.';
+        $pages['home']['og_image'] = 'https://example.com/home-card.png';
+        $pages['tool:qr-code-generator']['title'] = 'Custom QR SEO Title';
+        $pages['tool:qr-code-generator']['robots'] = 'noindex,follow';
+
+        $this->put(route('admin.site-settings.update'), [
+            ...$settings->siteDefaults(),
+            'site_name' => 'Example Tools',
+            'site_url' => 'https://example.com/',
+            'twitter_handle' => '@example',
+            'google_site_verification' => 'google-token',
+            'pages' => $pages,
+        ])->assertRedirect(route('admin.site-settings.edit'))
+            ->assertSessionHas('status', 'Site and SEO settings updated.');
+
+        $this->get(route('home'))
+            ->assertOk()
+            ->assertSee('<title>Custom Homepage Title · Example Tools</title>', false)
+            ->assertSee('<meta name="description" content="A custom homepage search description.">', false)
+            ->assertSee('<meta property="og:image" content="https://example.com/home-card.png">', false)
+            ->assertSee('<meta name="twitter:site" content="@example">', false)
+            ->assertSee('<meta name="google-site-verification" content="google-token">', false)
+            ->assertSee('Example Tools');
+
+        $this->get(route('tools.show', ['tool' => 'qr-code-generator']))
+            ->assertSee('<title>Custom QR SEO Title · Example Tools</title>', false)
+            ->assertSee('<meta name="robots" content="noindex,follow">', false);
+
+        $sitemap = $this->get(route('sitemap'))->assertOk();
+        $sitemap->assertSee('https://example.com/')
+            ->assertDontSee('https://example.com/tools/qr-code-generator');
+
+        $this->get(route('robots'))
+            ->assertOk()
+            ->assertSee('Sitemap: https://example.com/sitemap.xml');
     }
 }

@@ -4,30 +4,31 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
+use App\Support\Seo\SiteSeo;
 use Illuminate\Http\Response;
 
 final class SeoController extends Controller
 {
-    public function sitemap(): Response
+    public function sitemap(SiteSeo $seo): Response
     {
-        $siteUrl = (string) config('seo.site_url');
-        $paths = [
-            route('home', absolute: false),
-            route('tools.index', absolute: false),
-            ...collect(config('tools.tools'))
-                ->keys()
-                ->map(fn (string $slug): string => route('tools.show', ['tool' => $slug], absolute: false))
-                ->all(),
-        ];
+        $urls = collect($seo->editablePages())
+            ->filter(static fn (array $page): bool => $page['robots'] === 'index,follow')
+            ->map(fn (array $page): string => $seo->resolvePage(
+                $page['key'],
+                $page['title'],
+                $page['description'],
+                $page['path'],
+                'index,follow',
+            )['canonical'])
+            ->values()
+            ->all();
 
         return response()
-            ->view('seo.sitemap', [
-                'urls' => array_map(fn (string $path): string => $siteUrl.$path, $paths),
-            ])
+            ->view('seo.sitemap', ['urls' => $urls])
             ->header('Content-Type', 'application/xml; charset=UTF-8');
     }
 
-    public function robots(): Response
+    public function robots(SiteSeo $seo): Response
     {
         return response(
             implode("\n", [
@@ -35,7 +36,7 @@ final class SeoController extends Controller
                 'Allow: /',
                 'Disallow: /admin',
                 'Disallow: /profile',
-                'Sitemap: '.rtrim((string) config('seo.site_url'), '/').route('sitemap', absolute: false),
+                'Sitemap: '.$seo->siteUrl().route('sitemap', absolute: false),
                 '',
             ]),
             200,

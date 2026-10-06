@@ -4,7 +4,7 @@
     <section class="card form-card">
         <div class="eyebrow">Welcome back</div>
         <h1 style="font-size:34px">Sign in</h1>
-        <p>Access your MyTools profile.</p>
+        <p>Access your {{ app(\App\Support\Seo\SiteSeo::class)->site()['site_name'] }} profile.</p>
         <form method="POST" action="{{ route('auth.login.store') }}">
             @csrf
             <div class="field">

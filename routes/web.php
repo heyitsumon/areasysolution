@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\SiteSettingsController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\ProfileController;
@@ -43,4 +44,6 @@ Route::post('/analytics/tool-completions', [ToolAnalyticsController::class, 'sto
 
 Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(function (): void {
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/site-settings', [SiteSettingsController::class, 'edit'])->name('site-settings.edit');
+    Route::put('/site-settings', [SiteSettingsController::class, 'update'])->name('site-settings.update');
 });

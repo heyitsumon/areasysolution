@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 return [
     'site' => [
-        'name' => env('TOOLS_SITE_NAME', 'MyTools'),
+        'name' => env('TOOLS_SITE_NAME', 'ArEasySolution'),
         'tagline' => 'Free online tools that respect your privacy',
     ],
 

@@ -4,7 +4,7 @@
     <section class="card form-card">
         <div class="eyebrow">Get started</div>
         <h1 style="font-size:34px">Create your account</h1>
-        <p>Set up your MyTools profile.</p>
+        <p>Set up your {{ app(\App\Support\Seo\SiteSeo::class)->site()['site_name'] }} profile.</p>
         <form method="POST" action="{{ route('auth.register.store') }}">
             @csrf
             <div class="field">

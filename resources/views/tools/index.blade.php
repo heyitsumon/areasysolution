@@ -5,9 +5,9 @@
     'structuredData' => [
         '@context' => 'https://schema.org',
         '@type' => 'CollectionPage',
-        'name' => 'Free Online Tools',
-        'description' => 'Browser-based PDF, image, text and developer utilities.',
-        'url' => rtrim(config('seo.site_url'), '/').route('tools.index', absolute: false),
+        'name' => app(\App\Support\Seo\SiteSeo::class)->pageTitle('tools-index', 'Free Online Tools'),
+        'description' => app(\App\Support\Seo\SiteSeo::class)->pageDescription('tools-index', 'Browser-based PDF, image, text and developer utilities.'),
+        'url' => app(\App\Support\Seo\SiteSeo::class)->siteUrl().route('tools.index', absolute: false),
     ],
 ])
 

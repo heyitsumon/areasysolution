@@ -5,8 +5,8 @@
     'structuredData' => [
         '@context' => 'https://schema.org',
         '@type' => 'WebSite',
-        'name' => config('tools.site.name'),
-        'url' => rtrim(config('seo.site_url'), '/').route('home', absolute: false),
+        'name' => app(\App\Support\Seo\SiteSeo::class)->site()['site_name'],
+        'url' => app(\App\Support\Seo\SiteSeo::class)->siteUrl().route('home', absolute: false),
     ],
 ])
 

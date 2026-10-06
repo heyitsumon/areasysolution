@@ -6,11 +6,14 @@
             <div class="eyebrow">Admin panel</div>
             <h1 style="font-size:42px">Analytics overview</h1>
         </div>
-        <nav class="periods" aria-label="Analytics date range">
-            @foreach (['today' => 'Day', 'week' => 'Week', 'month' => 'Month'] as $value => $label)
-                <a class="{{ $period === $value ? 'active' : '' }}" href="{{ route('admin.dashboard', ['period' => $value]) }}">{{ $label }}</a>
-            @endforeach
-        </nav>
+        <div class="actions">
+            <a class="btn secondary" href="{{ route('admin.site-settings.edit') }}">Site &amp; SEO settings</a>
+            <nav class="periods" aria-label="Analytics date range">
+                @foreach (['today' => 'Day', 'week' => 'Week', 'month' => 'Month'] as $value => $label)
+                    <a class="{{ $period === $value ? 'active' : '' }}" href="{{ route('admin.dashboard', ['period' => $value]) }}">{{ $label }}</a>
+                @endforeach
+            </nav>
+        </div>
     </div>
     <p class="muted">Metrics are aggregated asynchronously; recent activity may take a short time to appear.</p>
     <section class="stats" aria-label="Summary metrics">

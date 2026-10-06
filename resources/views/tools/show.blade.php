@@ -7,11 +7,11 @@
         '@graph' => [
             [
                 '@type' => 'WebApplication',
-                'name' => $tool['name'],
-                'description' => $tool['description'],
+                'name' => app(\App\Support\Seo\SiteSeo::class)->pageTitle('tool:'.$tool['slug'], $tool['name']),
+                'description' => app(\App\Support\Seo\SiteSeo::class)->pageDescription('tool:'.$tool['slug'], 'Use '.$tool['name'].' online for free. '.$tool['description'].' Processing runs in your browser.'),
                 'applicationCategory' => 'UtilitiesApplication',
                 'operatingSystem' => 'Any',
-                'url' => rtrim(config('seo.site_url'), '/').route('tools.show', ['tool' => $tool['slug']], absolute: false),
+                'url' => app(\App\Support\Seo\SiteSeo::class)->siteUrl().route('tools.show', ['tool' => $tool['slug']], absolute: false),
             ],
             [
                 '@type' => 'BreadcrumbList',
@@ -20,19 +20,19 @@
                         '@type' => 'ListItem',
                         'position' => 1,
                         'name' => 'Home',
-                        'item' => rtrim(config('seo.site_url'), '/').route('home', absolute: false),
+                        'item' => app(\App\Support\Seo\SiteSeo::class)->siteUrl().route('home', absolute: false),
                     ],
                     [
                         '@type' => 'ListItem',
                         'position' => 2,
                         'name' => 'Tools',
-                        'item' => rtrim(config('seo.site_url'), '/').route('tools.index', absolute: false),
+                        'item' => app(\App\Support\Seo\SiteSeo::class)->siteUrl().route('tools.index', absolute: false),
                     ],
                     [
                         '@type' => 'ListItem',
                         'position' => 3,
                         'name' => $tool['name'],
-                        'item' => rtrim(config('seo.site_url'), '/').route('tools.show', ['tool' => $tool['slug']], absolute: false),
+                        'item' => app(\App\Support\Seo\SiteSeo::class)->siteUrl().route('tools.show', ['tool' => $tool['slug']], absolute: false),
                     ],
                 ],
             ],

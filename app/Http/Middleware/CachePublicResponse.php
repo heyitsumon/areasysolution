@@ -128,8 +128,9 @@ final class CachePublicResponse
     protected function cacheKey(Request $request): string
     {
         return sprintf(
-            'page:%s:%s:%s',
+            'page:%s:%s:%s:%s',
             hash('xxh128', app()->version().'|'.(string) config('app.key')),
+            (string) Cache::get('site-seo:page-cache-version', 0),
             $request->getHost(),
             $request->getRequestUri()
         );
