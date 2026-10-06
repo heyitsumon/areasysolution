@@ -20,7 +20,7 @@ export function registerServiceWorker() {
     window.addEventListener(
         'load',
         () => {
-            navigator.serviceWorker.register('/sw.js', { scope: '/' }).catch(() => {
+            navigator.serviceWorker.register('/sw.js', { scope: '/', updateViaCache: 'none' }).catch(() => {
                 // A failed registration must never surface to the visitor.
             });
         },

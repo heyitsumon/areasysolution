@@ -127,9 +127,15 @@ final class CachePublicResponse
 
     protected function cacheKey(Request $request): string
     {
+        $manifestPath = public_path('build/manifest.json');
+        $assetVersion = is_file($manifestPath)
+            ? hash_file('sha256', $manifestPath)
+            : 'no-manifest';
+
         return sprintf(
-            'page:%s:%s:%s:%s',
+            'page:%s:%s:%s:%s:%s',
             hash('xxh128', app()->version().'|'.(string) config('app.key')),
+            $assetVersion,
             (string) Cache::get('site-seo:page-cache-version', 0),
             $request->getHost(),
             $request->getRequestUri()

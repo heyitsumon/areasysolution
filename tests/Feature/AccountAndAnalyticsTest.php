@@ -176,6 +176,7 @@ final class AccountAndAnalyticsTest extends TestCase
         $this->get(route('tools.show', ['tool' => 'viral-hashtag-generator']))
             ->assertOk()
             ->assertSee('Viral Hashtag Generator')
+            ->assertSee('data-tool="viral-hashtag-generator"', false)
             ->assertSee('This tool does not check live platform trends or guarantee reach.');
 
         $this->get(route('tools.show', ['tool' => 'qr-code-generator']))

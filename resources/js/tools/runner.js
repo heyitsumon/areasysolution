@@ -95,7 +95,11 @@ export function bootToolWorkspace() {
     const loader = loaderFor(slug);
 
     if (! loader) {
-        renderUnavailable(root, context, 'This tool is still being built. Please check back shortly.');
+        renderUnavailable(
+            root,
+            context,
+            'This website is using outdated tool assets. Deploy the latest public/build directory, then refresh this page.'
+        );
 
         return;
     }
@@ -115,7 +119,7 @@ export function bootToolWorkspace() {
                 root,
                 context,
                 navigator.onLine
-                    ? 'The tool failed to start. Reloading the page usually fixes it.'
+                    ? 'The tool files could not load. Refresh the page; if this continues, deploy the latest public/build directory.'
                     : 'You appear to be offline. Reconnect and reload to use this tool.'
             );
 

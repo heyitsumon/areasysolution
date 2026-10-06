@@ -11,7 +11,7 @@
  *   else         anything visitor-specific.
  */
 
-const VERSION = 'mytools-v2';
+const VERSION = 'mytools-v3';
 const PAGES = `${VERSION}-pages`;
 const ASSETS = `${VERSION}-assets`;
 
