@@ -27,6 +27,7 @@ final class DashboardController extends Controller
             'period' => $data['period'],
             'pageViews' => $data['pageViews'],
             'onlineStats' => $data['onlineStats'],
+            'totalUniqueVisitors' => $data['totalUniqueVisitors'],
             'completedRuns' => $data['completedRuns'],
             'activeUsers' => $data['activeUsers'],
             'completedUsers' => $data['completedUsers'],
@@ -88,6 +89,7 @@ final class DashboardController extends Controller
             'visitors' => (clone $onlineVisitors)->count(),
             'members' => (clone $onlineVisitors)->whereNotNull('user_id')->distinct()->count('user_id'),
         ];
+        $totalUniqueVisitors = DB::table('unique_site_visitors')->count();
         $completedRuns = (clone $toolMetrics)->sum('completed_runs');
         $activeUsers = $this->distinctUsers('active_user_days', $from, $through);
         $completedUsers = $this->distinctUsers('tool_user_days', $from, $through);
@@ -134,6 +136,7 @@ final class DashboardController extends Controller
             'period' => $period,
             'pageViews' => $pageViews,
             'onlineStats' => $onlineStats,
+            'totalUniqueVisitors' => $totalUniqueVisitors,
             'completedRuns' => $completedRuns,
             'activeUsers' => $activeUsers,
             'completedUsers' => $completedUsers,

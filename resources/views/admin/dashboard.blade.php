@@ -36,6 +36,11 @@
             <strong data-metric="onlineStats.members">{{ number_format($onlineStats['members']) }}</strong>
             <small>Unique signed-in accounts</small>
         </article>
+        <article class="card stat">
+            <span>Total unique visitors</span>
+            <strong data-metric="totalUniqueVisitors">{{ number_format($totalUniqueVisitors) }}</strong>
+            <small>Distinct browsers recorded since tracking was enabled</small>
+        </article>
         <article class="card stat"><span>Website page views · today</span><strong data-metric="pageViews.today">{{ number_format($pageViews['today']) }}</strong></article>
         <article class="card stat"><span>Website page views · this week</span><strong data-metric="pageViews.week">{{ number_format($pageViews['week']) }}</strong></article>
         <article class="card stat"><span>Website page views · this month</span><strong data-metric="pageViews.month">{{ number_format($pageViews['month']) }}</strong></article>

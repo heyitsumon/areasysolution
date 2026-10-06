@@ -155,6 +155,7 @@ function updateMetrics(data) {
         'pageViews.month': data.pageViews.month,
         'onlineStats.visitors': data.onlineStats.visitors,
         'onlineStats.members': data.onlineStats.members,
+        totalUniqueVisitors: data.totalUniqueVisitors,
         newUsers: data.newUsers,
         activeUsers: data.activeUsers,
         completedRuns: data.completedRuns,

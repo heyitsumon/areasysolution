@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Feature;
 
+use App\Http\Middleware\TrackOnlineVisitor;
 use App\Jobs\RecordRouteHit;
 use App\Jobs\RecordToolCompletion;
 use App\Models\User;
@@ -11,6 +12,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Queue;
+use Illuminate\Support\Str;
 use Tests\TestCase;
 
 final class AccountAndAnalyticsTest extends TestCase
@@ -106,7 +108,10 @@ final class AccountAndAnalyticsTest extends TestCase
     {
         Queue::fake();
 
-        $this->get(route('home'))->assertOk();
+        $this->get(route('home'))
+            ->assertOk()
+            ->assertHeader('Cache-Control', 'no-store, private')
+            ->assertHeaderMissing('X-MyTools-Offline-Cache');
         Queue::assertPushed(RecordRouteHit::class, fn (RecordRouteHit $job): bool => $job->routeKey === 'home');
 
         $user = User::factory()->create();
@@ -127,12 +132,36 @@ final class AccountAndAnalyticsTest extends TestCase
         $this->get(route('home'))->assertOk();
 
         $this->assertDatabaseCount('online_visitors', 1);
+        $this->assertDatabaseCount('unique_site_visitors', 1);
         $visitor = DB::table('online_visitors')->first();
 
         $this->assertNotNull($visitor);
         $this->assertMatchesRegularExpression('/\A[a-f0-9]{64}\z/', $visitor->visitor_hash);
         $this->assertNull($visitor->user_id);
         $this->assertGreaterThanOrEqual(now()->subMinute()->timestamp, strtotime($visitor->last_seen_at));
+        $this->assertStringContainsString(TrackOnlineVisitor::VISITOR_COOKIE.'=', $this->get(route('tools.index'))->headers->get('Set-Cookie'));
+    }
+
+    public function test_unique_visitors_are_counted_once_per_persistent_browser_cookie(): void
+    {
+        Queue::fake();
+        $visitorId = (string) Str::uuid();
+
+        $this->withCookie(TrackOnlineVisitor::VISITOR_COOKIE, $visitorId)
+            ->get(route('home'))
+            ->assertOk();
+        $firstSeenAt = DB::table('unique_site_visitors')->value('first_seen_at');
+
+        $this->withCookie(TrackOnlineVisitor::VISITOR_COOKIE, $visitorId)
+            ->get(route('tools.index'))
+            ->assertOk();
+
+        $this->assertDatabaseCount('unique_site_visitors', 1);
+        $this->assertSame(
+            hash_hmac('sha256', strtolower($visitorId), (string) config('app.key')),
+            DB::table('unique_site_visitors')->value('visitor_hash')
+        );
+        $this->assertSame($firstSeenAt, DB::table('unique_site_visitors')->value('first_seen_at'));
     }
 
     public function test_the_tool_catalog_opens_real_tools_and_rejects_unknown_slugs(): void
@@ -164,7 +193,8 @@ final class AccountAndAnalyticsTest extends TestCase
             ->assertOk()
             ->assertSee('CSV to JSON Converter');
 
-        $this->get(route('tools.show', ['tool' => 'json-formatter']))
+        $this->withCookie(TrackOnlineVisitor::VISITOR_COOKIE, (string) Str::uuid())
+            ->get(route('tools.show', ['tool' => 'json-formatter']))
             ->assertOk()
             ->assertSee('data-tool="json-formatter"', false)
             ->assertSee('name="csrf-token"', false)
@@ -226,6 +256,7 @@ final class AccountAndAnalyticsTest extends TestCase
             ->assertJsonPath('pageViews.today', 2)
             ->assertJsonPath('onlineStats.visitors', 1)
             ->assertJsonPath('onlineStats.members', 1)
+            ->assertJsonPath('totalUniqueVisitors', 1)
             ->assertJsonPath('completedRuns', 2)
             ->assertJsonPath('dailyVisits.13.value', 2)
             ->assertJsonPath('dailyRuns.13.value', 2)
