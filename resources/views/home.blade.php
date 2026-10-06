@@ -19,12 +19,14 @@
             'merge-pdf',
             'word-counter',
             'qr-code-generator',
+            'viral-hashtag-generator',
         ]);
         $toolBadges = [
             'image-compressor' => 'IMG',
             'merge-pdf' => 'PDF',
             'word-counter' => 'Aa',
             'qr-code-generator' => 'QR',
+            'viral-hashtag-generator' => '#',
         ];
     @endphp
 

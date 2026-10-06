@@ -170,8 +170,13 @@ final class AccountAndAnalyticsTest extends TestCase
 
         $this->get(route('tools.index'))
             ->assertOk()
-            ->assertSee('26 free browser tools')
+            ->assertSee(count(config('tools.tools')).' free browser tools')
             ->assertSee('Image Compressor');
+
+        $this->get(route('tools.show', ['tool' => 'viral-hashtag-generator']))
+            ->assertOk()
+            ->assertSee('Viral Hashtag Generator')
+            ->assertSee('This tool does not check live platform trends or guarantee reach.');
 
         $this->get(route('tools.show', ['tool' => 'qr-code-generator']))
             ->assertOk()

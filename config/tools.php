@@ -45,6 +45,10 @@ return [
             'name' => 'Text Tools',
             'description' => 'Format and transform everyday text.',
         ],
+        'social-media-tools' => [
+            'name' => 'Social Media Tools',
+            'description' => 'Create and refine content for social platforms.',
+        ],
         'calculators' => [
             'name' => 'Calculators',
             'description' => 'Useful everyday calculators for percentages, health, age, tips and loans.',
@@ -179,6 +183,13 @@ return [
             'name' => 'Slug Generator',
             'description' => 'Create clean, readable URL slugs from text.',
             'category' => 'text-tools',
+            'accepts' => [],
+            'multiple' => false,
+        ],
+        'viral-hashtag-generator' => [
+            'name' => 'Viral Hashtag Generator',
+            'description' => 'Generate relevant hashtag ideas for your topic and social platform. Suggestions are created locally and are not live trend data.',
+            'category' => 'social-media-tools',
             'accepts' => [],
             'multiple' => false,
         ],
