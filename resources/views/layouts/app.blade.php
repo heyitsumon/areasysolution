@@ -75,6 +75,25 @@
         .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(175px,1fr));gap:14px;margin:22px 0}.stat strong{display:block;font-size:30px;letter-spacing:-.04em;margin-top:8px}.stat span{font-size:13px;color:#6d7789}
         .bar-row{display:grid;grid-template-columns:70px 1fr 48px;align-items:center;gap:10px;font-size:12px;color:#68748a;margin:9px 0}.bar{height:9px;background:#eef0ff;border-radius:99px;overflow:hidden}.bar i{display:block;height:100%;background:#5364df;border-radius:99px}
         .periods{display:flex;gap:8px;flex-wrap:wrap}.periods a{padding:8px 12px;border-radius:8px;background:#fff;border:1px solid #e1e6ef;color:#667187;font-size:13px}.periods a.active{background:#4658df;color:white;border-color:#4658df}
+        .analytics-livebar{display:flex;align-items:center;gap:9px;margin:18px 0 4px;color:#49566e;font-size:13px;font-weight:650}
+        .analytics-live-indicator{width:8px;height:8px;border-radius:50%;background:#10a875;box-shadow:0 0 0 4px #10a8751c}
+        .analytics-refresh-status{margin-left:4px;color:#768198;font-size:12px;font-weight:450}
+        .analytics-refresh-status[data-state="loading"]{color:#4857c8}
+        .analytics-refresh-status[data-state="error"]{color:#bb334a}
+        .analytics-refresh-button{margin-left:auto;border:1px solid #e1e6ef;border-radius:8px;background:#fff;padding:8px 11px;color:#4c5870;font:inherit;font-size:12px;cursor:pointer}
+        .analytics-refresh-button:hover{border-color:#b7c0d1;background:#f8f9fc}
+        .analytics-refresh-button:disabled{opacity:.55;cursor:wait}
+        .analytics-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin:20px 0}
+        .analytics-card{min-width:0}
+        .analytics-trend-card{grid-column:1/-1}
+        .analytics-card-heading{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:12px}
+        .analytics-card-heading h2{margin-bottom:3px}
+        .analytics-card-heading .muted{margin:0}
+        .analytics-range-badge{border:1px solid #e6eaf1;border-radius:999px;background:#f8f9fc;padding:6px 9px;color:#68748a;font-size:11px;font-weight:650}
+        .analytics-chart{position:relative;height:290px}
+        .analytics-chart-tall{height:340px}
+        .analytics-chart canvas[hidden]{display:none}
+        .analytics-empty{display:grid;min-height:180px;place-items:center;margin:0;color:#788399;font-size:14px}
         main.container{width:100%;flex:1 0 auto}
         .site-footer{position:relative;overflow:hidden;border-top:1px solid #202b47;background:radial-gradient(ellipse at 18% 0%,#202d52 0,transparent 42%),#111a30;color:#c2cbe0}
         .footer-inner{width:min(1120px,100%);margin:0 auto;padding:54px 24px 22px}
@@ -96,7 +115,7 @@
         .footer-bottom a:hover{color:#fff}
         .asset-warning{padding:14px 16px;border:1px solid #f1c879;border-radius:10px;background:#fff8df;color:#72520c;font-size:14px;line-height:1.6}
         .container.home-shell{max-width:none;padding:0 0 72px}
-        @media(max-width:650px){.nav{align-items:flex-start}.links{gap:10px;flex-wrap:wrap;justify-content:flex-end}.container{padding-top:28px}.card{padding:18px}.footer-inner{padding:40px 24px 18px}.footer-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:32px 22px;padding-bottom:30px}.footer-brand-block{grid-column:1/-1}.footer-bottom{align-items:flex-start;flex-direction:column;gap:8px}}
+        @media(max-width:650px){.nav{align-items:flex-start}.links{gap:10px;flex-wrap:wrap;justify-content:flex-end}.container{padding-top:28px}.card{padding:18px}.analytics-grid{grid-template-columns:1fr}.analytics-trend-card{grid-column:auto}.analytics-chart{height:250px}.analytics-chart-tall{height:300px}.analytics-livebar{flex-wrap:wrap}.analytics-refresh-button{margin-left:auto}.footer-inner{padding:40px 24px 18px}.footer-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:32px 22px;padding-bottom:30px}.footer-brand-block{grid-column:1/-1}.footer-bottom{align-items:flex-start;flex-direction:column;gap:8px}}
     </style>
 </head>
 <body>

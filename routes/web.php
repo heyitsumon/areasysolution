@@ -44,6 +44,7 @@ Route::post('/analytics/tool-completions', [ToolAnalyticsController::class, 'sto
 
 Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(function (): void {
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/analytics/data', [DashboardController::class, 'data'])->name('analytics.data');
     Route::get('/site-settings', [SiteSettingsController::class, 'edit'])->name('site-settings.edit');
     Route::put('/site-settings', [SiteSettingsController::class, 'update'])->name('site-settings.update');
 });

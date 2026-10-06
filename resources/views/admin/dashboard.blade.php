@@ -1,6 +1,9 @@
 @extends('layouts.app', ['title' => 'Admin analytics'])
 
 @section('content')
+    <div data-admin-analytics
+         data-endpoint="{{ route('admin.analytics.data', ['period' => $period]) }}"
+         data-period="{{ $period }}">
     <div class="actions" style="justify-content:space-between">
         <div>
             <div class="eyebrow">Admin panel</div>
@@ -15,66 +18,61 @@
             </nav>
         </div>
     </div>
-    <p class="muted">Metrics are aggregated asynchronously; recent activity may take a short time to appear.</p>
+    <div class="analytics-livebar">
+        <span class="analytics-live-indicator" aria-hidden="true"></span>
+        <span>Live dashboard</span>
+        <span class="analytics-refresh-status" data-refresh-status role="status" aria-live="polite">Connecting to analytics…</span>
+        <button class="analytics-refresh-button" type="button" data-refresh-now>Refresh now</button>
+    </div>
+    <p class="muted">Data refreshes every 30 seconds. New events appear after the analytics queue worker processes them.</p>
     <section class="stats" aria-label="Summary metrics">
-        <article class="card stat"><span>Website page views · today</span><strong>{{ number_format($pageViews['today']) }}</strong></article>
-        <article class="card stat"><span>Website page views · this week</span><strong>{{ number_format($pageViews['week']) }}</strong></article>
-        <article class="card stat"><span>Website page views · this month</span><strong>{{ number_format($pageViews['month']) }}</strong></article>
-        <article class="card stat"><span>New accounts · selected range</span><strong>{{ number_format($newUsers) }}</strong></article>
-        <article class="card stat"><span>Active members · selected range</span><strong>{{ number_format($activeUsers) }}</strong></article>
-        <article class="card stat"><span>Successful tool sessions · selected range</span><strong>{{ number_format($completedRuns) }}</strong></article>
-        <article class="card stat"><span>Members completing a tool · selected range</span><strong>{{ number_format($completedUsers) }}</strong></article>
-        <article class="card stat"><span>All registered accounts</span><strong>{{ number_format($totalUsers) }}</strong></article>
+        <article class="card stat"><span>Website page views · today</span><strong data-metric="pageViews.today">{{ number_format($pageViews['today']) }}</strong></article>
+        <article class="card stat"><span>Website page views · this week</span><strong data-metric="pageViews.week">{{ number_format($pageViews['week']) }}</strong></article>
+        <article class="card stat"><span>Website page views · this month</span><strong data-metric="pageViews.month">{{ number_format($pageViews['month']) }}</strong></article>
+        <article class="card stat"><span>New accounts · selected range</span><strong data-metric="newUsers">{{ number_format($newUsers) }}</strong></article>
+        <article class="card stat"><span>Active members · selected range</span><strong data-metric="activeUsers">{{ number_format($activeUsers) }}</strong></article>
+        <article class="card stat"><span>Successful tool sessions · selected range</span><strong data-metric="completedRuns">{{ number_format($completedRuns) }}</strong></article>
+        <article class="card stat"><span>Members completing a tool · selected range</span><strong data-metric="completedUsers">{{ number_format($completedUsers) }}</strong></article>
+        <article class="card stat"><span>All registered accounts</span><strong data-metric="totalUsers">{{ number_format($totalUsers) }}</strong></article>
     </section>
 
-    <section class="grid" style="grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));margin:20px 0">
-        <article class="card">
-            <h2>Page hits · last 14 days</h2>
-            @php($maxHits = max(1, (int) $dailyVisits->max('hits')))
-            @foreach ($dailyVisits as $day)
-                <div class="bar-row">
-                    <span>{{ $day['date'] }}</span>
-                    <div class="bar"><i style="width:{{ (int) round(($day['hits'] / $maxHits) * 100) }}%"></i></div>
-                    <strong>{{ number_format($day['hits']) }}</strong>
-                </div>
-            @endforeach
-        </article>
-        <article class="card">
-            <h2>Most visited routes</h2>
-            <div class="table-wrap">
-                <table>
-                    <thead><tr><th>Route</th><th>Hits</th></tr></thead>
-                    <tbody>
-                        @forelse ($topRoutes as $route)
-                            <tr><td>{{ $route->route_key }}</td><td>{{ number_format($route->hits) }}</td></tr>
-                        @empty
-                            <tr><td colspan="2" class="muted">No page-view data for this period yet.</td></tr>
-                        @endforelse
-                    </tbody>
-                </table>
+    <section class="analytics-grid" aria-label="Analytics charts">
+        <article class="card analytics-card analytics-trend-card">
+            <div class="analytics-card-heading">
+                <div><h2>Traffic &amp; tool activity</h2><p class="muted">Daily trends over the last 14 days</p></div>
+                <span class="analytics-range-badge">14 days</span>
+            </div>
+            <div class="analytics-chart analytics-chart-tall">
+                <canvas data-chart="activity" role="img" aria-label="Line chart showing daily page views and completed tool sessions over the last 14 days"></canvas>
             </div>
         </article>
-        <article class="card">
-            <h2>Successful tool sessions</h2>
-            <div class="table-wrap">
-                <table>
-                    <thead><tr><th>Tool</th><th>Sessions</th></tr></thead>
-                    <tbody>
-                        @forelse ($topTools as $tool)
-                            <tr><td>{{ $tool->tool_slug }}</td><td>{{ number_format($tool->completed_runs) }}</td></tr>
-                        @empty
-                            <tr><td colspan="2" class="muted">No tool completion events yet. Connect the completion tracker after a successful tool run.</td></tr>
-                        @endforelse
-                    </tbody>
-                </table>
+        <article class="card analytics-card">
+            <div class="analytics-card-heading">
+                <div><h2>Most visited pages</h2><p class="muted">Top routes · selected period</p></div>
             </div>
+            <div class="analytics-chart">
+                <canvas data-chart="routes" role="img" aria-label="Bar chart ranking the most visited website pages"></canvas>
+            </div>
+            <p class="analytics-empty" data-empty="routes" hidden>No page-view data for this period yet.</p>
         </article>
+        <article class="card analytics-card">
+            <div class="analytics-card-heading">
+                <div><h2>Top tools</h2><p class="muted">Successful sessions · selected period</p></div>
+            </div>
+            <div class="analytics-chart">
+                <canvas data-chart="tools" role="img" aria-label="Bar chart ranking tools by successful sessions"></canvas>
+            </div>
+            <p class="analytics-empty" data-empty="tools" hidden>No tool completion events for this period yet.</p>
+        </article>
+    </section>
+
+    <section class="grid" style="margin:20px 0">
         <article class="card">
             <h2>Recent registrations</h2>
             <div class="table-wrap">
                 <table>
                     <thead><tr><th>Name</th><th>Email</th><th>Joined</th></tr></thead>
-                    <tbody>
+                    <tbody data-recent-users>
                         @forelse ($recentUsers as $user)
                             <tr><td>{{ $user->name }}</td><td>{{ $user->email }}</td><td>{{ $user->created_at->format('M j, Y') }}</td></tr>
                         @empty
@@ -85,4 +83,5 @@
             </div>
         </article>
     </section>
+    </div>
 @endsection

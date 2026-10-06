@@ -16,6 +16,12 @@ function boot() {
     bootToolWorkspace();
     bootDirectoryFilter();
     registerServiceWorker();
+
+    if (document.querySelector('[data-admin-analytics]')) {
+        import('./admin-analytics')
+            .then(({ bootAdminAnalytics }) => bootAdminAnalytics())
+            .catch((error) => console.error('Admin analytics could not be initialized.', error));
+    }
 }
 
 if (document.readyState === 'loading') {
@@ -23,4 +29,3 @@ if (document.readyState === 'loading') {
 } else {
     boot();
 }
-

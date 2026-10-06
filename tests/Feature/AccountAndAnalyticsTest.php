@@ -78,6 +78,7 @@ final class AccountAndAnalyticsTest extends TestCase
     {
         Queue::fake();
         $this->get(route('admin.dashboard'))->assertRedirect(route('login'));
+        $this->get(route('admin.analytics.data'))->assertRedirect(route('login'));
 
         $admin = User::factory()->create();
         $admin->forceFill(['is_admin' => true])->save();
@@ -86,10 +87,17 @@ final class AccountAndAnalyticsTest extends TestCase
             ->get(route('admin.dashboard', ['period' => 'today']))
             ->assertOk()
             ->assertSee('Analytics overview')
-            ->assertSee('All registered accounts');
+            ->assertSee('All registered accounts')
+            ->assertSee('data-chart="activity"', false)
+            ->assertSee(route('admin.analytics.data', ['period' => 'today']), false)
+            ->assertSee('Refresh now');
 
         $this->actingAs(User::factory()->create())
             ->get(route('admin.dashboard'))
+            ->assertForbidden();
+
+        $this->actingAs(User::factory()->create())
+            ->getJson(route('admin.analytics.data'))
             ->assertForbidden();
     }
 
@@ -195,6 +203,16 @@ final class AccountAndAnalyticsTest extends TestCase
             ->assertViewHas('completedRuns', 2)
             ->assertViewHas('activeUsers', 1)
             ->assertViewHas('completedUsers', 1);
+
+        $this->actingAs($admin)
+            ->getJson(route('admin.analytics.data', ['period' => 'today']))
+            ->assertOk()
+            ->assertJsonPath('pageViews.today', 2)
+            ->assertJsonPath('completedRuns', 2)
+            ->assertJsonPath('dailyVisits.13.value', 2)
+            ->assertJsonPath('dailyRuns.13.value', 2)
+            ->assertJsonPath('topRoutes.0.label', 'home')
+            ->assertJsonPath('topTools.0.label', 'image-compressor');
     }
 
     public function test_tool_completion_slug_is_validated(): void
