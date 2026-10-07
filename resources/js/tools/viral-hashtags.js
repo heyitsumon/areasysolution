@@ -12,6 +12,7 @@ const STOP_WORDS = new Set([
 ]);
 
 const TOPIC_GROUPS = [
+    { jobOnly: true, match: /\b(job|jobs|employment|hiring|career|careers|recruitment|recruiter|vacancy|vacancies|resume|cv|work)\b/iu, tags: ['JobSearch', 'Jobs', 'Hiring', 'NowHiring', 'Career', 'CareerOpportunities', 'JobOpening', 'JobAlert', 'Recruitment', 'Employment', 'RemoteJobs', 'WorkFromHome'] },
     { match: /\b(coffee|cafe|café|espresso|latte|tea|recipe|recipes|baking|food|cook|cooking|vegan|dessert|dinner|lunch|breakfast)\b/iu, tags: ['Foodie', 'FoodPhotography', 'HomeCooking', 'RecipeIdeas', 'FoodLovers', 'Delicious'] },
     { match: /\b(travel|traveling|travelling|holiday|vacation|trip|destination|backpack|adventure)\b/iu, tags: ['TravelGram', 'Wanderlust', 'TravelPhotography', 'ExploreMore', 'AdventureAwaits', 'TravelTips'] },
     { match: /\b(fitness|workout|gym|training|exercise|running|run|yoga|health|wellness|nutrition)\b/iu, tags: ['FitnessJourney', 'FitLife', 'WorkoutMotivation', 'HealthyHabits', 'WellnessJourney', 'StayActive'] },
@@ -109,19 +110,24 @@ function inputPhrases(value) {
 export function generateHashtags(topic, keywords, platform) {
     const limit = PLATFORM_LIMITS[platform] ?? PLATFORM_LIMITS.instagram;
     const sourceText = [topic, keywords].filter(Boolean).join(', ').trim();
-    const popularSeo = buildPopularSeoTags(sourceText);
+    const jobSearch = /\b(job|jobs|employment|hiring|career|careers|recruitment|recruiter|vacancy|vacancies|resume|cv|work)\b/iu.test(sourceText);
+    const popularSeo = jobSearch ? [] : buildPopularSeoTags(sourceText);
     const core = [...new Set(inputPhrases(sourceText).map(toHashtag).filter((tag) => tag.length >= 2))]
         .map((tag) => `#${tag}`);
 
     const related = TOPIC_GROUPS
-        .filter((group) => group.match.test(sourceText))
+        .filter((group) => group.match.test(sourceText) && (!jobSearch || group.jobOnly === true))
         .flatMap((group) => group.tags)
         .map((tag) => `#${tag}`);
 
+    if (jobSearch && /\b(remote|work from home|wfh)\b/iu.test(sourceText)) {
+        related.unshift('#RemoteJobs', '#WorkFromHome');
+    }
+
     const tiers = {
-        topic: [...new Set([...core, ...popularSeo])],
-        niche: [...new Set(related)],
-        discovery: DISCOVERY_TAGS.map((tag) => `#${tag}`),
+        topic: [...new Set(jobSearch ? [...related, ...core] : [...core, ...popularSeo])],
+        niche: jobSearch ? [] : [...new Set(related)],
+        discovery: jobSearch ? [] : DISCOVERY_TAGS.map((tag) => `#${tag}`),
     };
     const unique = [];
     const seen = new Set();

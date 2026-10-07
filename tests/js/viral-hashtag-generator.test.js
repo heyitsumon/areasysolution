@@ -38,6 +38,25 @@ test('seo-focused topics include popular rankings and marketing tags without dup
     assert.equal(new Set(result.all.map((tag) => tag.toLowerCase())).size, result.all.length);
 });
 
+test('job searches return job and career hashtags without unrelated discovery or marketing tags', () => {
+    const result = generateHashtags('job', '', 'instagram');
+
+    assert.ok(result.all.includes('#JobSearch'));
+    assert.ok(result.all.includes('#Hiring'));
+    assert.ok(result.all.includes('#CareerOpportunities'));
+    assert.ok(result.all.every((tag) => !['#ContentCreator', '#SEO', '#DigitalMarketing'].includes(tag)));
+    assert.deepEqual(result.discovery, []);
+});
+
+test('job-related keywords keep suggestions focused on hiring and careers', () => {
+    const result = generateHashtags('remote job openings', 'hiring, career opportunities', 'tiktok');
+
+    assert.ok(result.all.includes('#RemoteJobs'));
+    assert.ok(result.all.includes('#NowHiring'));
+    assert.ok(result.all.includes('#JobAlert'));
+    assert.ok(result.all.every((tag) => /job|career|hir|recruit|employment|work|vacanc/iu.test(tag)));
+});
+
 test('unknown platforms use the conservative default cap', () => {
     assert.ok(generateHashtags('Creative photography', '', 'unknown').all.length <= 30);
 });
