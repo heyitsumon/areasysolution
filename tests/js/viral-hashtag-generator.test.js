@@ -29,6 +29,15 @@ test('empty or punctuation-only topics produce no topic hashtags', () => {
     assert.deepEqual(generateHashtags('!? 🎉', '', 'instagram').topic, []);
 });
 
+test('seo-focused topics include popular rankings and marketing tags without duplicates', () => {
+    const result = generateHashtags('SEO strategy for small business', '', 'instagram');
+
+    assert.ok(result.all.includes('#SEO'));
+    assert.ok(result.all.includes('#DigitalMarketing'));
+    assert.ok(result.all.includes('#MarketingStrategy'));
+    assert.equal(new Set(result.all.map((tag) => tag.toLowerCase())).size, result.all.length);
+});
+
 test('unknown platforms use the conservative default cap', () => {
     assert.ok(generateHashtags('Creative photography', '', 'unknown').all.length <= 30);
 });

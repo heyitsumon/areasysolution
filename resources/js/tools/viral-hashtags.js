@@ -29,7 +29,16 @@ const TOPIC_GROUPS = [
     { match: /\b(music|song|singing|singer|guitar|piano|band|musician)\b/iu, tags: ['MusicLovers', 'NewMusic', 'MusicCommunity', 'Songwriter', 'ListenToThis', 'MusicInspiration'] },
 ];
 
-const DISCOVERY_TAGS = ['ContentCreator', 'CreativeCommunity', 'DailyInspiration', 'MadeForYou', 'ShareYourStory', 'SocialMedia'];
+const DISCOVERY_TAGS = [
+    'ContentCreator', 'CreativeCommunity', 'DailyInspiration', 'MadeForYou', 'ShareYourStory',
+    'SocialMedia', 'SEO', 'DigitalMarketing', 'MarketingStrategy',
+];
+
+const POPULAR_SEO_TAGS = [
+    'SEO', 'SEOTips', 'SEOExpert', 'SearchEngineOptimization',
+    'DigitalMarketing', 'MarketingStrategy', 'ContentMarketing',
+    'SocialMediaMarketing', 'BrandGrowth', 'BusinessGrowth', 'GoogleRanking',
+];
 
 const toHashtag = (value) => {
     const words = value.normalize('NFKD')
@@ -37,11 +46,38 @@ const toHashtag = (value) => {
         .match(/[\p{L}\p{N}]+/gu) ?? [];
 
     return words
-        .filter((word) => !STOP_WORDS.has(word.toLocaleLowerCase()) || words.length === 1)
-        .map((word) => word.charAt(0).toLocaleUpperCase() + word.slice(1))
+        .filter((word) => !STOP_WORDS.has(word.toLocaleLowerCase()))
+        .map((word) => {
+            const lower = word.toLocaleLowerCase();
+            if (['seo', 'ai', 'ui', 'ux', 'ig', 'fb', 'tiktok', 'youtube'].includes(lower)) {
+                return word.toLocaleUpperCase();
+            }
+            return word.charAt(0).toLocaleUpperCase() + word.slice(1);
+        })
         .join('')
         .slice(0, 30);
 };
+
+function buildPopularSeoTags(sourceText) {
+    const normalized = sourceText.toLocaleLowerCase();
+    const matches = new Set();
+
+    if (/(seo|search engine optimization|keyword|ranking|google)/iu.test(normalized)) {
+        POPULAR_SEO_TAGS.forEach((tag) => matches.add(`#${tag}`));
+    }
+
+    if (/(marketing|brand|business|sales|growth|traffic)/iu.test(normalized)) {
+        ['DigitalMarketing', 'MarketingStrategy', 'BusinessGrowth', 'BrandGrowth', 'SocialMediaMarketing']
+            .forEach((tag) => matches.add(`#${tag}`));
+    }
+
+    if (/(content|creator|social|instagram|tiktok|youtube|blog)/iu.test(normalized)) {
+        ['ContentCreator', 'ContentMarketing', 'SocialMediaMarketing', 'InstagramGrowth']
+            .forEach((tag) => matches.add(`#${tag}`));
+    }
+
+    return [...matches];
+}
 
 function inputPhrases(value) {
     const phrases = value
@@ -73,6 +109,7 @@ function inputPhrases(value) {
 export function generateHashtags(topic, keywords, platform) {
     const limit = PLATFORM_LIMITS[platform] ?? PLATFORM_LIMITS.instagram;
     const sourceText = [topic, keywords].filter(Boolean).join(', ').trim();
+    const popularSeo = buildPopularSeoTags(sourceText);
     const core = [...new Set(inputPhrases(sourceText).map(toHashtag).filter((tag) => tag.length >= 2))]
         .map((tag) => `#${tag}`);
 
@@ -82,7 +119,7 @@ export function generateHashtags(topic, keywords, platform) {
         .map((tag) => `#${tag}`);
 
     const tiers = {
-        topic: [...new Set(core)],
+        topic: [...new Set([...core, ...popularSeo])],
         niche: [...new Set(related)],
         discovery: DISCOVERY_TAGS.map((tag) => `#${tag}`),
     };
