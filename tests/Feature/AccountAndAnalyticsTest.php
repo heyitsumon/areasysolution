@@ -105,6 +105,37 @@ final class AccountAndAnalyticsTest extends TestCase
             ->assertForbidden();
     }
 
+    public function test_database_indexes_support_dashboard_queries(): void
+    {
+        $schema = DB::getSchemaBuilder();
+
+        foreach ([
+            ['route_daily_metrics', ['metric_date', 'route_key']],
+            ['tool_daily_metrics', ['metric_date', 'tool_slug']],
+            ['active_user_days', ['metric_date', 'user_id']],
+            ['tool_user_days', ['user_id', 'tool_slug', 'metric_date']],
+            ['tool_user_days', ['metric_date', 'user_id']],
+            ['online_visitors', ['last_seen_at', 'user_id']],
+            ['users', ['created_at']],
+        ] as [$table, $columns]) {
+            $indexes = $schema->getIndexes($table);
+
+            $this->assertTrue(
+                collect($indexes)->contains(
+                    static fn (array $index): bool => $index['columns'] === $columns
+                ),
+                "Expected an index on {$table} (".implode(', ', $columns).').',
+            );
+        }
+
+        $uniqueVisitorIndexes = $schema->getIndexes('unique_site_visitors');
+
+        $this->assertFalse(collect($uniqueVisitorIndexes)->contains(
+            static fn (array $index): bool => in_array('first_seen_at', $index['columns'], true)
+                || in_array('last_seen_at', $index['columns'], true)
+        ));
+    }
+
     public function test_member_dashboard_is_private_and_scopes_activity_to_the_signed_in_user(): void
     {
         Queue::fake();
