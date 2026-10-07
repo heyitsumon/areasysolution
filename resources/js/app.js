@@ -1,6 +1,7 @@
 import './bootstrap';
 
 import { bootDirectoryFilter } from './directory';
+import { bootHomeToolFinder } from './home';
 import { bootToolWorkspace } from './tools/runner';
 import { registerServiceWorker } from './service-worker';
 
@@ -15,6 +16,7 @@ import { registerServiceWorker } from './service-worker';
 function boot() {
     bootToolWorkspace();
     bootDirectoryFilter();
+    bootHomeToolFinder();
     registerServiceWorker();
 
     if (document.querySelector('[data-admin-analytics]')) {
