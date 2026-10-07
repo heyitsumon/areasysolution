@@ -1,7 +1,7 @@
 import './bootstrap';
 
 import { bootDirectoryFilter } from './directory';
-import { bootHomeToolFinder } from './home';
+import { bootHomeHashtagGenerator, bootHomeToolFinder } from './home';
 import { bootToolWorkspace } from './tools/runner';
 import { registerServiceWorker } from './service-worker';
 
@@ -16,6 +16,8 @@ import { registerServiceWorker } from './service-worker';
 function boot() {
     bootToolWorkspace();
     bootDirectoryFilter();
+    bootHomeHashtagGenerator()
+        .catch((error) => console.error('Homepage hashtag generator could not be initialized.', error));
     bootHomeToolFinder();
     registerServiceWorker();
 
