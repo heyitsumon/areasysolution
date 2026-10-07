@@ -117,6 +117,13 @@ final class SiteSeo
                 'title' => 'Free Online Tools',
                 'description' => 'Browse free browser-based tools for PDFs, images, text and development. Find converters, generators and file utilities in one place.',
             ],
+            [
+                'key' => 'ads-txt-help',
+                'label' => 'Ads.txt help',
+                'path' => route('ads-txt.help', absolute: false),
+                'title' => 'Fix AdSense ads.txt Statuses',
+                'description' => 'Learn what Not found, Authorized, Unauthorized and Not applicable mean in AdSense, and how to check or fix your ads.txt file.',
+            ],
         ];
 
         foreach ((array) config('tools.tools', []) as $slug => $tool) {

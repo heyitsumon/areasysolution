@@ -39,6 +39,13 @@ final class SeoTest extends TestCase
             ->assertSee('"@type":"WebApplication"', false)
             ->assertSee('"isAccessibleForFree":true', false)
             ->assertSee('"@type":"BreadcrumbList"', false);
+
+        $this->get(route('ads-txt.help'))
+            ->assertOk()
+            ->assertSee('<meta name="robots" content="index,follow">', false)
+            ->assertSee('<title>AdSense ads.txt status help · ArEasySolution</title>', false)
+            ->assertSee('"@type":"Article"', false)
+            ->assertSee('Not applicable');
     }
 
     public function test_sitemap_lists_only_the_public_home_directory_and_tool_pages(): void
@@ -51,11 +58,12 @@ final class SeoTest extends TestCase
             ->assertHeader('Content-Type', 'application/xml; charset=UTF-8')
             ->assertSee(config('seo.site_url').'/')
             ->assertSee(config('seo.site_url').'/tools')
+            ->assertSee(config('seo.site_url').'/ads-txt-help')
             ->assertSee(config('seo.site_url').'/tools/qr-code-generator')
             ->assertDontSee('/admin')
             ->assertDontSee('/profile');
 
-        $this->assertSame(count(config('tools.tools')) + 2, substr_count($response->getContent(), '<url>'));
+        $this->assertSame(count(config('tools.tools')) + 3, substr_count($response->getContent(), '<url>'));
     }
 
     public function test_robots_exposes_sitemap_and_excludes_private_areas(): void
