@@ -22,6 +22,7 @@ final class SeoTest extends TestCase
             ->assertOk()
             ->assertSee('<meta name="robots" content="index,follow">', false)
             ->assertSee('<link rel="canonical" href="'.config('seo.site_url').'/">', false)
+            ->assertSee('<link rel="icon" href="'.url('/favicon.ico').'" sizes="any">', false)
             ->assertSee('"@type":"WebSite"', false)
             ->assertSee('"@type":"Organization"', false)
             ->assertSee('property="og:title"', false);
@@ -30,6 +31,7 @@ final class SeoTest extends TestCase
             ->assertOk()
             ->assertSee('<meta name="description"', false)
             ->assertSee('"@type":"CollectionPage"', false)
+            ->assertSee('"@type":"BreadcrumbList"', false)
             ->assertSee('"@type":"ItemList"', false)
             ->assertSee(route('tools.show', ['tool' => 'qr-code-generator']), false);
 
@@ -41,6 +43,23 @@ final class SeoTest extends TestCase
             ->assertSee('"@type":"BreadcrumbList"', false);
 
         $this->get('/ads-txt-help')->assertNotFound();
+    }
+
+    public function test_every_tool_page_has_a_canonical_url_and_usable_search_metadata(): void
+    {
+        Queue::fake();
+
+        foreach (config('tools.tools') as $slug => $tool) {
+            $response = $this->get(route('tools.show', ['tool' => $slug]).'?utm_source=test')
+                ->assertOk()
+                ->assertSee('<title>'.e($tool['name']).' · ArEasySolution</title>', false)
+                ->assertSee('<meta name="description"', false)
+                ->assertSee('<meta name="robots" content="index,follow">', false)
+                ->assertSee('<link rel="canonical" href="'.config('seo.site_url').'/tools/'.$slug.'">', false)
+                ->assertSee('"@type":"WebApplication"', false);
+
+            $response->assertDontSee('?utm_source=test');
+        }
     }
 
     public function test_sitemap_lists_only_the_public_home_directory_and_tool_pages(): void

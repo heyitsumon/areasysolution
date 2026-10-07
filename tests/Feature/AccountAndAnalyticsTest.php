@@ -78,6 +78,41 @@ final class AccountAndAnalyticsTest extends TestCase
         $this->assertGuest();
     }
 
+    public function test_authentication_forms_reject_oversized_or_non_string_input(): void
+    {
+        $this->get(route('auth.register'));
+        $csrfToken = $this->app['session']->token();
+        $this->post(route('auth.register.store'), [
+            '_token' => $csrfToken,
+            'name' => 'Example User',
+            'email' => ['invalid'],
+            'password' => str_repeat('a', 256),
+            'password_confirmation' => str_repeat('a', 256),
+        ])->assertSessionHasErrors(['email', 'password']);
+
+        $this->assertDatabaseCount('users', 0);
+
+        $this->get(route('login'));
+        $csrfToken = $this->app['session']->token();
+        $this->post(route('auth.login.store'), [
+            '_token' => $csrfToken,
+            'email' => str_repeat('a', 256).'@example.com',
+            'password' => str_repeat('a', 256),
+        ])->assertSessionHasErrors(['email', 'password']);
+
+        $member = User::factory()->create();
+        $this->actingAs($member)->get(route('profile.edit'));
+        $csrfToken = $this->app['session']->token();
+        $this->put(route('profile.update'), [
+            '_token' => $csrfToken,
+            'name' => 'Example User',
+            'email' => ['invalid'],
+            'current_password' => 'invalid',
+            'password' => str_repeat('a', 256),
+            'password_confirmation' => str_repeat('a', 256),
+        ])->assertSessionHasErrors(['email', 'password']);
+    }
+
     public function test_admin_dashboard_is_restricted_and_reports_aggregated_activity(): void
     {
         Queue::fake();
@@ -248,11 +283,13 @@ final class AccountAndAnalyticsTest extends TestCase
             ->assertSee(count(config('tools.tools')).' free browser tools')
             ->assertSee('Image Compressor');
 
-        $this->get(route('tools.show', ['tool' => 'viral-hashtag-generator']))
-            ->assertOk()
-            ->assertSee('Viral Hashtag Generator')
-            ->assertSee('data-tool="viral-hashtag-generator"', false)
-            ->assertSee('This tool does not check live platform trends or guarantee reach.');
+        $this->get(route('tools.show', ['tool' => 'viral-hashtag-generator']))->assertNotFound();
+        $this->get(route('tools.show', ['tool' => 'youtube-tags-generator']))->assertNotFound();
+
+        $this->get(route('tools.index'))
+            ->assertDontSee('Social Media Tools')
+            ->assertDontSee('Viral Hashtag Generator')
+            ->assertDontSee('YouTube Tags Generator');
 
         $this->get(route('tools.show', ['tool' => 'qr-code-generator']))
             ->assertOk()

@@ -75,10 +75,6 @@
         <p id="tool-status" class="sr-only" aria-live="polite"></p>
     </section>
     <p class="mt-4 text-xs text-slate-500">
-        @if ($tool['slug'] === 'viral-hashtag-generator')
-            Hashtag ideas are generated in your browser. This tool does not check live platform trends or guarantee reach.
-        @else
-            This tool runs in your browser. Files are not sent to our servers.
-        @endif
+        This tool runs in your browser. Files are not sent to our servers.
     </p>
 @endsection

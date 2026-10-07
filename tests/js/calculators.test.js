@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { ageOn, bmi, loan, percentage, tip } from '../../resources/js/tools/calculators-core.js';
+import { ageDetailsOn, ageOn, bmi, loan, percentage, tip } from '../../resources/js/tools/calculators-core.js';
 
 test('percentage calculator supports common percentage questions', () => {
     assert.equal(percentage('of', 15, 200), 30);
@@ -19,6 +19,22 @@ test('age calculator handles calendar boundaries and rejects future births', () 
     assert.deepEqual(ageOn('2000-01-31', '2000-03-01'), { years: 0, months: 1, days: 1 });
     assert.deepEqual(ageOn('2000-06-15', '2026-10-04'), { years: 26, months: 3, days: 19 });
     assert.throws(() => ageOn('2026-10-05', '2026-10-04'), /on or before/);
+});
+
+test('age details include exact elapsed totals in common units', () => {
+    assert.deepEqual(ageDetailsOn('2000-06-15', '2026-10-04'), {
+        years: 26,
+        months: 3,
+        days: 19,
+        totalMonths: 315,
+        totalDays: 9607,
+        weeks: 1372,
+        remainingDays: 3,
+        hours: 230568,
+        minutes: 13834080,
+        seconds: 830044800,
+    });
+    assert.throws(() => ageDetailsOn('2026-10-05', '2026-10-04'), /on or before/);
 });
 
 test('tip calculator splits the total evenly', () => {

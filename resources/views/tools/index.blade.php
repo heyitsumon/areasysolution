@@ -5,9 +5,31 @@
     'structuredData' => [
         '@context' => 'https://schema.org',
         '@type' => 'CollectionPage',
+        '@id' => app(\App\Support\Seo\SiteSeo::class)->siteUrl().route('tools.index', absolute: false).'#collection',
         'name' => app(\App\Support\Seo\SiteSeo::class)->pageTitle('tools-index', 'Free Online Tools'),
         'description' => app(\App\Support\Seo\SiteSeo::class)->pageDescription('tools-index', 'Browser-based PDF, image, text and developer utilities.'),
         'url' => app(\App\Support\Seo\SiteSeo::class)->siteUrl().route('tools.index', absolute: false),
+        'isPartOf' => [
+            '@type' => 'WebSite',
+            '@id' => app(\App\Support\Seo\SiteSeo::class)->siteUrl().'#website',
+        ],
+        'breadcrumb' => [
+            '@type' => 'BreadcrumbList',
+            'itemListElement' => [
+                [
+                    '@type' => 'ListItem',
+                    'position' => 1,
+                    'name' => 'Home',
+                    'item' => app(\App\Support\Seo\SiteSeo::class)->siteUrl().route('home', absolute: false),
+                ],
+                [
+                    '@type' => 'ListItem',
+                    'position' => 2,
+                    'name' => 'Tools',
+                    'item' => app(\App\Support\Seo\SiteSeo::class)->siteUrl().route('tools.index', absolute: false),
+                ],
+            ],
+        ],
         'mainEntity' => [
             '@type' => 'ItemList',
             'numberOfItems' => count(config('tools.tools', [])),

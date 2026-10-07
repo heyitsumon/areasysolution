@@ -26,6 +26,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{{ $pageTitle }}</title>
+    <link rel="icon" href="{{ asset('favicon.ico') }}" sizes="any">
     <meta name="description" content="{{ $pageSeo['description'] }}">
     <meta name="robots" content="{{ $pageSeo['robots'] }}">
     <link rel="canonical" href="{{ $canonicalUrl }}">

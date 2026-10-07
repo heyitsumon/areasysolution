@@ -63,6 +63,24 @@ export function ageOn(birthDate, asOfDate) {
     return { years, months, days };
 }
 
+export function ageDetailsOn(birthDate, asOfDate) {
+    const age = ageOn(birthDate, asOfDate);
+    const birth = new Date(`${birthDate}T00:00:00Z`);
+    const asOf = new Date(`${asOfDate}T00:00:00Z`);
+    const totalDays = (asOf.getTime() - birth.getTime()) / 86_400_000;
+
+    return {
+        ...age,
+        totalMonths: age.years * 12 + age.months,
+        totalDays,
+        weeks: Math.floor(totalDays / 7),
+        remainingDays: totalDays % 7,
+        hours: totalDays * 24,
+        minutes: totalDays * 24 * 60,
+        seconds: totalDays * 24 * 60 * 60,
+    };
+}
+
 export function tip(bill, tipPercent, people) {
     if (!(bill >= 0) || !(tipPercent >= 0) || !(people >= 1) || !Number.isInteger(people)) {
         throw new Error('Enter a non-negative bill and tip, and at least one whole person.');

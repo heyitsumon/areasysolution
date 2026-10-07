@@ -22,14 +22,16 @@ final class RegisteredUserController extends Controller
 
     public function store(Request $request): RedirectResponse
     {
-        $request->merge([
-            'email' => mb_strtolower(trim((string) $request->input('email'))),
-        ]);
+        $email = $request->input('email');
+
+        if (is_string($email)) {
+            $request->merge(['email' => mb_strtolower(trim($email))]);
+        }
 
         $validated = $request->validate([
             'name' => ['required', 'string', 'min:2', 'max:100'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email'],
-            'password' => ['required', 'confirmed', Password::min(12)],
+            'password' => ['required', 'string', 'max:255', 'confirmed', Password::min(12)],
         ]);
 
         $user = User::create($validated);

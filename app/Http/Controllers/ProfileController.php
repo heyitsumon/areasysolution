@@ -21,14 +21,17 @@ final class ProfileController extends Controller
     public function update(Request $request): RedirectResponse
     {
         $user = $request->user();
-        $request->merge([
-            'email' => mb_strtolower(trim((string) $request->input('email'))),
-        ]);
+        $email = $request->input('email');
+
+        if (is_string($email)) {
+            $request->merge(['email' => mb_strtolower(trim($email))]);
+        }
+
         $validated = $request->validate([
             'name' => ['required', 'string', 'min:2', 'max:100'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email,'.$user->id],
-            'current_password' => ['nullable', 'required_with:password', 'current_password'],
-            'password' => ['nullable', 'confirmed', Password::min(12)],
+            'current_password' => ['nullable', 'string', 'max:255', 'required_with:password', 'current_password'],
+            'password' => ['nullable', 'string', 'max:255', 'confirmed', Password::min(12)],
         ]);
 
         $emailChanged = $user->email !== $validated['email'];
