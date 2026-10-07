@@ -4,6 +4,8 @@ import { copyToClipboard } from '../lib/files';
 import { node, panel, text } from '../lib/ui';
 import { generateHashtags } from './viral-hashtags.js';
 
+const GENERATION_COOLDOWN_MS = 2000;
+
 export default function mount({ root, complete }) {
     const topic = text({
         label: 'Keyword or topic',
@@ -37,6 +39,28 @@ export default function mount({ root, complete }) {
     root.append(workspace);
 
     let generatedHashtags = [];
+    let cooldownTimer;
+
+    const startCooldown = () => {
+        const availableAt = Date.now() + GENERATION_COOLDOWN_MS;
+        generate.disabled = true;
+
+        const updateCooldown = () => {
+            const secondsRemaining = Math.ceil((availableAt - Date.now()) / 1000);
+
+            if (secondsRemaining <= 0) {
+                window.clearInterval(cooldownTimer);
+                generate.disabled = false;
+                generate.textContent = 'Generate hashtags';
+                return;
+            }
+
+            generate.textContent = `Generate again in ${secondsRemaining}s`;
+        };
+
+        updateCooldown();
+        cooldownTimer = window.setInterval(updateCooldown, 200);
+    };
 
     generate.addEventListener('click', () => {
         const value = topic.input.value.trim();
@@ -58,6 +82,7 @@ export default function mount({ root, complete }) {
 
         statusMessage.set(`${generatedHashtags.length} relevant hashtag ideas generated.`, 'success');
         complete();
+        startCooldown();
     });
 
     copy.addEventListener('click', async () => {
