@@ -48,12 +48,11 @@ export async function bootHomeHashtagGenerator() {
 
     const form = widget.querySelector('[data-home-hashtag-form]');
     const topicInput = widget.querySelector('[name="topic"]');
-    const platformSelect = widget.querySelector('[name="platform"]');
     const results = widget.querySelector('[data-home-hashtag-results]');
     const copyButton = widget.querySelector('[data-home-hashtag-copy]');
     const status = widget.querySelector('[data-home-hashtag-status]');
 
-    if (!form || !topicInput || !platformSelect || !results || !copyButton || !status) return;
+    if (!form || !topicInput || !results || !copyButton || !status) return;
 
     const { generateHashtags } = await import('./tools/viral-hashtags.js');
     let currentHashtags = '';
@@ -67,7 +66,7 @@ export async function bootHomeHashtagGenerator() {
             return;
         }
 
-        const suggestions = generateHashtags(topic, '', platformSelect.value);
+        const suggestions = generateHashtags(topic, '', 'instagram');
         currentHashtags = suggestions.all.join(' ');
         results.replaceChildren(...suggestions.all.map((tag) => {
             const chip = document.createElement('span');

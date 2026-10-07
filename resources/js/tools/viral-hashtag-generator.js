@@ -1,7 +1,7 @@
 import { button, textarea } from '../lib/controls';
 import { status } from '../lib/feedback';
 import { copyToClipboard } from '../lib/files';
-import { node, panel, select } from '../lib/ui';
+import { node, panel } from '../lib/ui';
 import { generateHashtags } from './viral-hashtags.js';
 
 export default function mount({ root, complete }) {
@@ -15,18 +15,6 @@ export default function mount({ root, complete }) {
         label: 'Related keywords (optional)',
         rows: 3,
         placeholder: 'Separate ideas with commas, e.g. cold brew, oat milk, summer drinks',
-    });
-    const platform = select({
-        label: 'Platform',
-        value: 'instagram',
-        options: [
-            { value: 'instagram', label: 'Instagram · up to 30 suggestions' },
-            { value: 'tiktok', label: 'TikTok · up to 10 suggestions' },
-            { value: 'youtube', label: 'YouTube · up to 15 suggestions' },
-            { value: 'x', label: 'X · up to 5 suggestions' },
-            { value: 'linkedin', label: 'LinkedIn · up to 5 suggestions' },
-        ],
-        hint: 'Platform limits are a practical cap, not a recommendation to use every tag.',
     });
     const output = textarea({ label: 'Hashtag set', rows: 4, mono: true });
     output.textarea.readOnly = true;
@@ -46,7 +34,7 @@ export default function mount({ root, complete }) {
         description: 'Add a topic and optional keywords to get a balanced set of relevant hashtag ideas.',
         body: node('<div class="space-y-4"></div>'),
     });
-    form.querySelector('[data-panel-body]').append(topic.el, keywords.el, platform.el, actions, statusMessage.el);
+    form.querySelector('[data-panel-body]').append(topic.el, keywords.el, actions, statusMessage.el);
 
     const result = panel({
         title: 'Your hashtag ideas',
@@ -63,9 +51,9 @@ export default function mount({ root, complete }) {
             return;
         }
 
-        const suggestions = generateHashtags(topic.textarea.value, keywords.textarea.value, platform.select.value);
+        const suggestions = generateHashtags(topic.textarea.value, keywords.textarea.value, 'instagram');
         output.textarea.value = suggestions.all.join(' ');
-        counts.textContent = `${suggestions.all.length} unique suggestions · ${platform.select.options[platform.select.selectedIndex].text}`;
+        counts.textContent = `${suggestions.all.length} unique hashtag suggestions`;
         copy.disabled = suggestions.all.length === 0;
         groups.replaceChildren();
 

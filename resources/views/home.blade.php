@@ -101,9 +101,8 @@
         .home-hashtag-cta:hover{transform:translateY(-1px);background:#414dcc}
         .home-hashtag-demo{min-width:0;border:1px solid #e5e7f2;border-radius:16px;background:#fff;padding:17px;box-shadow:0 12px 32px #202c5710}
         .home-hashtag-form{display:flex;gap:8px}
-        .home-hashtag-input,.home-hashtag-platform{min-width:0;min-height:43px;border:1px solid #dfe4ef;border-radius:9px;background:#fff;padding:0 11px;color:var(--home-ink);font:inherit;font-size:13px}
+        .home-hashtag-input{min-width:0;min-height:43px;border:1px solid #dfe4ef;border-radius:9px;background:#fff;padding:0 11px;color:var(--home-ink);font:inherit;font-size:13px}
         .home-hashtag-input{flex:1}
-        .home-hashtag-platform{flex:0 0 116px}
         .home-hashtag-generate,.home-hashtag-copy{min-height:43px;border:0;border-radius:9px;background:#505de0;padding:0 13px;color:#fff;font:inherit;font-size:12px;font-weight:750;cursor:pointer}
         .home-hashtag-copy{border:1px solid #e1e5ef;background:#fff;color:#515d76}
         .home-hashtag-generate:hover{background:#414dcc}
@@ -114,7 +113,7 @@
         .home-hashtag-status{min-height:18px;margin:6px 0 0;color:#4e5acb;font-size:12px}
         .home-hashtag-actions{display:flex;align-items:center;justify-content:space-between;gap:12px}
         .home-hashtag-actions .home-hashtag-note{flex:1}
-        .home-hashtag-cta:focus-visible,.home-hashtag-input:focus-visible,.home-hashtag-platform:focus-visible,.home-hashtag-generate:focus-visible,.home-hashtag-copy:focus-visible{outline:3px solid #9fa8ff;outline-offset:3px}
+        .home-hashtag-cta:focus-visible,.home-hashtag-input:focus-visible,.home-hashtag-generate:focus-visible,.home-hashtag-copy:focus-visible{outline:3px solid #9fa8ff;outline-offset:3px}
         .home-tool-card{display:flex;min-width:0;min-height:205px;flex-direction:column;border:1px solid var(--home-line);border-radius:16px;background:#fff;padding:18px;box-shadow:0 5px 18px #1b2c4b08;transition:transform .18s,border-color .18s,box-shadow .18s}
         .home-tool-card:hover{transform:translateY(-4px);border-color:#c7cbff;box-shadow:0 16px 30px #1b2c4b12}
         .home-tool-card[hidden]{display:none}
@@ -141,7 +140,7 @@
         .home-bottom-cta .btn{gap:8px}
         @media(max-width:900px){.home-hero-inner{grid-template-columns:minmax(0,1fr) minmax(250px,.78fr);gap:32px;padding-block:64px}.home-tool-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
         @media(max-width:700px){.home-hero-inner{grid-template-columns:1fr;gap:30px;padding-block:54px}.home-title{font-size:clamp(43px,11vw,60px)}.home-lead{font-size:15px}.home-showcase{max-width:520px}.home-section{padding-top:49px}.home-section-head{align-items:flex-start;flex-direction:column;gap:12px}.home-hashtag-feature{grid-template-columns:1fr;gap:22px}.home-tool-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.home-benefits{grid-template-columns:1fr}.home-bottom-cta{align-items:flex-start;flex-direction:column;margin-top:49px;padding:23px}}
-        @media(max-width:480px){.home-wrap{width:min(100% - 32px,520px)}.home-finder{padding:14px}.home-finder-controls{align-items:flex-start;flex-direction:column;gap:10px}.home-result-count{align-self:flex-end}.home-hashtag-form{flex-wrap:wrap}.home-hashtag-input{flex-basis:calc(100% - 126px)}.home-hashtag-platform{flex:1}.home-hashtag-generate{flex:1}.home-hashtag-actions{align-items:flex-start;flex-direction:column-reverse}.home-tool-grid{grid-template-columns:1fr}.home-tool-card{min-height:170px}.home-actions{align-items:stretch;flex-direction:column}.home-cta{width:100%}}
+        @media(max-width:480px){.home-wrap{width:min(100% - 32px,520px)}.home-finder{padding:14px}.home-finder-controls{align-items:flex-start;flex-direction:column;gap:10px}.home-result-count{align-self:flex-end}.home-hashtag-form{flex-wrap:wrap}.home-hashtag-input{flex-basis:calc(100% - 126px)}.home-hashtag-generate{flex:1}.home-hashtag-actions{align-items:flex-start;flex-direction:column-reverse}.home-tool-grid{grid-template-columns:1fr}.home-tool-card{min-height:170px}.home-actions{align-items:stretch;flex-direction:column}.home-cta{width:100%}}
         @media(prefers-reduced-motion:reduce){.home-page *{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
     </style>
 
@@ -200,14 +199,6 @@
                         <form class="home-hashtag-form" data-home-hashtag-form>
                             <label class="sr-only" for="home-hashtag-topic">What is your post about?</label>
                             <input class="home-hashtag-input" id="home-hashtag-topic" name="topic" type="text" value="travel" maxlength="120" placeholder="e.g. travel, coffee, fitness" autocomplete="off" required>
-                            <label class="sr-only" for="home-hashtag-platform">Social platform</label>
-                            <select class="home-hashtag-platform" id="home-hashtag-platform" name="platform">
-                                <option value="instagram">Instagram</option>
-                                <option value="tiktok">TikTok</option>
-                                <option value="youtube">YouTube</option>
-                                <option value="x">X</option>
-                                <option value="linkedin">LinkedIn</option>
-                            </select>
                             <button class="home-hashtag-generate" type="submit">Generate</button>
                         </form>
                         <div class="home-hashtag-tags" data-home-hashtag-results aria-live="polite">
