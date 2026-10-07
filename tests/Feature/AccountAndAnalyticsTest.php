@@ -260,7 +260,20 @@ final class AccountAndAnalyticsTest extends TestCase
             ->get(route('admin.dashboard'))
             ->assertForbidden();
 
-        $this->get('/tools/not-a-real-tool')->assertNotFound();
+        $this->get('/tools/not-a-real-tool')
+            ->assertNotFound()
+            ->assertSee('This page took a wrong turn.')
+            ->assertSee('Back to home')
+            ->assertSee('Explore all tools');
+
+        $this->get('/this-page-does-not-exist')
+            ->assertNotFound()
+            ->assertSee('This page took a wrong turn.')
+            ->assertSee('<meta name="robots" content="noindex,follow">', false);
+
+        $this->getJson('/this-page-does-not-exist')
+            ->assertNotFound()
+            ->assertJsonStructure(['message']);
     }
 
     public function test_analytics_jobs_aggregate_runs_and_deduplicate_member_days(): void
