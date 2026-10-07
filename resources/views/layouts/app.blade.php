@@ -9,11 +9,8 @@
             ? 'tool:'.request()->route('tool')
             : (request()->routeIs('tools.index')
                 ? 'tools-index'
-                : (request()->routeIs('ads-txt.help')
-                    ? 'ads-txt-help'
-                    : (request()->route()?->getName() ?? request()->getPathInfo())));
+                : (request()->route()?->getName() ?? request()->getPathInfo()));
         $fallbackRobots = request()->routeIs('home', 'tools.index', 'tools.show')
-            || request()->routeIs('ads-txt.help')
             ? 'index,follow'
             : 'noindex,follow';
         $pageSeo = $siteSeo->resolvePage(
@@ -234,7 +231,6 @@
                     <div class="footer-links">
                         <a href="{{ route('home') }}">Home</a>
                         <a href="{{ route('tools.index') }}">All tools</a>
-                        <a href="{{ route('ads-txt.help') }}">Ads.txt help</a>
                     </div>
                 </nav>
                 <nav aria-label="Your account">

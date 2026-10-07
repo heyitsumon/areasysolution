@@ -16,7 +16,6 @@ use Illuminate\Support\Facades\Route;
 Route::get('/robots.txt', [SeoController::class, 'robots'])->name('robots');
 Route::get('/sitemap.xml', [SeoController::class, 'sitemap'])->name('sitemap');
 Route::view('/', 'home')->name('home');
-Route::view('/ads-txt-help', 'ads-txt-help')->name('ads-txt.help');
 Route::get('/tools', [ToolController::class, 'index'])->name('tools.index');
 Route::get('/tools/{tool}', [ToolController::class, 'show'])
     ->where('tool', '[a-z0-9]+(?:-[a-z0-9]+)*')
