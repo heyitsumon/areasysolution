@@ -8,7 +8,7 @@ test('hashtag generation deduplicates tags and ranks topic ideas first', () => {
     assert.equal(result.all[0], '#IcedCoffeeRecipes');
     assert.equal(new Set(result.all.map((tag) => tag.toLowerCase())).size, result.all.length);
     assert.ok(result.all.includes('#Foodie'));
-    assert.ok(result.all.includes('#ContentCreator'));
+    assert.deepEqual(result.discovery, []);
 });
 
 test('platform selection applies a sensible maximum suggestion count', () => {
@@ -41,20 +41,44 @@ test('seo-focused topics include popular rankings and marketing tags without dup
 test('job searches return job and career hashtags without unrelated discovery or marketing tags', () => {
     const result = generateHashtags('job', '', 'instagram');
 
-    assert.ok(result.all.includes('#JobSearch'));
-    assert.ok(result.all.includes('#Hiring'));
-    assert.ok(result.all.includes('#CareerOpportunities'));
+    for (const tag of ['#Jobs', '#JobSearch', '#CareerOpportunities', '#Employment', '#JobHunting', '#InterviewTips', '#ResumeSkills', '#HiringNow']) {
+        assert.ok(result.all.includes(tag), `Expected ${tag} in generated job hashtags`);
+    }
     assert.ok(result.all.every((tag) => !['#ContentCreator', '#SEO', '#DigitalMarketing'].includes(tag)));
     assert.deepEqual(result.discovery, []);
 });
 
 test('job-related keywords keep suggestions focused on hiring and careers', () => {
-    const result = generateHashtags('remote job openings', 'hiring, career opportunities', 'tiktok');
+    const result = generateHashtags('remote job openings', 'hiring, career opportunities', 'instagram');
 
-    assert.ok(result.all.includes('#RemoteJobs'));
-    assert.ok(result.all.includes('#NowHiring'));
-    assert.ok(result.all.includes('#JobAlert'));
-    assert.ok(result.all.every((tag) => /job|career|hir|recruit|employment|work|vacanc/iu.test(tag)));
+    assert.ok(result.all.includes('#Jobs'));
+    assert.ok(result.all.includes('#HiringNow'));
+    assert.ok(result.all.includes('#CareerDevelopment'));
+    assert.ok(result.all.every((tag) => !['#Foodie', '#Wanderlust', '#SEO', '#DigitalMarketing'].includes(tag)));
+});
+
+test('unrelated post topics produce distinct relevant tag sets', () => {
+    const jobs = generateHashtags('job', '', 'instagram').all;
+    const travel = generateHashtags('travel', '', 'instagram').all;
+    const food = generateHashtags('coffee recipes', '', 'instagram').all;
+
+    assert.ok(jobs.includes('#JobHunting'));
+    assert.ok(travel.includes('#Wanderlust'));
+    assert.ok(food.includes('#Foodie'));
+    assert.notDeepEqual(jobs, travel);
+    assert.notDeepEqual(travel, food);
+    assert.ok(jobs.every((tag) => !travel.includes(tag)));
+});
+
+test('job titles add different profession-specific hashtags', () => {
+    const marketing = generateHashtags('marketing manager job', '', 'instagram').all;
+    const developer = generateHashtags('software developer job', '', 'instagram').all;
+
+    assert.ok(marketing.includes('#MarketingJobs'));
+    assert.ok(developer.includes('#DeveloperJobs'));
+    assert.ok(!marketing.includes('#DeveloperJobs'));
+    assert.ok(!developer.includes('#MarketingJobs'));
+    assert.notDeepEqual(marketing, developer);
 });
 
 test('unknown platforms use the conservative default cap', () => {

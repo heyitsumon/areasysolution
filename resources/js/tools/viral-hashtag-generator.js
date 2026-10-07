@@ -16,33 +16,31 @@ export default function mount({ root, complete }) {
         rows: 3,
         placeholder: 'Separate ideas with commas, e.g. cold brew, oat milk, summer drinks',
     });
-    const output = textarea({ label: 'Hashtag set', rows: 4, mono: true });
-    output.textarea.readOnly = true;
-    output.textarea.placeholder = 'Your hashtag ideas will appear here.';
-
-    const counts = node('<p class="text-xs text-slate-500" aria-live="polite"></p>');
-    const groups = node('<div class="space-y-3"></div>');
+    const counts = node('<p class="flex items-center gap-2 text-sm font-medium text-emerald-700" aria-live="polite"><span class="h-2 w-2 rounded-full bg-emerald-500"></span>Enter a topic to generate ideas</p>');
+    const cards = node('<div class="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3"></div>');
     const actions = node('<div class="flex flex-wrap gap-2"></div>');
     const generate = button({ label: 'Generate hashtags', variant: 'primary' });
-    const copy = button({ label: 'Copy hashtags' });
+    const copy = button({ label: 'Copy all hashtags' });
     copy.disabled = true;
     actions.append(generate, copy);
 
     const statusMessage = status();
     const form = panel({
         title: 'Describe your post',
-        description: 'Add a topic and optional keywords to get a balanced set of relevant hashtag ideas.',
+        description: 'Enter your post topic and optional keywords. Suggestions will be tailored to what you enter.',
         body: node('<div class="space-y-4"></div>'),
     });
     form.querySelector('[data-panel-body]').append(topic.el, keywords.el, actions, statusMessage.el);
 
     const result = panel({
-        title: 'Your hashtag ideas',
-        description: 'Mix specific tags with a few broader ones. More tags do not guarantee more reach.',
+        title: 'Hashtag ideas',
+        description: 'Click a card to copy one hashtag, or copy the complete set. Suggestions are not live trend rankings.',
         body: node('<div class="space-y-4"></div>'),
     });
-    result.querySelector('[data-panel-body]').append(counts, output.el, groups);
+    result.querySelector('[data-panel-body]').append(counts, cards);
     root.append(form, result);
+
+    let generatedHashtags = [];
 
     generate.addEventListener('click', () => {
         if (!topic.textarea.value.trim()) {
@@ -52,26 +50,28 @@ export default function mount({ root, complete }) {
         }
 
         const suggestions = generateHashtags(topic.textarea.value, keywords.textarea.value, 'instagram');
-        output.textarea.value = suggestions.all.join(' ');
-        counts.textContent = `${suggestions.all.length} unique hashtag suggestions`;
+        generatedHashtags = suggestions.all;
+        const indicator = node('<span class="h-2 w-2 rounded-full bg-emerald-500"></span>');
+        counts.replaceChildren(indicator, document.createTextNode(`${suggestions.all.length} hashtag ideas generated`));
         copy.disabled = suggestions.all.length === 0;
-        groups.replaceChildren();
+        cards.replaceChildren(...suggestions.all.map((tag) => {
+            const card = node('<article class="flex min-h-16 items-center justify-between gap-3 rounded-xl border border-slate-200 bg-white px-4 py-3 shadow-sm transition hover:border-indigo-200 hover:shadow-md"></article>');
+            const label = node('<p class="break-all font-semibold text-slate-800"></p>');
+            label.textContent = tag;
+            const copyTag = node('<button class="shrink-0 rounded-lg p-2 text-slate-500 transition hover:bg-indigo-50 hover:text-indigo-700 focus-visible:outline-2 focus-visible:outline-indigo-500" type="button" aria-label=""></button>');
+            copyTag.setAttribute('aria-label', `Copy ${tag}`);
+            copyTag.innerHTML = '<svg aria-hidden="true" viewBox="0 0 20 20" fill="none" class="h-4 w-4"><rect x="6.5" y="6.5" width="9" height="10" rx="1.5" stroke="currentColor" stroke-width="1.5"/><path d="M13.5 6.5V5A1.5 1.5 0 0 0 12 3.5H5A1.5 1.5 0 0 0 3.5 5v8A1.5 1.5 0 0 0 5 14.5h1.5" stroke="currentColor" stroke-width="1.5"/></svg>';
+            copyTag.addEventListener('click', async () => {
+                const copied = await copyToClipboard(tag);
+                statusMessage.set(
+                    copied ? `${tag} copied to your clipboard.` : 'Clipboard access is unavailable. Select the hashtag and copy it manually.',
+                    copied ? 'success' : 'warning',
+                );
+            });
+            card.append(label, copyTag);
 
-        for (const [title, tags] of [
-            ['Topic-specific', suggestions.topic],
-            ['Related niche ideas', suggestions.niche],
-            ['Broader discovery ideas', suggestions.discovery],
-        ]) {
-            if (tags.length === 0) continue;
-
-            const section = node('<section class="rounded-xl border border-slate-200 p-3"></section>');
-            const heading = node('<h3 class="text-xs font-semibold uppercase tracking-wide text-slate-500"></h3>');
-            heading.textContent = title;
-            const list = node('<p class="mt-2 break-words font-mono text-sm leading-7 text-indigo-700"></p>');
-            list.textContent = tags.join(' ');
-            section.append(heading, list);
-            groups.append(section);
-        }
+            return card;
+        }));
 
         if (suggestions.all.length === 0) {
             statusMessage.set('Could not make hashtags from that topic. Try words or keywords using letters or numbers.', 'warning');
@@ -83,9 +83,9 @@ export default function mount({ root, complete }) {
     });
 
     copy.addEventListener('click', async () => {
-        if (!output.textarea.value) return;
+        if (generatedHashtags.length === 0) return;
 
-        const copied = await copyToClipboard(output.textarea.value);
+        const copied = await copyToClipboard(generatedHashtags.join(' '));
         statusMessage.set(
             copied ? 'Hashtags copied to your clipboard.' : 'Clipboard access is unavailable. Select the hashtags and copy them manually.',
             copied ? 'success' : 'warning',

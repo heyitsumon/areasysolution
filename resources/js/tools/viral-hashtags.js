@@ -12,7 +12,7 @@ const STOP_WORDS = new Set([
 ]);
 
 const TOPIC_GROUPS = [
-    { jobOnly: true, match: /\b(job|jobs|employment|hiring|career|careers|recruitment|recruiter|vacancy|vacancies|resume|cv|work)\b/iu, tags: ['JobSearch', 'Jobs', 'Hiring', 'NowHiring', 'Career', 'CareerOpportunities', 'JobOpening', 'JobAlert', 'Recruitment', 'Employment', 'RemoteJobs', 'WorkFromHome'] },
+    { jobOnly: true, match: /\b(job|jobs|employment|hiring|career|careers|recruitment|recruiter|vacancy|vacancies|resume|cv|work)\b/iu, tags: ['Jobs', 'JobSearch', 'CareerOpportunities', 'Employment', 'JobHunting', 'WorkLife', 'InterviewTips', 'ResumeSkills', 'CareerDevelopment', 'HiringNow', 'JobVacancy', 'CareerGrowth', 'JobOpportunities'] },
     { match: /\b(coffee|cafe|café|espresso|latte|tea|recipe|recipes|baking|food|cook|cooking|vegan|dessert|dinner|lunch|breakfast)\b/iu, tags: ['Foodie', 'FoodPhotography', 'HomeCooking', 'RecipeIdeas', 'FoodLovers', 'Delicious'] },
     { match: /\b(travel|traveling|travelling|holiday|vacation|trip|destination|backpack|adventure)\b/iu, tags: ['TravelGram', 'Wanderlust', 'TravelPhotography', 'ExploreMore', 'AdventureAwaits', 'TravelTips'] },
     { match: /\b(fitness|workout|gym|training|exercise|running|run|yoga|health|wellness|nutrition)\b/iu, tags: ['FitnessJourney', 'FitLife', 'WorkoutMotivation', 'HealthyHabits', 'WellnessJourney', 'StayActive'] },
@@ -30,9 +30,13 @@ const TOPIC_GROUPS = [
     { match: /\b(music|song|singing|singer|guitar|piano|band|musician)\b/iu, tags: ['MusicLovers', 'NewMusic', 'MusicCommunity', 'Songwriter', 'ListenToThis', 'MusicInspiration'] },
 ];
 
-const DISCOVERY_TAGS = [
-    'ContentCreator', 'CreativeCommunity', 'DailyInspiration', 'MadeForYou', 'ShareYourStory',
-    'SocialMedia', 'SEO', 'DigitalMarketing', 'MarketingStrategy',
+const JOB_SPECIALTIES = [
+    { match: /\b(marketing|marketer|sales|social media)\b/iu, tags: ['MarketingJobs', 'MarketingCareers', 'DigitalMarketingJobs', 'SalesJobs'] },
+    { match: /\b(software|developer|programmer|coding|technology|tech|it)\b/iu, tags: ['TechJobs', 'DeveloperJobs', 'ITJobs', 'SoftwareEngineering', 'TechCareers'] },
+    { match: /\b(healthcare|health care|nurse|nursing|doctor|medical)\b/iu, tags: ['HealthcareJobs', 'NursingJobs', 'MedicalCareers', 'HealthcareCareers'] },
+    { match: /\b(teacher|teaching|education|tutor)\b/iu, tags: ['TeachingJobs', 'EducationCareers', 'TeacherJobs', 'TutoringJobs'] },
+    { match: /\b(accountant|accounting|finance|financial|bookkeeping)\b/iu, tags: ['FinanceJobs', 'AccountingJobs', 'FinanceCareers', 'AccountingCareers'] },
+    { match: /\b(hotel|hospitality|restaurant|chef|waiter|waitress)\b/iu, tags: ['HospitalityJobs', 'RestaurantJobs', 'ChefJobs', 'HotelCareers'] },
 ];
 
 const POPULAR_SEO_TAGS = [
@@ -112,6 +116,9 @@ export function generateHashtags(topic, keywords, platform) {
     const sourceText = [topic, keywords].filter(Boolean).join(', ').trim();
     const jobSearch = /\b(job|jobs|employment|hiring|career|careers|recruitment|recruiter|vacancy|vacancies|resume|cv|work)\b/iu.test(sourceText);
     const popularSeo = jobSearch ? [] : buildPopularSeoTags(sourceText);
+    const jobSpecialties = jobSearch
+        ? JOB_SPECIALTIES.filter((group) => group.match.test(sourceText)).flatMap((group) => group.tags.map((tag) => `#${tag}`))
+        : [];
     const core = [...new Set(inputPhrases(sourceText).map(toHashtag).filter((tag) => tag.length >= 2))]
         .map((tag) => `#${tag}`);
 
@@ -125,9 +132,9 @@ export function generateHashtags(topic, keywords, platform) {
     }
 
     const tiers = {
-        topic: [...new Set(jobSearch ? [...related, ...core] : [...core, ...popularSeo])],
+        topic: [...new Set(jobSearch ? [...jobSpecialties, ...related, ...core] : [...core, ...popularSeo])],
         niche: jobSearch ? [] : [...new Set(related)],
-        discovery: jobSearch ? [] : DISCOVERY_TAGS.map((tag) => `#${tag}`),
+        discovery: [],
     };
     const unique = [];
     const seen = new Set();
