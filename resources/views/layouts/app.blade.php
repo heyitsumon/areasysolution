@@ -120,7 +120,63 @@
         .asset-warning{padding:14px 16px;border:1px solid #f1c879;border-radius:10px;background:#fff8df;color:#72520c;font-size:14px;line-height:1.6}
         .container.home-shell{max-width:none;padding:0 0 72px}
         @media(max-width:650px){.nav{align-items:flex-start}.links{gap:10px;flex-wrap:wrap;justify-content:flex-end}.container{padding-top:28px}.card{padding:18px}.analytics-grid{grid-template-columns:1fr}.analytics-trend-card{grid-column:auto}.analytics-chart{height:250px}.analytics-chart-tall{height:300px}.analytics-livebar{flex-wrap:wrap}.analytics-refresh-button{margin-left:auto}.footer-inner{padding:40px 24px 18px}.footer-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:32px 22px;padding-bottom:30px}.footer-brand-block{grid-column:1/-1}.footer-bottom{align-items:flex-start;flex-direction:column;gap:8px}}
+        img,svg,video,canvas{max-width:100%}
+        @media(max-width:760px){
+            .nav{flex-wrap:wrap;gap:12px;padding:14px 20px}
+            .links{width:100%;justify-content:flex-start;gap:6px 12px}
+            .links form{margin:0}
+            .links>a,.links form button{min-height:44px}
+            .container{padding-right:20px;padding-left:20px}
+            .analytics-grid{grid-template-columns:minmax(0,1fr)}
+            .analytics-trend-card{grid-column:auto}
+            .analytics-card{min-width:0}
+            .analytics-card-heading{flex-wrap:wrap}
+            .table-wrap{max-width:100%;overscroll-behavior-x:contain}
+            .table-wrap table{min-width:520px}
+        }
+        @media(max-width:650px){
+            h1{font-size:clamp(30px,8vw,42px)!important;line-height:1.1}
+            .container{padding:28px 16px 48px}
+            .hero{padding:24px 0 32px}
+            .nav{padding-right:16px;padding-left:16px}
+            .links{gap:4px 8px}
+            .links a,.links .btn,.links form button{min-height:44px;padding:9px 10px;font-size:13px}
+            button,.field input,.field select{min-height:44px}
+            .card{min-width:0;padding:16px}
+            .stats{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+            .stat strong{font-size:clamp(22px,7vw,30px);overflow-wrap:anywhere}
+            .analytics-livebar{align-items:flex-start}
+            .analytics-refresh-status{flex:1 1 150px;min-width:0;overflow-wrap:anywhere}
+            .analytics-chart{height:230px}
+            .analytics-chart-tall{height:270px}
+            .analytics-card-heading h2{font-size:20px}
+            .bar-row{grid-template-columns:54px minmax(0,1fr) 38px;gap:7px}
+            .form-card{width:100%;margin:12px auto}
+            .form-card form>.btn{width:100%;min-height:44px}
+            .field input,.field select,.field textarea{min-width:0;font-size:16px}
+            .actions{min-width:0}
+            .actions>*{max-width:100%}
+            .footer-inner{padding-right:16px;padding-left:16px}
+            .footer-grid{gap:28px 16px}
+            .footer-links a{min-height:44px;display:flex;align-items:center}
+        }
+        @media(max-width:380px){
+            .stats{grid-template-columns:minmax(0,1fr)}
+            .links{column-gap:4px}
+            .links a,.links .btn,.links form button{padding-right:8px;padding-left:8px}
+            .footer-grid{grid-template-columns:minmax(0,1fr)}
+            .footer-brand-block{grid-column:auto}
+            .analytics-card-heading{align-items:flex-start}
+            .analytics-range-badge{white-space:nowrap}
+        }
+        @media(prefers-reduced-motion:reduce){
+            *,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+        }
     </style>
+
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7283499382397295"
+     crossorigin="anonymous"></script>
+     
 </head>
 <body>
     <header class="topbar">
@@ -129,6 +185,7 @@
             <div class="links">
                 <a href="{{ route('tools.index') }}">Tools</a>
                 @auth
+                    <a href="{{ route('dashboard') }}">Dashboard</a>
                     <a href="{{ route('profile.edit') }}">Profile</a>
                     @if (auth()->user()->is_admin)
                         <a href="{{ route('admin.dashboard') }}">Admin</a>
@@ -177,6 +234,7 @@
                     <h2 class="footer-heading">Your account</h2>
                     <div class="footer-links">
                         @auth
+                            <a href="{{ route('dashboard') }}">Dashboard</a>
                             <a href="{{ route('profile.edit') }}">Profile</a>
                             @if (auth()->user()->is_admin)
                                 <a href="{{ route('admin.dashboard') }}">Admin dashboard</a>

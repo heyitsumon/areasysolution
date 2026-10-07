@@ -33,9 +33,10 @@ final class AccountAndAnalyticsTest extends TestCase
 
         $user = User::query()->where('email', 'avery@example.com')->firstOrFail();
 
-        $response->assertRedirect(route('profile.edit'));
+        $response->assertRedirect(route('dashboard'));
         $this->assertAuthenticatedAs($user);
         $this->assertNotSame('safe-password-123', $user->password);
+        $this->get(route('dashboard'))->assertOk()->assertSee('Welcome back, Avery User.');
         $this->get(route('profile.edit'))->assertOk()->assertSee('Your profile');
 
         $this->put(route('profile.update'), [
@@ -69,7 +70,7 @@ final class AccountAndAnalyticsTest extends TestCase
         $this->post(route('auth.login.store'), [
             'email' => 'login@example.com',
             'password' => 'password',
-        ])->assertRedirect(route('profile.edit'));
+        ])->assertRedirect(route('dashboard'));
 
         $this->assertAuthenticatedAs($user);
 
@@ -102,6 +103,49 @@ final class AccountAndAnalyticsTest extends TestCase
         $this->actingAs(User::factory()->create())
             ->getJson(route('admin.analytics.data'))
             ->assertForbidden();
+    }
+
+    public function test_member_dashboard_is_private_and_scopes_activity_to_the_signed_in_user(): void
+    {
+        Queue::fake();
+
+        $this->get(route('dashboard'))->assertRedirect(route('login'));
+
+        $member = User::factory()->create([
+            'name' => 'Private Member',
+            'email' => 'private@example.com',
+        ]);
+        $otherMember = User::factory()->create([
+            'name' => 'Another Member',
+            'email' => 'another@example.com',
+        ]);
+        $today = now()->toDateString();
+        $yesterday = now()->subDay()->toDateString();
+
+        DB::table('active_user_days')->insert([
+            ['user_id' => $member->id, 'metric_date' => $today],
+            ['user_id' => $member->id, 'metric_date' => $yesterday],
+            ['user_id' => $otherMember->id, 'metric_date' => $today],
+        ]);
+        DB::table('tool_user_days')->insert([
+            ['tool_slug' => 'image-compressor', 'user_id' => $member->id, 'metric_date' => $today],
+            ['tool_slug' => 'image-compressor', 'user_id' => $member->id, 'metric_date' => $yesterday],
+            ['tool_slug' => 'qr-code-generator', 'user_id' => $otherMember->id, 'metric_date' => $today],
+        ]);
+
+        $this->actingAs($member)
+            ->get(route('dashboard'))
+            ->assertOk()
+            ->assertSee('Welcome back, Private Member.')
+            ->assertSee('Image Compressor')
+            ->assertDontSee('QR Code Generator')
+            ->assertDontSee('another@example.com')
+            ->assertViewHas('toolsUsed', 1)
+            ->assertViewHas('toolDays', 2)
+            ->assertViewHas('activeDays', 2)
+            ->assertViewHas('activeDaysThisFortnight', 2)
+            ->assertViewHas('recentTools', fn ($tools): bool => $tools->count() === 1
+                && $tools->first()['slug'] === 'image-compressor');
     }
 
     public function test_page_views_and_tool_completions_are_queued(): void

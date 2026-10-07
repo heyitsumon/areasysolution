@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\SiteSettingsController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\RegisteredUserController;
+use App\Http\Controllers\MemberDashboardController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SeoController;
 use App\Http\Controllers\ToolAnalyticsController;
@@ -34,6 +35,7 @@ Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])
     ->name('auth.logout');
 
 Route::middleware('auth')->group(function (): void {
+    Route::get('/dashboard', MemberDashboardController::class)->name('dashboard');
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
 });

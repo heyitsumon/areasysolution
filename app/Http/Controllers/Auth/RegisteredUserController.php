@@ -38,6 +38,6 @@ final class RegisteredUserController extends Controller
         Auth::login($user);
         $request->session()->regenerate();
 
-        return redirect()->intended(route('profile.edit'));
+        return redirect()->intended(route('dashboard'));
     }
 }
