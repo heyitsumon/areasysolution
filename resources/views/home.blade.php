@@ -4,9 +4,23 @@
     'canonicalPath' => route('home', absolute: false),
     'structuredData' => [
         '@context' => 'https://schema.org',
-        '@type' => 'WebSite',
-        'name' => app(\App\Support\Seo\SiteSeo::class)->site()['site_name'],
-        'url' => app(\App\Support\Seo\SiteSeo::class)->siteUrl().route('home', absolute: false),
+        '@graph' => [
+            [
+                '@type' => 'WebSite',
+                '@id' => app(\App\Support\Seo\SiteSeo::class)->siteUrl().'#website',
+                'name' => app(\App\Support\Seo\SiteSeo::class)->site()['site_name'],
+                'url' => app(\App\Support\Seo\SiteSeo::class)->siteUrl().route('home', absolute: false),
+                'publisher' => [
+                    '@id' => app(\App\Support\Seo\SiteSeo::class)->siteUrl().'#organization',
+                ],
+            ],
+            [
+                '@type' => 'Organization',
+                '@id' => app(\App\Support\Seo\SiteSeo::class)->siteUrl().'#organization',
+                'name' => app(\App\Support\Seo\SiteSeo::class)->site()['site_name'],
+                'url' => app(\App\Support\Seo\SiteSeo::class)->siteUrl(),
+            ],
+        ],
     ],
 ])
 

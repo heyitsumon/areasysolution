@@ -8,6 +8,20 @@
         'name' => app(\App\Support\Seo\SiteSeo::class)->pageTitle('tools-index', 'Free Online Tools'),
         'description' => app(\App\Support\Seo\SiteSeo::class)->pageDescription('tools-index', 'Browser-based PDF, image, text and developer utilities.'),
         'url' => app(\App\Support\Seo\SiteSeo::class)->siteUrl().route('tools.index', absolute: false),
+        'mainEntity' => [
+            '@type' => 'ItemList',
+            'numberOfItems' => count(config('tools.tools', [])),
+            'itemListElement' => collect(config('tools.tools', []))
+                ->map(fn (array $tool, string $slug): array => ['slug' => $slug, ...$tool])
+                ->values()
+                ->map(fn (array $tool, int $index): array => [
+                    '@type' => 'ListItem',
+                    'position' => $index + 1,
+                    'name' => $tool['name'],
+                    'url' => app(\App\Support\Seo\SiteSeo::class)->siteUrl().route('tools.show', ['tool' => $tool['slug']], absolute: false),
+                ])
+                ->all(),
+        ],
     ],
 ])
 

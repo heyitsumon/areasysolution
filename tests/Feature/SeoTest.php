@@ -23,17 +23,21 @@ final class SeoTest extends TestCase
             ->assertSee('<meta name="robots" content="index,follow">', false)
             ->assertSee('<link rel="canonical" href="'.config('seo.site_url').'/">', false)
             ->assertSee('"@type":"WebSite"', false)
+            ->assertSee('"@type":"Organization"', false)
             ->assertSee('property="og:title"', false);
 
         $this->get(route('tools.index'))
             ->assertOk()
             ->assertSee('<meta name="description"', false)
-            ->assertSee('"@type":"CollectionPage"', false);
+            ->assertSee('"@type":"CollectionPage"', false)
+            ->assertSee('"@type":"ItemList"', false)
+            ->assertSee(route('tools.show', ['tool' => 'qr-code-generator']), false);
 
         $this->get(route('tools.show', ['tool' => 'qr-code-generator']))
             ->assertOk()
             ->assertSee('<title>QR Code Generator · ArEasySolution</title>', false)
             ->assertSee('"@type":"WebApplication"', false)
+            ->assertSee('"isAccessibleForFree":true', false)
             ->assertSee('"@type":"BreadcrumbList"', false);
     }
 
@@ -124,6 +128,8 @@ final class SeoTest extends TestCase
             ->assertSee('<title>Custom Homepage Title · Example Tools</title>', false)
             ->assertSee('<meta name="description" content="A custom homepage search description.">', false)
             ->assertSee('<meta property="og:image" content="https://example.com/home-card.png">', false)
+            ->assertSee('<meta property="og:image:alt" content="Custom Homepage Title · Example Tools">', false)
+            ->assertSee('<meta name="twitter:card" content="summary_large_image">', false)
             ->assertSee('<meta name="twitter:site" content="@example">', false)
             ->assertSee('<meta name="google-site-verification" content="google-token">', false)
             ->assertSee('Example Tools');

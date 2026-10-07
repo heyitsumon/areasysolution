@@ -11,6 +11,7 @@
                 'description' => app(\App\Support\Seo\SiteSeo::class)->pageDescription('tool:'.$tool['slug'], 'Use '.$tool['name'].' online for free. '.$tool['description'].' Processing runs in your browser.'),
                 'applicationCategory' => 'UtilitiesApplication',
                 'operatingSystem' => 'Any',
+                'isAccessibleForFree' => true,
                 'url' => app(\App\Support\Seo\SiteSeo::class)->siteUrl().route('tools.show', ['tool' => $tool['slug']], absolute: false),
             ],
             [

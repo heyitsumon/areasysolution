@@ -29,16 +29,19 @@
     <meta name="description" content="{{ $pageSeo['description'] }}">
     <meta name="robots" content="{{ $pageSeo['robots'] }}">
     <link rel="canonical" href="{{ $canonicalUrl }}">
+    <meta name="theme-color" content="#111a30">
+    <meta property="og:locale" content="{{ str_replace('-', '_', app()->getLocale()) }}">
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="{{ $siteName }}">
     <meta property="og:title" content="{{ $pageTitle }}">
     <meta property="og:description" content="{{ $pageSeo['description'] }}">
     <meta property="og:url" content="{{ $canonicalUrl }}">
-    <meta name="twitter:card" content="summary">
+    <meta name="twitter:card" content="{{ $pageSeo['og_image'] !== '' ? 'summary_large_image' : 'summary' }}">
     <meta name="twitter:title" content="{{ $pageTitle }}">
     <meta name="twitter:description" content="{{ $pageSeo['description'] }}">
     @if ($pageSeo['og_image'] !== '')
         <meta property="og:image" content="{{ $pageSeo['og_image'] }}">
+        <meta property="og:image:alt" content="{{ $pageTitle }}">
         <meta name="twitter:image" content="{{ $pageSeo['og_image'] }}">
     @endif
     @if ($siteSettings['twitter_handle'] !== '')
