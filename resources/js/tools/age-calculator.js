@@ -34,10 +34,12 @@ function formatLongDate(isoDate) {
     }).format(date);
 }
 
-function createDateField(labelText, defaultDate = '') {
+function createDateField(labelText, hint, defaultDate = '') {
     const group = node('<div class="age-cal__date-group"></div>');
     const label = node('<label class="age-cal__date-label"></label>');
     label.textContent = labelText;
+    const description = node('<p class="age-cal__date-hint"></p>');
+    description.textContent = hint;
 
     const boxes = node('<div class="age-cal__date-boxes"></div>');
 
@@ -78,7 +80,7 @@ function createDateField(labelText, defaultDate = '') {
     yearBox.append(year, node('<small>yyyy</small>'));
 
     boxes.append(monthBox, dayBox, yearBox);
-    group.append(label, boxes);
+    group.append(label, description, boxes);
 
     if (defaultDate) {
         const [defaultDay, defaultMonth, defaultYear] = defaultDate.split('-');
@@ -111,11 +113,16 @@ function createDateField(labelText, defaultDate = '') {
 export default function mount({ root, announce, complete }) {
     root.classList.add('age-calculator');
 
-    const birthDate = createDateField('Date of Birth');
-    const asOfDate = createDateField('Find Age on', toDisplayDate(localDateString()));
+    const birthDate = createDateField('Date of birth', 'Enter the day, month and year you were born.');
+    const asOfDate = createDateField('Age on', 'Choose the date you want to calculate your age for.', toDisplayDate(localDateString()));
 
     const dateFields = node('<div class="age-cal__date-fields"></div>');
     dateFields.append(birthDate.el, asOfDate.el);
+
+    const controlsHeading = node('<div class="age-cal__controls-heading"></div>');
+    const controlsTitle = node('<h2 class="age-cal__controls-title">Enter your dates</h2>');
+    const controlsDescription = node('<p class="age-cal__controls-description">Your age will update based on both dates.</p>');
+    controlsHeading.append(controlsTitle, controlsDescription);
 
     const clearButton = button({ label: 'Clear', variant: 'secondary' });
     clearButton.classList.add('age-cal__clear');
@@ -126,15 +133,15 @@ export default function mount({ root, announce, complete }) {
     actionRow.append(clearButton, calculateButton);
 
     const controls = node('<section class="age-cal__controls" aria-label="Age calculator inputs"></section>');
-    controls.append(dateFields, actionRow);
+    controls.append(controlsHeading, dateFields, actionRow);
 
     const results = node('<section class="age-cal__result" aria-live="polite" hidden></section>');
-    const answerTitle = node('<h2 class="age-cal__answer-title">Answer</h2>');
-    const ageLabel = node('<p class="age-cal__result-age-label">Age</p>');
+    const answerTitle = node('<h2 class="age-cal__answer-title">Your age</h2>');
     const ageValue = node('<p class="age-cal__result-age-value"></p>');
     const metaLines = node('<div class="age-cal__meta-lines"></div>');
+    const unitsTitle = node('<h3 class="age-cal__units-title">In other time units</h3>');
     const unitLines = node('<div class="age-cal__unit-lines"></div>');
-    results.append(answerTitle, ageLabel, ageValue, metaLines, unitLines);
+    results.append(answerTitle, ageValue, metaLines, unitsTitle, unitLines);
 
     const feedback = status();
     root.append(controls, results, feedback.el);
@@ -145,6 +152,11 @@ export default function mount({ root, announce, complete }) {
         metaLines.replaceChildren();
         unitLines.replaceChildren();
         feedback.set('');
+    };
+
+    const markInputChanged = (input) => {
+        input.classList.add('age-cal__date-input--edited');
+        resetResult();
     };
 
     const calculate = () => {
@@ -163,7 +175,6 @@ export default function mount({ root, announce, complete }) {
             const meta = [
                 `Born on: ${formatLongDate(birthIsoDate)}`,
                 `Age on: ${formatLongDate(asOfIsoDate)}`,
-                'Age in different time units:',
             ];
             metaLines.replaceChildren(...meta.map((line) => {
                 const snippet = node('<p></p>');
@@ -204,13 +215,26 @@ export default function mount({ root, announce, complete }) {
         asOfDate.day.value = String(today.getDate()).padStart(2, '0');
         asOfDate.month.value = String(today.getMonth() + 1).padStart(2, '0');
         asOfDate.year.value = String(today.getFullYear());
+        birthDate.inputEls.concat(asOfDate.inputEls).forEach((input) => {
+            input.classList.remove('age-cal__date-input--edited');
+        });
         resetResult();
     });
 
     calculateButton.addEventListener('click', calculate);
     birthDate.inputEls.concat(asOfDate.inputEls).forEach((input) => {
         input.addEventListener('input', () => {
-            resetResult();
+            markInputChanged(input);
+        });
+        input.addEventListener('focus', () => {
+            input.classList.add('age-cal__date-input--edited');
+        });
+        input.addEventListener('blur', () => {
+            if (input.value.trim() !== '') {
+                input.classList.add('age-cal__date-input--edited');
+            } else {
+                input.classList.remove('age-cal__date-input--edited');
+            }
         });
     });
 }
