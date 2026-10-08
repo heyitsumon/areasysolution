@@ -18,135 +18,164 @@
 .age-calculator {
     display: grid;
     gap: 18px;
-    color: #111827;
+    color: #1f2937;
+}
+
+.age-cal__controls {
+    border: 1px solid #d0d0d0;
+    background: #efefef;
+    padding: 15px 14px 12px;
+}
+
+.age-cal__date-fields {
+    display: grid;
+    gap: 14px;
+}
+
+.age-cal__date-group {
+    display: grid;
+    gap: 8px;
+}
+
+.age-cal__date-label {
+    margin: 0;
+    font-size: 15px;
+    font-weight: 700;
+    color: #1f2937;
+}
+
+.age-cal__date-boxes {
+    display: flex;
+    gap: 10px;
+    align-items: stretch;
+}
+
+.age-cal__date-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    width: 90px;
+}
+
+.age-cal__date-input {
+    width: 100%;
+    height: 44px;
+    border: 1px solid #a8a8a8;
+    border-radius: 3px;
+    background: #fff;
+    padding: 6px 8px;
+    color: #1f2937;
+    font-size: 18px;
+    font-weight: 500;
+    text-align: center;
+    box-shadow: inset 0 1px 2px rgba(15, 23, 42, 0.04);
+}
+
+.age-cal__date-input::placeholder {
+    color: #9ca3af;
+}
+
+.age-cal__date-box small {
+    display: block;
+    margin-top: 4px;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: lowercase;
+    color: #5d6977;
+}
+
+.age-cal__action-row {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+    margin-top: 18px;
+}
+
+.age-cal__clear,
+.age-cal__calculate {
+    min-height: 40px;
+    border: 1px solid #9aa0a8;
+    border-radius: 3px;
+    background: #f7f7f7;
+    color: #2a2d35;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: filter 0.2s ease;
+}
+
+.age-cal__calculate {
+    background: #dfdfdf;
+}
+
+.age-cal__clear:hover,
+.age-cal__calculate:hover {
+    filter: brightness(0.98);
 }
 
 .age-cal__result {
-    overflow: hidden;
-    border: 1px solid #d1d5db;
-    background: #fff;
+    border: 1px solid #d0d0d0;
+    background: #f7f7f7;
+    padding: 12px 16px 16px;
 }
 
-.age-cal__result-heading {
-    display: flex;
-    min-height: 40px;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
-    background: #4f8429;
-    padding: 5px 10px;
-    color: white;
-}
-
-.age-cal__result-heading h2 {
-    margin: 0;
-    font-size: 20px;
-    font-weight: 600;
-    line-height: 1.3;
-}
-
-.age-cal__copy {
-    min-height: 30px;
-    padding: 4px 9px;
-    color: white;
-}
-
-.age-cal__age-label {
-    margin: 9px 12px 0;
+.age-cal__answer-title {
+    margin: 0 0 10px;
     font-size: 20px;
     font-weight: 700;
+    color: #1f2937;
 }
 
-.age-cal__age-lines {
-    margin: 0 12px;
-    font-size: clamp(17px, 2.2vw, 21px);
-    line-height: 1.32;
-    color: #111827;
-}
-
-.age-cal__age-lines p {
+.age-cal__result-age-label {
     margin: 0;
+    font-size: 17px;
+    font-weight: 400;
+    color: #1f2937;
+}
+
+.age-cal__result-age-value {
+    margin: 4px 0 10px;
+    font-size: clamp(21px, 3vw, 28px);
+    line-height: 1.25;
+    font-weight: 600;
+    color: #1f2937;
+}
+
+.age-cal__meta-lines,
+.age-cal__unit-lines {
+    display: grid;
+    gap: 2px;
+    font-size: 16px;
+    color: #1f2937;
+}
+
+.age-cal__meta-lines {
+    margin-bottom: 8px;
+}
+
+.age-cal__meta-lines p,
+.age-cal__unit-lines p {
+    margin: 0;
+    line-height: 1.55;
+}
+
+.age-cal__unit-lines {
+    padding-left: 2px;
 }
 
 .age-cal__result[hidden] {
     display: none;
 }
 
-.age-cal__controls {
-    border: 1px solid #d1d5db;
-    background: #f1f1f1;
-    padding: 14px 16px 16px;
-}
+@media (max-width: 520px) {
+    .age-cal__date-box {
+        width: 72px;
+    }
 
-.age-cal__controls-heading {
-    margin: 0;
-    font-size: 16px;
-    font-weight: 700;
-    color: #1f2937;
-}
-
-.age-cal__controls-hint {
-    margin: 4px 0 12px;
-    font-size: 12px;
-    color: #64748b;
-}
-
-.age-cal__date-fields {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 14px;
-}
-
-.age-cal__date-fields > div > label {
-    margin: 0;
-    font-size: 14px;
-    font-weight: 600;
-    color: #1f2937;
-}
-
-.age-cal__date-input {
-    width: 100%;
-    min-height: 36px;
-    border: 1px solid #94a3b8;
-    border-radius: 6px;
-    background: white;
-    padding: 7px 9px;
-    color: #111827;
-    font-size: 14px;
-    box-shadow: 0 1px 2px #00000012;
-}
-
-.age-cal__date-input::placeholder {
-    color: #94a3b8;
-}
-
-.age-cal__date-fields > div > p {
-    margin: 4px 0 0;
-    font-size: 11px;
-    color: #64748b;
-}
-
-.age-cal__calculate-row {
-    display: flex;
-    justify-content: center;
-    padding-top: 12px;
-}
-
-.age-cal__calculate {
-    min-width: 132px;
-    min-height: 40px;
-    border: 0;
-    border-radius: 3px;
-    background: #4f8429;
-    padding: 8px 23px;
-    color: #fff;
-    font-size: 15px;
-    font-weight: 700;
-    cursor: pointer;
-}
-
-.age-cal__calculate:hover {
-    background: #3d6b20;
+    .age-cal__date-input {
+        font-size: 16px;
+    }
 }
 
 @media (max-width: 520px) {
