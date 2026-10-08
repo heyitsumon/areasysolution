@@ -83,12 +83,12 @@ export default function mount({ root, announce, complete }) {
             const totalWeeks = `${numberFormat.format(age.weeks)} weeks ${age.remainingDays} days`;
             const lines = [
                 `${age.years} years ${age.months} months ${age.days} days`,
-                `or ${numberFormat.format(age.totalMonths)} months ${age.days} days`,
-                `or ${totalWeeks}`,
-                `or ${numberFormat.format(age.totalDays)} days`,
-                `or ${numberFormat.format(age.hours)} hours`,
-                `or ${numberFormat.format(age.minutes)} minutes`,
-                `or ${numberFormat.format(age.seconds)} seconds`,
+                ` ${numberFormat.format(age.totalMonths)} months ${age.days} days`,
+                ` ${totalWeeks}`,
+                ` ${numberFormat.format(age.totalDays)} days`,
+                ` ${numberFormat.format(age.hours)} hours`,
+                ` ${numberFormat.format(age.minutes)} minutes`,
+                ` ${numberFormat.format(age.seconds)} seconds`,
             ];
 
             ageLines.replaceChildren(...lines.map((line) => {
