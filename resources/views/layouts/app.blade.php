@@ -240,7 +240,7 @@
                 <nav aria-label="Explore">
                     <h2 class="footer-heading">Explore</h2>
                     <div class="footer-links">
-                        <a href="{{ route('home') }}">Home.</a>
+                        <a href="{{ route('home') }}">Home</a>
                         <a href="{{ route('tools.index') }}">All tools</a>
                     </div>
                 </nav>
