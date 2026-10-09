@@ -168,6 +168,20 @@ return [
             'accepts' => [],
             'multiple' => false,
         ],
+        'mixed-number-calculator' => [
+            'name' => 'Mixed Numbers Calculator',
+            'description' => 'Add, subtract, multiply and divide mixed numbers, fractions, integers and decimals.',
+            'category' => 'calculators',
+            'accepts' => [],
+            'multiple' => false,
+        ],
+        'gpa-calculator' => [
+            'name' => 'GPA Calculator',
+            'description' => 'Calculate a semester or cumulative GPA from course credits and grades.',
+            'category' => 'calculators',
+            'accepts' => [],
+            'multiple' => false,
+        ],
         'case-converter' => [
             'name' => 'Case Converter',
             'description' => 'Convert text between common letter-case styles.',
