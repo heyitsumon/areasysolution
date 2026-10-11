@@ -1,18 +1,22 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { ageDetailsOn, ageOn, bmi, loan, percentage, tip } from '../../resources/js/tools/calculators-core.js';
+import { ageDetailsOn, ageOn, birthdayDetailsOn } from '../../resources/js/tools/calculators-core.js';
+import { calculateBmi } from '../../resources/js/tools/bmi-calculator/model.js';
+import { calculateLoan } from '../../resources/js/tools/loan-calculator/model.js';
+import { calculatePercentage } from '../../resources/js/tools/percentage-calculator/model.js';
+import { calculateTip } from '../../resources/js/tools/tip-calculator/model.js';
 
 test('percentage calculator supports common percentage questions', () => {
-    assert.equal(percentage('of', 15, 200), 30);
-    assert.equal(percentage('is', 30, 200), 15);
-    assert.equal(percentage('change', 100, 125), 25);
-    assert.equal(percentage('change', 100, 75), -25);
-    assert.throws(() => percentage('is', 3, 0), /must not be zero/);
+    assert.equal(calculatePercentage(['of', 15, 200]).value, 30);
+    assert.equal(calculatePercentage(['is', 30, 200]).value, 15);
+    assert.equal(calculatePercentage(['change', 100, 125]).value, 25);
+    assert.equal(calculatePercentage(['change', 100, 75]).value, -25);
+    assert.throws(() => calculatePercentage(['is', 3, 0]), /must not be zero/);
 });
 
 test('BMI returns value and screening category', () => {
-    assert.deepEqual(bmi(70, 175), { value: 22.857142857142858, category: 'Healthy range' });
-    assert.throws(() => bmi(0, 175), /greater than zero/);
+    assert.deepEqual(calculateBmi([70, 175]), { value: 22.857142857142858, category: 'Healthy range' });
+    assert.throws(() => calculateBmi([0, 175]), /greater than zero/);
 });
 
 test('age calculator handles calendar boundaries and rejects future births', () => {
@@ -37,15 +41,35 @@ test('age details include exact elapsed totals in common units', () => {
     assert.throws(() => ageDetailsOn('2026-10-05', '2026-10-04'), /on or before/);
 });
 
+test('age calculator shows the next birthday countdown and birthday ages', () => {
+    assert.deepEqual(birthdayDetailsOn('2000-09-09', '2026-10-08'), {
+        daysUntilNextBirthday: 336,
+        nextBirthday: '2027-09-09',
+        ageLastBirthday: 26,
+        ageNextBirthday: 27,
+        ageNearestBirthday: 26,
+    });
+});
+
+test('birthday details use the next calendar date for leap-day birthdays', () => {
+    assert.deepEqual(birthdayDetailsOn('2020-02-29', '2021-02-27'), {
+        daysUntilNextBirthday: 1,
+        nextBirthday: '2021-02-28',
+        ageLastBirthday: 0,
+        ageNextBirthday: 1,
+        ageNearestBirthday: 1,
+    });
+});
+
 test('tip calculator splits the total evenly', () => {
-    assert.deepEqual(tip(100, 20, 4), { tipAmount: 20, total: 120, perPerson: 30 });
-    assert.throws(() => tip(10, 10, 0), /at least one whole person/);
+    assert.deepEqual(calculateTip([100, 20, 4]), { tipAmount: 20, total: 120, perPerson: 30 });
+    assert.throws(() => calculateTip([10, 10, 0]), /at least one whole person/);
 });
 
 test('loan calculator handles zero and positive interest rates', () => {
-    assert.deepEqual(loan(1200, 0, 1), { monthlyPayment: 100, totalPaid: 1200, totalInterest: 0 });
-    const estimate = loan(20000, 6, 5);
+    assert.deepEqual(calculateLoan([1200, 0, 1]), { monthlyPayment: 100, totalPaid: 1200, totalInterest: 0 });
+    const estimate = calculateLoan([20000, 6, 5]);
     assert.ok(Math.abs(estimate.monthlyPayment - 386.656) < 0.01);
     assert.ok(estimate.totalInterest > 0);
-    assert.throws(() => loan(1000, -1, 2), /cannot be negative/);
+    assert.throws(() => calculateLoan([1000, -1, 2]), /cannot be negative/);
 });

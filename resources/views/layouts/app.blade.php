@@ -176,6 +176,23 @@
         @media(prefers-reduced-motion:reduce){
             *,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
         }
+        @media print {
+            header.topbar, footer.site-footer, nav, .eyebrow, #how-to-heading, section[aria-labelledby="how-to-heading"], section[aria-labelledby="features-heading"], section[aria-labelledby="faq-heading"], section[aria-labelledby="related-heading"], .no-print, .asset-warning {
+                display: none !important;
+            }
+            body, main, .container {
+                background: #ffffff !important;
+                padding: 0 !important;
+                margin: 0 !important;
+                max-width: 100% !important;
+            }
+            .invoice-preview-sheet {
+                border: none !important;
+                box-shadow: none !important;
+                padding: 0 !important;
+                width: 100% !important;
+            }
+        }
     </style>
 
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7283499382397295"
@@ -195,9 +212,12 @@
 <body>
     <header class="topbar">
         <nav class="nav" aria-label="Main navigation">
-            <a class="brand" href="{{ route('home') }}">{{ $siteName }}</a>
+            <a class="brand" href="{{ route('home') }}" style="display:inline-flex;align-items:center;gap:10px;">
+                <span style="display:grid;place-items:center;width:32px;height:32px;border-radius:10px;background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;font-weight:900;font-size:14px;box-shadow:0 3px 10px #4f46e535;">A</span>
+                <span>{{ $siteName }}</span>
+            </a>
             <div class="links">
-                <a href="{{ route('tools.index') }}">Tools</a>
+                <a style="{{ request()->routeIs('tools.*') ? 'color:#4f46e5;font-weight:700;' : '' }}" href="{{ route('tools.index') }}">Tools</a>
                 @auth
                     <a href="{{ route('dashboard') }}">Dashboard</a>
                     <a href="{{ route('profile.edit') }}">Profile</a>
@@ -240,7 +260,7 @@
                 <nav aria-label="Explore">
                     <h2 class="footer-heading">Explore</h2>
                     <div class="footer-links">
-                        <a href="{{ route('home') }}">Hom</a>
+                        <a href="{{ route('home') }}">Home</a>
                         <a href="{{ route('tools.index') }}">All tools</a>
                     </div>
                 </nav>

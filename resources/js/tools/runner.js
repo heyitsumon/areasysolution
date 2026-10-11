@@ -21,13 +21,19 @@ import { recordToolCompletion } from '../tool-analytics';
  * possible without a hand-maintained registry.
  */
 
-const modules = import.meta.glob(['./*.js', '!./runner.js']);
+const modules = import.meta.glob(['./*.js', '!./runner.js', './*/controller.js']);
 
 /**
  * @param {string} slug
  * @returns {(() => Promise<{default: (context: ToolContext) => void}>) | null}
  */
 function loaderFor(slug) {
+    const controller = modules[`./${slug}/controller.js`];
+
+    if (controller) {
+        return controller;
+    }
+
     const key = `./${slug}.js`;
 
     return modules[key] ?? null;

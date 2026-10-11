@@ -194,6 +194,51 @@
     line-height: 1.15;
 }
 
+.age-cal__birthday-details {
+    margin-bottom: 20px;
+    border: 1px solid #e0e7ff;
+    border-radius: 14px;
+    background: #f8faff;
+    padding: 16px;
+}
+
+.age-cal__birthday-title {
+    margin: 0;
+    color: #1e293b;
+    font-size: 16px;
+    font-weight: 700;
+}
+
+.age-cal__birthday-countdown {
+    margin: 8px 0 2px;
+    color: #4338ca;
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.age-cal__birthday-date {
+    margin: 0;
+    color: #64748b;
+    font-size: 14px;
+}
+
+.age-cal__birthday-ages {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
+    margin-top: 14px;
+}
+
+.age-cal__birthday-ages p {
+    margin: 0;
+    border-radius: 9px;
+    background: #fff;
+    padding: 9px 12px;
+    color: #475569;
+    font-size: 13px;
+    line-height: 1.5;
+}
+
 .age-cal__meta-lines,
 .age-cal__unit-lines {
     display: grid;
@@ -244,6 +289,10 @@
     }
 
     .age-cal__unit-lines {
+        grid-template-columns: 1fr;
+    }
+
+    .age-cal__birthday-ages {
         grid-template-columns: 1fr;
     }
 }

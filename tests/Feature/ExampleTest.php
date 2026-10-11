@@ -16,11 +16,11 @@ class ExampleTest extends TestCase
     {
         $this->get('/')
             ->assertOk()
-            ->assertSee('Everyday tasks.')
-            ->assertSee('Privacy comes first')
-            ->assertSee('No account roadblock')
+            ->assertSee('A simpler, more thoughtful toolkit.')
+            ->assertSee('Privacy is part of the experience')
+            ->assertSee('Start without signing up')
             ->assertSee(route('tools.show', ['tool' => 'image-compressor']), false)
             ->assertSee(route('tools.show', ['tool' => 'qr-code-generator']), false)
-            ->assertSee('Browse all '.count(config('tools.tools')).' tools');
+            ->assertSee(route('tools.index'), false);
     }
 }

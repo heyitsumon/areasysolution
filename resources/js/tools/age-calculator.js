@@ -1,7 +1,7 @@
 import { button } from '../lib/controls';
 import { status } from '../lib/feedback';
 import { node } from '../lib/ui';
-import { ageDetailsOn } from './calculators-core';
+import { ageDetailsOn, birthdayDetailsOn } from './calculators-core';
 
 const numberFormat = new Intl.NumberFormat('en-US');
 
@@ -138,10 +138,16 @@ export default function mount({ root, announce, complete }) {
     const results = node('<section class="age-cal__result" aria-live="polite" hidden></section>');
     const answerTitle = node('<h2 class="age-cal__answer-title">Your age</h2>');
     const ageValue = node('<p class="age-cal__result-age-value"></p>');
+    const birthdayDetails = node('<section class="age-cal__birthday-details" aria-label="Birthday details"></section>');
+    const birthdayTitle = node('<h3 class="age-cal__birthday-title">Next birthday or anniversary</h3>');
+    const birthdayCountdown = node('<p class="age-cal__birthday-countdown"></p>');
+    const birthdayDate = node('<p class="age-cal__birthday-date"></p>');
+    const birthdayAges = node('<div class="age-cal__birthday-ages"></div>');
+    birthdayDetails.append(birthdayTitle, birthdayCountdown, birthdayDate, birthdayAges);
     const metaLines = node('<div class="age-cal__meta-lines"></div>');
     const unitsTitle = node('<h3 class="age-cal__units-title">In other time units</h3>');
     const unitLines = node('<div class="age-cal__unit-lines"></div>');
-    results.append(answerTitle, ageValue, metaLines, unitsTitle, unitLines);
+    results.append(answerTitle, ageValue, birthdayDetails, metaLines, unitsTitle, unitLines);
 
     const feedback = status();
     root.append(controls, results, feedback.el);
@@ -149,6 +155,9 @@ export default function mount({ root, announce, complete }) {
     const resetResult = () => {
         results.hidden = true;
         ageValue.textContent = '';
+        birthdayCountdown.textContent = '';
+        birthdayDate.textContent = '';
+        birthdayAges.replaceChildren();
         metaLines.replaceChildren();
         unitLines.replaceChildren();
         feedback.set('');
@@ -167,10 +176,22 @@ export default function mount({ root, announce, complete }) {
             const birthIsoDate = toIsoDate(`${birthValues.day}-${birthValues.month}-${birthValues.year}`);
             const asOfIsoDate = toIsoDate(`${asOfValues.day}-${asOfValues.month}-${asOfValues.year}`);
             const age = ageDetailsOn(birthIsoDate, asOfIsoDate);
+            const birthday = birthdayDetailsOn(birthIsoDate, asOfIsoDate);
             const comparableYears = (age.totalDays / 365.2425).toFixed(3).replace(/\.?0+$/u, '')
                 .replace(/\.$/u, '');
 
             ageValue.textContent = `${age.years} years ${age.months} months ${age.days} days`;
+            birthdayCountdown.textContent = `${numberFormat.format(birthday.daysUntilNextBirthday)} ${birthday.daysUntilNextBirthday === 1 ? 'day' : 'days'} until your next birthday or anniversary`;
+            birthdayDate.textContent = formatLongDate(birthday.nextBirthday);
+            birthdayAges.replaceChildren(...[
+                `Age Last Birthday: ${birthday.ageLastBirthday} years`,
+                `Age Next Birthday: ${birthday.ageNextBirthday} years`,
+                `Age Nearest Birthday: ${birthday.ageNearestBirthday} years`,
+            ].map((line) => {
+                const snippet = node('<p></p>');
+                snippet.textContent = line;
+                return snippet;
+            }));
 
             const meta = [
                 `Born on: ${formatLongDate(birthIsoDate)}`,
