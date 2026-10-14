@@ -173,6 +173,58 @@ return [
             'accepts' => [],
             'multiple' => false,
         ],
+<<<<<<< HEAD
+=======
+        'percentage-calculator' => [
+            'name' => 'Percentage Calculator',
+            'description' => 'Calculate percentages, find what percent one number is of another, and compare percentage change.',
+            'category' => 'calculators',
+            'accepts' => [],
+            'multiple' => false,
+        ],
+        'bmi-calculator' => [
+            'name' => 'BMI Calculator',
+            'description' => 'Calculate body mass index from your weight and height using metric units.',
+            'category' => 'calculators',
+            'accepts' => [],
+            'multiple' => false,
+        ],
+        'age-calculator' => [
+            'name' => 'Age Calculator',
+            'description' => 'Calculate your exact age in years, months and days on any date.',
+            'category' => 'calculators',
+            'accepts' => [],
+            'multiple' => false,
+        ],
+        'tip-calculator' => [
+            'name' => 'Tip Calculator',
+            'description' => 'Calculate a tip, the total bill and an even per-person split.',
+            'category' => 'calculators',
+            'accepts' => [],
+            'multiple' => false,
+        ],
+        'loan-calculator' => [
+            'name' => 'Loan Payment Calculator',
+            'description' => 'Estimate monthly payments, total repayment and interest for a fixed-rate loan.',
+            'category' => 'calculators',
+            'accepts' => [],
+            'multiple' => false,
+        ],
+        'mixed-number-calculator' => [
+            'name' => 'Mixed Numbers Calculator',
+            'description' => 'Add, subtract, multiply and divide mixed numbers, fractions, integers and decimals.',
+            'category' => 'calculators',
+            'accepts' => [],
+            'multiple' => false,
+        ],
+        'gpa-calculator' => [
+            'name' => 'GPA Calculator',
+            'description' => 'Calculate a semester or cumulative GPA from course credits and grades.',
+            'category' => 'calculators',
+            'accepts' => [],
+            'multiple' => false,
+        ],
+>>>>>>> a24b0eb03ec88c48d172b2f0dff614d955c64da9
         'case-converter' => [
             'name' => 'Case Converter',
             'description' => 'Convert text between UPPERCASE, lowercase, Title Case, camelCase and more.',

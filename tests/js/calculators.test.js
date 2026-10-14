@@ -1,10 +1,14 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+<<<<<<< HEAD
 import { ageDetailsOn, ageOn, birthdayDetailsOn } from '../../resources/js/tools/calculators-core.js';
 import { calculateBmi } from '../../resources/js/tools/bmi-calculator/model.js';
 import { calculateLoan } from '../../resources/js/tools/loan-calculator/model.js';
 import { calculatePercentage } from '../../resources/js/tools/percentage-calculator/model.js';
 import { calculateTip } from '../../resources/js/tools/tip-calculator/model.js';
+=======
+import { ageDetailsOn, ageOn, bmi, gpa, loan, mixedNumberOperation, percentage, tip } from '../../resources/js/tools/calculators-core.js';
+>>>>>>> a24b0eb03ec88c48d172b2f0dff614d955c64da9
 
 test('percentage calculator supports common percentage questions', () => {
     assert.equal(calculatePercentage(['of', 15, 200]).value, 30);
@@ -72,4 +76,29 @@ test('loan calculator handles zero and positive interest rates', () => {
     assert.ok(Math.abs(estimate.monthlyPayment - 386.656) < 0.01);
     assert.ok(estimate.totalInterest > 0);
     assert.throws(() => calculateLoan([1000, -1, 2]), /cannot be negative/);
+});
+
+test('mixed number calculator handles common fraction operations', () => {
+    assert.equal(mixedNumberOperation('1 3/4', '2 3/8', 'add'), '4 1/8');
+    assert.equal(mixedNumberOperation('1 3/4', '2 3/8', 'subtract'), '-5/8');
+    assert.equal(mixedNumberOperation('1 3/4', '2 3/8', 'multiply'), '4 5/32');
+    assert.equal(mixedNumberOperation('1 3/4', '2 3/8', 'divide'), '14/19');
+    assert.throws(() => mixedNumberOperation('1/2', '0', 'divide'), /divisor cannot be zero/);
+});
+
+test('GPA calculator computes weighted average from credits and grades', () => {
+    assert.deepEqual(gpa([
+        { course: 'Math', credits: 3, grade: 'A' },
+        { course: 'English', credits: 3, grade: 'B+' },
+        { course: 'History', credits: 2, grade: 'A-' },
+    ]), {
+        gpa: 3.663,
+        totalCredits: 8,
+        rows: [
+            { course: 'Math', credits: 3, grade: 'A', gradePoints: 12 },
+            { course: 'English', credits: 3, grade: 'B+', gradePoints: 9.9 },
+            { course: 'History', credits: 2, grade: 'A-', gradePoints: 7.4 },
+        ],
+    });
+    assert.deepEqual(gpa([]), { gpa: 0, totalCredits: 0, rows: [] });
 });

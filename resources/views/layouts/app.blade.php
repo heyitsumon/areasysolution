@@ -219,7 +219,7 @@
             <div class="links">
                 <a style="{{ request()->routeIs('tools.*') ? 'color:#4f46e5;font-weight:700;' : '' }}" href="{{ route('tools.index') }}">Tools</a>
                 @auth
-                    <a href="{{ route('dashboard') }}">Dashboard</a>
+                    <a href="{{ route('dashboard') }}">Dashboard-----</a>
                     <a href="{{ route('profile.edit') }}">Profile</a>
                     @if (auth()->user()->is_admin)
                         <a href="{{ route('admin.dashboard') }}">Admin</a>
