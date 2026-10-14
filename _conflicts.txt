@@ -1,0 +1,3 @@
+﻿D:\projects\tools\my-tools\resources\js\tools\gpa-calculator.js:287: >>>>>>> a24b0eb03ec88c48d172b2f0dff614d955c64da9
+D:\projects\tools\my-tools\tests\js\calculators.test.js:3: <<<<<<< HEAD
+D:\projects\tools\my-tools\tests\js\calculators.test.js:11: >>>>>>> a24b0eb03ec88c48d172b2f0dff614d955c64da9

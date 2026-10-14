@@ -1,0 +1,10 @@
+﻿10: export function ageOn(birthDate, asOfDate) {
+42: export function birthdayDetailsOn(birthDate, asOfDate) {
+60: export function ageDetailsOn(birthDate, asOfDate) {
+78: export function tip(bill, tipPercent, people) {
+86: export function loan(principal, annualRatePercent, years) {
+151: export function formatMixedNumber(numerator, denominator) {
+169: export function parseMixedNumber(value) {
+203: export function mixedNumberOperation(left, right, operation) {
+233: export function gpa(courses) {
+275: export function money(value) {
