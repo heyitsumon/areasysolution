@@ -39,7 +39,7 @@
         $categories = config('tools.categories', []);
         $toolCount = count($allTools);
         $categoryCount = count($categories);
-        $featuredSlugs = ['image-compressor', 'merge-pdf', 'word-counter', 'qr-code-generator'];
+        $featuredSlugs = ['scientific-calculator', 'word-counter', 'image-compressor', 'merge-pdf', 'business-name-generator', 'qr-code-generator'];
     @endphp
 
     <style>
@@ -88,20 +88,32 @@
         .home-search-icon{position:absolute;top:50%;left:15px;width:18px;height:18px;transform:translateY(-50%);color:#78839a;pointer-events:none}
         .home-search{width:100%;min-height:48px;border:1px solid #dfe4ef;border-radius:11px;background:#fbfcff;padding:0 15px 0 44px;color:var(--home-ink);font:inherit;font-size:14px}
         .home-search::placeholder{color:#8a95a9}
+        .home-quick-searches{display:flex;flex-wrap:wrap;align-items:center;gap:7px;margin-top:13px}
+        .home-quick-searches-label{color:#8a95a9;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase}
+        .home-quick-chip{min-height:28px;border:1px solid #e4e7f0;border-radius:999px;background:#fbfcff;padding:0 11px;color:#414fd2;font:inherit;font-size:12px;font-weight:650;cursor:pointer;transition:background .15s,border-color .15s}
+        .home-quick-chip:hover{border-color:#c9cefa;background:#f1f2ff}
         .home-result-count{flex:0 0 auto;color:#778297;font-size:12px}
         .home-filters{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
         .home-filter{min-height:36px;border:1px solid #e4e7f0;border-radius:999px;background:#fff;padding:0 13px;color:#5d6880;font:inherit;font-size:12px;font-weight:650;cursor:pointer;transition:background .15s,border-color .15s,color .15s}
         .home-filter:hover{border-color:#c9cefa;color:#3945c2}
         .home-filter[aria-pressed="true"]{border-color:#505de0;background:#505de0;color:#fff}
+        .home-filter-count{display:inline-block;margin-left:5px;border-radius:999px;background:#eef0ff;padding:1px 7px;color:#4855d3;font-size:10px;font-weight:800}
+        .home-filter[aria-pressed="true"] .home-filter-count{background:#ffffff2e;color:#fff}
         .home-tool-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-top:16px}
         .home-tool-card{display:flex;min-width:0;min-height:205px;flex-direction:column;border:1px solid var(--home-line);border-radius:16px;background:#fff;padding:18px;box-shadow:0 5px 18px #1b2c4b08;transition:transform .18s,border-color .18s,box-shadow .18s}
         .home-tool-card:hover{transform:translateY(-4px);border-color:#c7cbff;box-shadow:0 16px 30px #1b2c4b12}
         .home-tool-card[hidden]{display:none}
+        .home-tool-card[data-new="true"]{border-color:#dcd6ff;background:linear-gradient(160deg,#fbfaff,#fff 55%)}
+        .home-new-tag{display:inline-block;border-radius:999px;background:#505de0;padding:2px 8px;color:#fff;font-size:9px;font-weight:800;letter-spacing:.08em;text-transform:uppercase}
         .home-tool-card-top{display:flex;align-items:center;justify-content:space-between}
         .home-tool-badge{display:grid;width:38px;height:38px;place-items:center;border-radius:11px;background:#eef0ff;color:#4855d3;font-size:11px;font-weight:850;letter-spacing:.02em}
         .home-tool-card[data-category="image-tools"] .home-tool-badge{background:#e9f7f4;color:#13846e}
         .home-tool-card[data-category="text-tools"] .home-tool-badge{background:#fff4e8;color:#b86b1d}
         .home-tool-card[data-category="calculators"] .home-tool-badge{background:#f2edff;color:#7554c9}
+        .home-tool-card[data-category="business-tools"] .home-tool-badge{background:#ecf8ef;color:#1e7c46}
+        .home-tool-card[data-category="developer-tools"] .home-tool-badge{background:#eef4ff;color:#2563eb}
+        .home-tool-card[data-category="seo-tools"] .home-tool-badge{background:#fdf2ec;color:#c2540a}
+        .home-tool-card[data-category="utility-tools"] .home-tool-badge{background:#f5f6f8;color:#475569}
         .home-tool-open{color:#9099ad;font-size:18px}
         .home-tool-category{margin-top:16px;color:#78839a;font-size:10px;font-weight:750;letter-spacing:.08em;text-transform:uppercase}
         .home-tool-card h3{margin:5px 0 6px;font-size:15px;font-weight:800;letter-spacing:-.025em}
@@ -127,7 +139,7 @@
         <section class="home-hero">
             <div class="home-wrap home-hero-inner">
                 <div>
-                    <div class="home-kicker">Small tasks, made simple</div>
+                    <div class="home-kicker">{{ $toolCount }} free tools · no sign-up</div>
                     <h1 class="home-title">Get more done.<br><span>Without the busywork.</span></h1>
                     <p class="home-lead">A thoughtful collection of free online tools for PDFs, images, text, calculations and everyday development. Find what you need and get straight to it.</p>
                     <div class="home-actions">
@@ -143,7 +155,7 @@
                 <aside class="home-showcase" aria-label="Popular online tools">
                     <div class="home-showcase-head">
                         <span class="home-showcase-title">Popular starting points</span>
-                        <span class="home-showcase-count">{{ $toolCount }} tools</span>
+                        <span class="home-showcase-count">Most used</span>
                     </div>
                     @foreach ($featuredSlugs as $slug)
                         @if (isset($allTools[$slug]))
@@ -176,7 +188,7 @@
                     <a class="home-text-link" href="{{ route('tools.index') }}">Explore all tools <span aria-hidden="true">→</span></a>
                 </div>
 
-                <div class="home-finder">
+                    <div class="home-finder">
                     <div class="home-finder-controls">
                         <label class="home-search-wrap">
                             <svg class="home-search-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
@@ -187,25 +199,42 @@
                         </label>
                         <span class="home-result-count" data-tool-result-count aria-live="polite">{{ $toolCount }} tools</span>
                     </div>
+                    <div class="home-quick-searches" role="group" aria-label="Quick searches">
+                        <span class="home-quick-searches-label">Popular:</span>
+                        @foreach (['pdf', 'convert', 'ratio', 'sleep', 'grade', 'split', 'pace', 'qr'] as $quickTerm)
+                            <button class="home-quick-chip" type="button" data-quick-search="{{ $quickTerm }}">{{ ucfirst($quickTerm) }}</button>
+                        @endforeach
+                    </div>
                     <div class="home-filters" role="group" aria-label="Filter tools by category">
-                        <button class="home-filter" type="button" data-tool-filter="all" aria-pressed="true">All tools</button>
+                        <button class="home-filter" type="button" data-tool-filter="all" aria-pressed="true">All tools <span class="home-filter-count">{{ $toolCount }}</span></button>
                         @foreach ($categories as $slug => $category)
-                            <button class="home-filter" type="button" data-tool-filter="{{ $slug }}" aria-pressed="false">{{ $category['name'] }}</button>
+                            @php
+                                $categoryToolCount = collect($allTools)->where('category', $slug)->count();
+                            @endphp
+                            <button class="home-filter" type="button" data-tool-filter="{{ $slug }}" aria-pressed="false">{{ $category['name'] }} <span class="home-filter-count">{{ $categoryToolCount }}</span></button>
                         @endforeach
                     </div>
                 </div>
 
                 <div class="home-tool-grid" data-tool-grid>
+                    @php
+                        $newSlugs = ['salary-tax-calculator', 'aspect-ratio-calculator', 'final-grade-calculator', 'sleep-cycle-calculator', 'running-pace-calculator', 'shipping-cost-calculator', 'bill-split-calculator'];
+                    @endphp
                     @foreach ($allTools as $slug => $tool)
                         @php
                             $categorySlug = $tool['category'];
                             $categoryName = $categories[$categorySlug]['name'] ?? 'Online tool';
                             $badge = strtoupper(substr($categoryName, 0, 2));
+                            $isNew = in_array($slug, $newSlugs, true);
                         @endphp
-                        <a class="home-tool-card" href="{{ route('tools.show', ['tool' => $slug]) }}" data-category="{{ $categorySlug }}" data-search="{{ strtolower($tool['name'].' '.$tool['description'].' '.$categoryName) }}">
+                        <a class="home-tool-card" href="{{ route('tools.show', ['tool' => $slug]) }}" data-category="{{ $categorySlug }}" data-search="{{ strtolower($tool['name'].' '.$tool['description'].' '.$categoryName) }}" @if($isNew) data-new="true" @endif>
                             <span class="home-tool-card-top">
                                 <span class="home-tool-badge" aria-hidden="true">{{ $badge }}</span>
-                                <span class="home-tool-open" aria-hidden="true">↗</span>
+                                @if ($isNew)
+                                    <span class="home-new-tag">New</span>
+                                @else
+                                    <span class="home-tool-open" aria-hidden="true">↗</span>
+                                @endif
                             </span>
                             <span class="home-tool-category">{{ $categoryName }}</span>
                             <h3>{{ $tool['name'] }}</h3>

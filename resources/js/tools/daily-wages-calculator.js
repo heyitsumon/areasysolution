@@ -16,7 +16,7 @@ export default function mount(context) {
                     { value: 'hourly', label: 'From hourly rate' },
                 ],
             },
-            { key: 'amount', label: 'Monthly salary (BDT) or hourly rate', type: 'number', value: 15000, min: 0, step: 100 },
+            { key: 'amount', label: 'Monthly salary ($) or hourly rate', type: 'number', value: 1500, min: 0, step: 100 },
             { key: 'days', label: 'Working days per week', type: 'number', value: 6, min: 1, max: 7, step: 1 },
             { key: 'hours', label: 'Hours per day', type: 'number', value: 8, min: 1, max: 16, step: 1 },
             { key: 'overtimeHours', label: 'Overtime hours (per day)', type: 'number', value: 0, min: 0, max: 12, step: 1 },
@@ -38,19 +38,19 @@ export default function mount(context) {
             const dailyTotal = dailyBase + dailyOt;
             return {
                 text: [
-                    `Hourly rate: \u09F3${hourlyRate.toFixed(2)}`,
-                    `Daily wage (base ${hours} h): \u09F3${dailyBase.toFixed(2)}`,
-                    otHours > 0 ? `Overtime (${otHours} h @ ${otMultiplier}x): \u09F3${dailyOt.toFixed(2)}` : '',
-                    `Total per day: \u09F3${dailyTotal.toFixed(2)}`,
-                    `Per month (\u2248${workingDaysPerMonth.toFixed(1)} working days): \u09F3${(dailyTotal * workingDaysPerMonth).toFixed(0)}`,
+                    `Hourly rate: $${hourlyRate.toFixed(2)}`,
+                    `Daily wage (base ${hours} h): $${dailyBase.toFixed(2)}`,
+                    otHours > 0 ? `Overtime (${otHours} h @ ${otMultiplier}x): $${dailyOt.toFixed(2)}` : '',
+                    `Total per day: $${dailyTotal.toFixed(2)}`,
+                    `Per month (≈${workingDaysPerMonth.toFixed(1)} working days): $${(dailyTotal * workingDaysPerMonth).toFixed(0)}`,
                 ].filter(Boolean).join('\n'),
                 stats: [
-                    { label: 'Daily wage', value: `\u09F3${dailyTotal.toFixed(0)}` },
-                    { label: 'Hourly rate', value: `\u09F3${hourlyRate.toFixed(1)}` },
-                    { label: 'Monthly est.', value: `\u09F3${(dailyTotal * workingDaysPerMonth).toFixed(0)}` },
+                    { label: 'Daily wage', value: `$${dailyTotal.toFixed(0)}` },
+                    { label: 'Hourly rate', value: `$${hourlyRate.toFixed(1)}` },
+                    { label: 'Monthly est.', value: `$${(dailyTotal * workingDaysPerMonth).toFixed(0)}` },
                     { label: 'Working days/mo', value: workingDaysPerMonth.toFixed(1) },
                 ],
-                message: 'Based on 52 working weeks per year. Bangladesh Labour Rules require 2x pay for overtime.',
+                message: 'Based on 52 working weeks per year. Many labour laws require 1.5–2x pay for overtime — check yours.',
                 tone: 'success',
             };
         },

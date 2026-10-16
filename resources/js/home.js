@@ -4,6 +4,7 @@ export function bootHomeToolFinder() {
     const toolCards = [...document.querySelectorAll('[data-tool-grid] .home-tool-card')];
     const resultCount = document.querySelector('[data-tool-result-count]');
     const emptyState = document.querySelector('[data-tool-empty]');
+    const quickChips = [...document.querySelectorAll('[data-quick-search]')];
 
     if (!searchInput || !resultCount || !emptyState || toolCards.length === 0) return;
 
@@ -35,6 +36,19 @@ export function bootHomeToolFinder() {
                 filter.setAttribute('aria-pressed', String(filter === button));
             });
             updateTools();
+        });
+    });
+
+    quickChips.forEach((chip) => {
+        chip.addEventListener('click', () => {
+            searchInput.value = chip.dataset.quickSearch || '';
+            filterButtons.forEach((filter) => {
+                filter.setAttribute('aria-pressed', String(filter.dataset.toolFilter === 'all'));
+            });
+            activeCategory = 'all';
+            updateTools();
+            searchInput.focus();
+            document.getElementById('tool-finder')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
         });
     });
 }

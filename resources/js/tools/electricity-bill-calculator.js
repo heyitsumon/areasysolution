@@ -1,9 +1,9 @@
 import { mountFormOutput } from './form-output-shell';
 
 /**
- * Bangladesh (DESCO/BPDB-style) residential slab tariff for units consumed
- * per month. Lifeline rate applies to the first slab for small consumers.
- * Rates are indicative and editable in the form.
+ * Residential slab tariff calculator. Default slabs are indicative — the
+ * visitor can enter their own utility's rates, so it works anywhere tiered
+ * electricity pricing is used.
  */
 const SLABS = [
     { upTo: 75, rate: 5.26, label: '0-75 units (lifeline)' },
@@ -15,12 +15,12 @@ const SLABS = [
 
 export default function mount(context) {
     mountFormOutput(context, {
-        title: 'Electricity bill calculator (Bangladesh)',
-        description: 'Estimate your monthly electricity bill from units consumed using residential slab rates, plus demand and service charges.',
+        title: 'Electricity bill calculator',
+        description: 'Estimate your monthly electricity bill from units consumed using tiered slab rates, plus fixed charges and tax.',
         fileName: 'electricity-bill.txt',
         fields: [
             { key: 'units', label: 'Units consumed (kWh)', type: 'number', value: 180, min: 0, step: 1 },
-            { key: 'customRates', label: 'Custom slab rates (comma separated, BDT/kWh)', type: 'text', placeholder: 'e.g. 5.26, 7.15, 8.80, 9.95, 11.20', hint: 'Leave empty to use indicative residential slabs.' },
+            { key: 'customRates', label: 'Custom slab rates (comma separated, per kWh)', type: 'text', placeholder: 'e.g. 0.15, 0.22, 0.31', hint: 'Leave empty to use the indicative tiered slabs.' },
             { key: 'demandCharge', label: 'Monthly demand/service charge', type: 'number', value: 120, min: 0, step: 10 },
             { key: 'vat', label: 'VAT / surcharge', type: 'number', value: 5, min: 0, max: 30, step: 0.5, suffix: '%' },
             { key: 'meter', label: 'Meter rent', type: 'number', value: 40, min: 0, step: 5 },
@@ -48,7 +48,7 @@ export default function mount(context) {
                 if (used > 0) {
                     const cost = used * rates[index];
                     energyCost += cost;
-                    lines.push(`${slab.label}: ${used.toFixed(0)} units \u00D7 \u09F3${rates[index].toFixed(2)} = \u09F3${cost.toFixed(2)}`);
+                    lines.push(`${slab.label}: ${used.toFixed(0)} units × $${rates[index].toFixed(2)} = $${cost.toFixed(2)}`);
                     remaining -= used;
                 }
                 if (slab.upTo !== Infinity) previousCap = slab.upTo;
@@ -59,18 +59,18 @@ export default function mount(context) {
             const subtotal = energyCost + demand + meterRent;
             const vat = subtotal * (vatRate / 100);
             const total = subtotal + vat;
-            lines.push(`Demand/service charge: \u09F3${demand.toFixed(2)}`, `Meter rent: \u09F3${meterRent.toFixed(2)}`);
-            if (vatRate > 0) lines.push(`VAT (${vatRate}%): \u09F3${vat.toFixed(2)}`);
-            lines.push(`TOTAL ESTIMATED BILL: \u09F3${total.toFixed(2)}`);
+            lines.push(`Demand/service charge: $${demand.toFixed(2)}`, `Meter rent: $${meterRent.toFixed(2)}`);
+            if (vatRate > 0) lines.push(`Tax/surcharge (${vatRate}%): $${vat.toFixed(2)}`);
+            lines.push(`TOTAL ESTIMATED BILL: $${total.toFixed(2)}`);
             return {
                 text: lines.join('\n'),
                 stats: [
-                    { label: 'Total bill', value: `\u09F3${total.toFixed(0)}` },
-                    { label: 'Energy cost', value: `\u09F3${energyCost.toFixed(0)}` },
+                    { label: 'Total bill', value: `$${total.toFixed(0)}` },
+                    { label: 'Energy cost', value: `$${energyCost.toFixed(0)}` },
                     { label: 'Units', value: String(units) },
-                    { label: 'Avg per unit', value: units > 0 ? `\u09F3${(total / units).toFixed(2)}` : '-' },
+                    { label: 'Avg per unit', value: units > 0 ? `$${(total / units).toFixed(2)}` : '-' },
                 ],
-                message: 'Slab rates are indicative - check your utility (BPDB/DESCO/REB) for current tariffs and enter them above.',
+                message: 'Slab rates are indicative — enter your utility\'s actual tiered rates above for an accurate estimate.',
                 tone: 'info',
             };
         },

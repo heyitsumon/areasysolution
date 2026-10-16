@@ -3,6 +3,7 @@ import './bootstrap';
 import { bootDirectoryFilter } from './directory';
 import { bootHomeToolFinder } from './home';
 import { bootToolWorkspace } from './tools/runner';
+import './ui';
 import { registerServiceWorker } from './service-worker';
 
 /*

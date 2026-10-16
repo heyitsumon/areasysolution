@@ -15,6 +15,92 @@
     @apply inline-flex items-center justify-center rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 shadow-sm hover:bg-slate-50;
 }
 
+/* ---- SweetAlert2 theming (matches the site look) ---- */
+.ui-dialog {
+    z-index: 20000;
+}
+
+.ui-popup {
+    border-radius: 18px;
+    border: 1px solid #e8ebf2;
+    box-shadow: 0 24px 70px rgba(15, 23, 42, 0.18);
+    font-family: inherit;
+    padding: 26px 24px 22px;
+}
+
+.ui-title {
+    color: #162033;
+    font-size: 20px;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+}
+
+.ui-html {
+    color: #64718a;
+    font-size: 14px;
+    line-height: 1.65;
+}
+
+.ui-btn {
+    min-height: 44px;
+    margin: 0 4px;
+}
+
+.ui-close {
+    color: #9aa5ba;
+    border-radius: 8px;
+    outline: none;
+}
+
+.ui-close:focus-visible {
+    box-shadow: 0 0 0 3px rgba(83, 100, 223, 0.35);
+}
+
+.ui-icon.swal2-icon--success {
+    border-color: #b7ecd2;
+    color: #10a875;
+}
+
+.ui-icon.swal2-icon--error {
+    border-color: #f4c6ce;
+    color: #bb334a;
+}
+
+.ui-icon.swal2-icon--warning {
+    border-color: #f4dcbb;
+    color: #b86b1d;
+}
+
+.ui-icon.swal2-icon--info,
+.ui-icon.swal2-icon--question {
+    border-color: #ccd2f5;
+    color: #5364df;
+}
+
+/* SweetAlert2 toast tweaks */
+.swal2-toast {
+    border: 1px solid #e8ebf2 !important;
+    border-radius: 12px !important;
+    box-shadow: 0 12px 32px rgba(15, 23, 42, 0.12) !important;
+    font-family: inherit !important;
+    background: #fff !important;
+}
+
+.swal2-toast .swal2-title {
+    color: #162033 !important;
+    font-size: 14px !important;
+    font-weight: 750 !important;
+}
+
+.swal2-toast .swal2-html-container {
+    color: #64718a !important;
+    font-size: 12px !important;
+}
+
+.swal2-timer-progress-bar {
+    background: #5364df !important;
+}
+
 .age-calculator {
     display: grid;
     gap: 20px;
@@ -555,5 +641,200 @@
     .file-picker__target,
     .file-picker__icon {
         transition-duration: 0.01ms;
+    }
+}
+
+/* ---- Scientific calculator ---- */
+.sci-display {
+    width: 100%;
+    min-height: 56px;
+    margin-top: 14px;
+    border: 1px solid #dfe4ef;
+    border-radius: 12px;
+    background: #fbfcff;
+    padding: 12px 16px;
+    color: #162033;
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 20px;
+    text-align: right;
+    outline: none;
+}
+
+.sci-display:focus {
+    border-color: #6574e8;
+    box-shadow: 0 0 0 3px rgba(83, 100, 223, 0.15);
+}
+
+.sci-angle {
+    display: inline-flex;
+    gap: 4px;
+    border: 1px solid #e4e8f0;
+    border-radius: 10px;
+    background: #f5f7fc;
+    padding: 4px;
+}
+
+.sci-angle-btn {
+    min-width: 58px;
+    min-height: 34px;
+    border: 0;
+    border-radius: 7px;
+    background: transparent;
+    color: #5b6578;
+    font: inherit;
+    font-size: 12px;
+    font-weight: 750;
+    letter-spacing: 0.04em;
+    cursor: pointer;
+}
+
+.sci-angle-btn[aria-pressed="true"] {
+    background: #4658df;
+    color: #fff;
+    box-shadow: 0 2px 8px rgba(70, 88, 223, 0.35);
+}
+
+.sci-keypad {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 8px;
+    margin-top: 14px;
+}
+
+.sci-key {
+    min-height: 46px;
+    padding: 0 4px;
+    font-size: 14px;
+    font-weight: 650;
+    border-radius: 10px;
+}
+
+.sci-key--equals {
+    grid-column: span 1;
+    font-size: 16px;
+}
+
+.sci-result {
+    border: 1px solid #dfe3ff;
+    border-radius: 14px;
+    background: linear-gradient(145deg, #f6f7ff, #fbfcff);
+    padding: 18px;
+    min-height: 84px;
+}
+
+.sci-result-value {
+    margin: 0;
+    color: #202b59;
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: clamp(24px, 4vw, 34px);
+    font-weight: 750;
+    overflow-wrap: anywhere;
+}
+
+.sci-result-meta {
+    margin: 6px 0 0;
+    color: #77839a;
+    font-size: 12px;
+    overflow-wrap: anywhere;
+}
+
+.sci-history {
+    display: grid;
+    gap: 4px;
+    margin-top: 6px;
+}
+
+.sci-history-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    border-bottom: 1px solid #eef1f6;
+    padding: 7px 2px;
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 13px;
+}
+
+.sci-history-expression {
+    min-width: 0;
+    overflow: hidden;
+    color: #77839a;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.sci-history-value {
+    flex: 0 0 auto;
+    color: #3446d3;
+    font-weight: 700;
+}
+
+@media (max-width: 480px) {
+    .sci-keypad {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+    .sci-key {
+        min-height: 48px;
+    }
+}
+
+/* ---- Business name generator ---- */
+.bng-results {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+}
+
+.bng-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    border: 1px solid #e8ebf2;
+    border-radius: 14px;
+    background: #fff;
+    padding: 14px 16px;
+    box-shadow: 0 5px 18px rgba(27, 44, 75, 0.05);
+    transition: border-color 0.15s, transform 0.15s;
+}
+
+.bng-card:hover {
+    border-color: #c7cbff;
+    transform: translateY(-2px);
+}
+
+.bng-name {
+    margin: 0;
+    color: #162033;
+    font-size: 16px;
+    font-weight: 750;
+    letter-spacing: -0.02em;
+    overflow-wrap: anywhere;
+}
+
+.bng-domain {
+    margin: 3px 0 0;
+    color: #3446d3;
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 12px;
+}
+
+.bng-tagline {
+    margin: 3px 0 0;
+    color: #77839a;
+    font-size: 12px;
+    font-style: italic;
+}
+
+.bng-copy {
+    flex: 0 0 auto;
+    min-height: 36px;
+    padding: 0 14px;
+    font-size: 13px;
+}
+
+@media (max-width: 640px) {
+    .bng-results {
+        grid-template-columns: 1fr;
     }
 }

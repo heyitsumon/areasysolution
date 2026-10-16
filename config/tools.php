@@ -57,14 +57,6 @@ return [
             'name' => 'SEO & Website Tools',
             'description' => 'Check, preview and generate the tags that search engines read.',
         ],
-        'social-media-tools' => [
-            'name' => 'Social Media Tools',
-            'description' => 'Generate titles, captions, hashtags and bios for every platform.',
-        ],
-        'bangladesh-tools' => [
-            'name' => 'Bangladesh Tools',
-            'description' => 'Local calculators and converters for Bangladesh-specific needs.',
-        ],
         'business-tools' => [
             'name' => 'Business Tools',
             'description' => 'Documents, pricing maths and generators for running a business.',
@@ -414,6 +406,13 @@ return [
             'accepts' => [],
             'multiple' => false,
         ],
+        'scientific-calculator' => [
+            'name' => 'Scientific Calculator',
+            'description' => 'Solve scientific and trigonometric expressions with sin, cos, tan, log, powers, roots, factorials and memory keys — all in your browser.',
+            'category' => 'calculators',
+            'accepts' => [],
+            'multiple' => false,
+        ],
 
         // --- Developer Tools (14) ---
         'json-formatter' => [
@@ -568,28 +567,28 @@ return [
         'preview-views' => [
             'name' => 'Preview Views Generator',
             'description' => 'Generate social media preview cards for links shared on different platforms.',
-            'category' => 'social-media-tools',
+            'category' => 'seo-tools',
             'accepts' => [],
             'multiple' => false,
         ],
         'daily-wages-calculator' => [
             'name' => 'Daily Wages Calculator',
             'description' => 'Calculate daily wages for workers based on hourly rate and working days.',
-            'category' => 'bangladesh-tools',
+            'category' => 'calculators',
             'accepts' => [],
             'multiple' => false,
         ],
         'electricity-bill-calculator' => [
             'name' => 'Electricity Bill Calculator',
-            'description' => 'Calculate electricity bill for Bangladesh electricity consumption tiers.',
-            'category' => 'bangladesh-tools',
+            'description' => 'Estimate your monthly electricity bill from units consumed using residential slab rates.',
+            'category' => 'calculators',
             'accepts' => [],
             'multiple' => false,
         ],
         'remittance-calculator' => [
-            'name' => 'Remittance Calculator',
-            'description' => 'Calculate remittance amount after deducting bank charges for overseas workers.',
-            'category' => 'bangladesh-tools',
+            'name' => 'Remittance Fee Calculator',
+            'description' => 'Calculate the amount received after deducting transfer fees and exchange charges.',
+            'category' => 'calculators',
             'accepts' => [],
             'multiple' => false,
         ],
@@ -624,7 +623,7 @@ return [
             'multiple' => false,
         ],
         'ohms-law-calculator' => [
-            'name' => 'Ohmřs Law Calculator',
+            'name' => "Ohm's Law Calculator",
             'description' => 'Solve voltage, current, resistance and power from any two known electrical values.',
             'category' => 'calculators',
             'accepts' => [],
@@ -661,6 +660,13 @@ return [
         'roi-calculator' => [
             'name' => 'ROI Calculator',
             'description' => 'Calculate return on investment percentage and net gain for any project or purchase.',
+            'category' => 'business-tools',
+            'accepts' => [],
+            'multiple' => false,
+        ],
+        'business-name-generator' => [
+            'name' => 'Business Name Generator',
+            'description' => 'Generate unique, brandable and available-sounding business name ideas from your keywords, with domain-name style checks.',
             'category' => 'business-tools',
             'accepts' => [],
             'multiple' => false,
@@ -784,7 +790,7 @@ return [
             'accepts' => [],
             'multiple' => false,
         ],
-        'unit-test-generator' => [
+        'ascii-table' => [
             'name' => 'ASCII Table Reference',
             'description' => 'Browse the full ASCII character table with decimal, hex, octal and binary codes.',
             'category' => 'developer-tools',
@@ -798,10 +804,61 @@ return [
             'accepts' => [],
             'multiple' => false,
         ],
-        'vigenere-cipher' => [
+        'caesar-cipher' => [
             'name' => 'Caesar Cipher Encoder',
             'description' => 'Encode and decode Caesar shift ciphers with any rotation, plus ROT13 one-click mode.',
             'category' => 'developer-tools',
+            'accepts' => [],
+            'multiple' => false,
+        ],
+
+        // --- New additions (high search volume, low competition) ---
+        'salary-tax-calculator' => [
+            'name' => 'Salary Tax Calculator',
+            'description' => 'See your real take-home pay after progressive income tax, social contributions and pension.',
+            'category' => 'calculators',
+            'accepts' => [],
+            'multiple' => false,
+        ],
+        'aspect-ratio-calculator' => [
+            'name' => 'Aspect Ratio Calculator',
+            'description' => 'Resize images and video without distortion — find the missing width or height instantly.',
+            'category' => 'calculators',
+            'accepts' => [],
+            'multiple' => false,
+        ],
+        'final-grade-calculator' => [
+            'name' => 'Final Grade Calculator',
+            'description' => 'Find the exact score you need on your final exam to reach your target course grade.',
+            'category' => 'calculators',
+            'accepts' => [],
+            'multiple' => false,
+        ],
+        'sleep-cycle-calculator' => [
+            'name' => 'Sleep Cycle Calculator',
+            'description' => 'Wake up between sleep cycles, not in the middle — see your best bedtimes and wake times.',
+            'category' => 'calculators',
+            'accepts' => [],
+            'multiple' => false,
+        ],
+        'running-pace-calculator' => [
+            'name' => 'Running Pace Calculator',
+            'description' => 'Get pace per km and mile, speed, and predicted finish times for 5K up to marathon.',
+            'category' => 'calculators',
+            'accepts' => [],
+            'multiple' => false,
+        ],
+        'shipping-cost-calculator' => [
+            'name' => 'Shipping Cost Calculator',
+            'description' => 'Estimate courier costs with volumetric weight, zones and service speeds before you ship.',
+            'category' => 'business-tools',
+            'accepts' => [],
+            'multiple' => false,
+        ],
+        'bill-split-calculator' => [
+            'name' => 'Bill Split Calculator',
+            'description' => 'Split any restaurant bill between friends with tip, even shares and optional rounding.',
+            'category' => 'calculators',
             'accepts' => [],
             'multiple' => false,
         ],

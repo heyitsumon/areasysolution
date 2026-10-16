@@ -66,8 +66,39 @@
     <style>
         :root{font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#162033;background:#f6f8fc;font-synthesis:none}
         *{box-sizing:border-box}body{margin:0;min-height:100vh;display:flex;flex-direction:column}a{color:inherit;text-decoration:none}
-        .topbar{background:#fff;border-bottom:1px solid #e6eaf1}.nav{max-width:1120px;margin:auto;padding:18px 24px;display:flex;align-items:center;justify-content:space-between;gap:20px}
-        .brand{font-size:20px;font-weight:800;letter-spacing:-.05em;color:#3446d3}.links{display:flex;align-items:center;gap:18px;color:#5b6578;font-size:14px}
+        .topbar{position:relative;background:#fff;border-bottom:1px solid #e6eaf1}
+        .nav{max-width:1120px;margin:auto;padding:18px 24px;display:flex;align-items:center;justify-content:space-between;gap:20px}
+        .brand{font-size:20px;font-weight:800;letter-spacing:-.05em;color:#3446d3}
+        .links{display:flex;align-items:center;gap:18px;color:#5b6578;font-size:14px}
+        /* --- Responsive nav --- */
+        .nav-toggle{display:none;place-items:center;width:44px;height:44px;border:1px solid #e4e8f0;border-radius:10px;background:#fff;color:#37415a;cursor:pointer}
+        .nav-toggle-icon{width:22px;height:22px;grid-area:1/1}
+        .nav-toggle-icon--close{display:none}
+        body.nav-open .nav-toggle-icon--open{display:none}
+        body.nav-open .nav-toggle-icon--close{display:block}
+        .nav-toggle:focus-visible{outline:3px solid #9fa8ff;outline-offset:2px}
+        .nav-mobile{border-top:1px solid #eef1f6;background:#fff;box-shadow:0 18px 30px #1b2c4b14}
+        .nav-mobile[hidden]{display:none}
+        .nav-mobile-inner{display:grid;gap:2px;max-width:1120px;margin:0 auto;padding:10px 24px 18px}
+        .nav-mobile-link{display:flex;align-items:center;justify-content:space-between;gap:10px;min-height:48px;padding:0 14px;border-radius:10px;color:#37415a;font-size:15px;font-weight:550}
+        .nav-mobile-link>span{color:#a6afc2}
+        .nav-mobile-link:hover{background:#f3f5fb;color:#3446d3}
+        .nav-mobile-link--active{background:#eef0ff;color:#4f46e5;font-weight:750}
+        .nav-mobile-link--ghost{color:#71809a}
+        .nav-mobile-cta{display:flex;align-items:center;justify-content:center;min-height:46px;margin-top:8px;border-radius:10px;background:#eef0ff;color:#394bc9;font-size:15px;font-weight:700}
+        .nav-mobile-cta:hover{background:#e3e6ff}
+        @media(max-width:760px){
+            .nav-links-desktop{display:none}
+            .nav-toggle{display:grid}
+            .nav{padding:12px 20px;gap:12px}
+            .brand{font-size:18px}
+            .nav-mobile-inner{padding:10px 20px 16px}
+        }
+        @media(max-width:400px){
+            .nav{padding:10px 16px}
+            .brand{font-size:17px}
+            .nav-mobile-inner{padding:8px 16px 14px}
+        }
         .container{max-width:1120px;margin:0 auto;padding:42px 24px 72px}.hero{padding:38px 0 44px;max-width:760px}.eyebrow{font-size:12px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:#5364df}
         h1{font-size:clamp(34px,6vw,58px);line-height:1.06;letter-spacing:-.055em;margin:12px 0 18px}h2{font-size:23px;letter-spacing:-.03em;margin:0 0 10px}
         p{color:#657086;line-height:1.7}.muted{color:#738096;font-size:14px}.card{background:#fff;border:1px solid #e6eaf1;border-radius:16px;padding:24px;box-shadow:0 10px 30px #263c6608}
@@ -216,14 +247,24 @@
                 <span style="display:grid;place-items:center;width:32px;height:32px;border-radius:10px;background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;font-weight:900;font-size:14px;box-shadow:0 3px 10px #4f46e535;">A</span>
                 <span>{{ $siteName }}</span>
             </a>
-            <div class="links">
-                <a style="{{ request()->routeIs('tools.*') ? 'color:#4f46e5;font-weight:700;' : '' }}" href="{{ route('tools.index') }}">Tools</a>
+
+            @php
+                $navLinks = [
+                    'tools' => ['label' => 'Tools', 'url' => route('tools.index'), 'active' => request()->routeIs('tools.*')],
+                    'dashboard' => ['label' => 'Dashboard', 'url' => route('dashboard'), 'active' => request()->routeIs('dashboard'), 'auth' => true],
+                    'profile' => ['label' => 'Profile', 'url' => route('profile.edit'), 'active' => request()->routeIs('profile.*'), 'auth' => true],
+                    'admin' => ['label' => 'Admin', 'url' => route('admin.dashboard'), 'active' => request()->routeIs('admin.*'), 'auth' => true, 'admin' => true],
+                ];
+            @endphp
+
+            {{-- Desktop links --}}
+            <div class="links nav-links-desktop">
+                @foreach ($navLinks as $key => $link)
+                    @if (($link['auth'] ?? false) && !auth()->check()) @continue @endif
+                    @if (($link['admin'] ?? false) && !(auth()->check() && auth()->user()->is_admin)) @continue @endif
+                    <a style="{{ $link['active'] ? 'color:#4f46e5;font-weight:700;' : '' }}" href="{{ $link['url'] }}">{{ $link['label'] }}</a>
+                @endforeach
                 @auth
-                    <a href="{{ route('dashboard') }}">Dashboard-----</a>
-                    <a href="{{ route('profile.edit') }}">Profile</a>
-                    @if (auth()->user()->is_admin)
-                        <a href="{{ route('admin.dashboard') }}">Admin</a>
-                    @endif
                     <form method="POST" action="{{ route('auth.logout') }}">
                         @csrf
                         <button class="btn ghost" type="submit">Sign out</button>
@@ -233,8 +274,76 @@
                     <a class="btn secondary" href="{{ route('auth.register') }}">Create account</a>
                 @endauth
             </div>
+
+            {{-- Mobile hamburger --}}
+            <button type="button" class="nav-toggle" data-nav-toggle aria-expanded="false" aria-controls="nav-mobile-menu" aria-label="Toggle menu">
+                <svg class="nav-toggle-icon nav-toggle-icon--open" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                    <path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+                <svg class="nav-toggle-icon nav-toggle-icon--close" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                    <path d="m6 6 12 12M18 6 6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+            </button>
         </nav>
+
+        {{-- Mobile slide-down menu --}}
+        <div class="nav-mobile" id="nav-mobile-menu" data-nav-mobile hidden>
+            <div class="nav-mobile-inner">
+                @foreach ($navLinks as $key => $link)
+                    @if (($link['auth'] ?? false) && !auth()->check()) @continue @endif
+                    @if (($link['admin'] ?? false) && !(auth()->check() && auth()->user()->is_admin)) @continue @endif
+                    <a href="{{ $link['url'] }}" data-nav-mobile-link class="nav-mobile-link {{ $link['active'] ? 'nav-mobile-link--active' : '' }}">
+                        {{ $link['label'] }}
+                        <span aria-hidden="true">›</span>
+                    </a>
+                @endforeach
+                @auth
+                    <form method="POST" action="{{ route('auth.logout') }}" class="nav-mobile-form">
+                        @csrf
+                        <button type="submit" class="nav-mobile-link nav-mobile-link--ghost" style="width:100%;text-align:left;background:none;border:0;cursor:pointer;font:inherit;">Sign out</button>
+                    </form>
+                @else
+                    <a href="{{ route('login') }}" data-nav-mobile-link class="nav-mobile-link">Sign in <span aria-hidden="true">›</span></a>
+                    <a href="{{ route('auth.register') }}" data-nav-mobile-link class="nav-mobile-cta">Create account</a>
+                @endauth
+            </div>
+        </div>
     </header>
+
+    <script>
+        (function () {
+            var toggle = document.querySelector('[data-nav-toggle]');
+            var menu = document.querySelector('[data-nav-mobile]');
+            if (!toggle || !menu) return;
+
+            function setMenu(open) {
+                menu.hidden = !open;
+                toggle.setAttribute('aria-expanded', String(open));
+                document.body.classList.toggle('nav-open', open);
+            }
+
+            toggle.addEventListener('click', function () {
+                setMenu(menu.hidden);
+            });
+
+            // Close when a menu link is tapped
+            menu.addEventListener('click', function (event) {
+                if (event.target.closest('[data-nav-mobile-link]')) setMenu(false);
+            });
+
+            // Close on Escape and when tapping outside
+            document.addEventListener('keydown', function (event) {
+                if (event.key === 'Escape' && !menu.hidden) { setMenu(false); toggle.focus(); }
+            });
+            document.addEventListener('click', function (event) {
+                if (!menu.hidden && !event.target.closest('.topbar')) setMenu(false);
+            });
+
+            // Auto-close if resized up to desktop
+            var mq = window.matchMedia('(min-width: 761px)');
+            mq.addEventListener('change', function (e) { if (e.matches) setMenu(false); });
+        })();
+    </script>
     <main class="container{{ request()->routeIs('home') ? ' home-shell' : '' }}">
         @if (session('status'))
             <div class="notice" role="status">{{ session('status') }}</div>
