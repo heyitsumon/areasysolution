@@ -1,14 +1,10 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-<<<<<<< HEAD
-import { ageDetailsOn, ageOn, birthdayDetailsOn } from '../../resources/js/tools/calculators-core.js';
+import { ageDetailsOn, ageOn, birthdayDetailsOn, gpa, mixedNumberOperation } from '../../resources/js/tools/calculators-core.js';
 import { calculateBmi } from '../../resources/js/tools/bmi-calculator/model.js';
 import { calculateLoan } from '../../resources/js/tools/loan-calculator/model.js';
 import { calculatePercentage } from '../../resources/js/tools/percentage-calculator/model.js';
 import { calculateTip } from '../../resources/js/tools/tip-calculator/model.js';
-=======
-import { ageDetailsOn, ageOn, bmi, gpa, loan, mixedNumberOperation, percentage, tip } from '../../resources/js/tools/calculators-core.js';
->>>>>>> a24b0eb03ec88c48d172b2f0dff614d955c64da9
 
 test('percentage calculator supports common percentage questions', () => {
     assert.equal(calculatePercentage(['of', 15, 200]).value, 30);

@@ -202,6 +202,50 @@ final class ToolSeoContent
                     ['q' => 'What is the ideal meta description length for SEO?', 'a' => 'Between 140 and 160 characters. This prevents search engines from truncating your description in search result snippets.'],
                 ],
             ],
+            'square-footage-calculator' => [
+                'faqs' => [
+                    ['q' => 'How do I calculate square footage of a room?', 'a' => 'Multiply the length of the room by its width. For example, a room 12 feet long and 10 feet wide is 120 square feet. This calculator converts meters, inches and yards to feet automatically.'],
+                    ['q' => 'How many square feet are in a square meter?', 'a' => 'One square meter equals 10.764 square feet. The calculator shows both units side by side for every measurement.'],
+                    ['q' => 'How much extra flooring should I buy?', 'a' => 'Buy 10% more material than the measured area to cover cutting waste, pattern matching and future repairs.'],
+                ],
+            ],
+            'bmr-calculator' => [
+                'faqs' => [
+                    ['q' => 'What is BMR?', 'a' => 'Basal Metabolic Rate (BMR) is the number of calories your body burns at complete rest just to keep your heart, brain and organs working. It accounts for 60-70% of daily energy use.'],
+                    ['q' => 'Which formula does this BMR calculator use?', 'a' => 'The Mifflin-St Jeor equation, which the American Dietetic Association considers the most accurate predictive formula for resting energy expenditure in healthy adults.'],
+                    ['q' => 'Should I eat below my BMR to lose weight?', 'a' => 'Generally no. A moderate deficit of about 500 calories below your total daily energy expenditure (TDEE) is more sustainable and protects muscle mass.'],
+                ],
+            ],
+            'pregnancy-due-date-calculator' => [
+                'faqs' => [
+                    ['q' => 'How accurate is this due date calculator?', 'a' => 'The calculator uses Naegele\'s rule (280 days from the first day of your last period), which is the standard clinical estimate. Only about 4% of babies arrive exactly on the due date, so treat it as a guide, and your ultrasound dating may shift it by a few days.'],
+                    ['q' => 'What if my cycle is not 28 days?', 'a' => 'Ovulation typically happens 14 days before your next period, so longer cycles push the due date later. Select your average cycle length and the calculator adjusts automatically.'],
+                ],
+            ],
+            'water-intake-calculator' => [
+                'faqs' => [
+                    ['q' => 'How much water should I drink a day?', 'a' => 'A common evidence-based baseline is about 33 ml per kilogram of body weight, plus extra for exercise (roughly 350 ml per 30 minutes of sweating) and hot weather.'],
+                    ['q' => 'Can I drink too much water?', 'a' => 'Yes, extreme intake can dilute blood sodium (hyponatremia). Spread drinking through the day and let thirst guide you rather than forcing large volumes at once.'],
+                ],
+            ],
+            'protein-calculator' => [
+                'faqs' => [
+                    ['q' => 'How much protein do I need per day?', 'a' => 'Sedentary adults need about 0.8 g per kg of body weight. Regular strength training raises the optimum to 1.6-2.2 g per kg for muscle repair and growth.'],
+                    ['q' => 'Is too much protein harmful?', 'a' => 'For healthy people, intakes up to 2.2 g/kg are well studied and safe. People with kidney disease should follow their doctor\'s advice instead.'],
+                ],
+            ],
+            'morse-code-translator' => [
+                'faqs' => [
+                    ['q' => 'What is Morse code?', 'a' => 'Morse code encodes letters and numbers as sequences of short signals (dots) and long signals (dashes), originally used for telegraphy and still used in amateur radio and aviation beacons.'],
+                    ['q' => 'How is SOS written in Morse code?', 'a' => 'SOS is three dots, three dashes, three dots: ... --- ... - usually transmitted as one continuous signal without letter gaps.'],
+                ],
+            ],
+            'caesar-cipher' => [
+                'faqs' => [
+                    ['q' => 'What is the Caesar cipher?', 'a' => 'One of the oldest encryption methods: each letter is replaced by a letter a fixed number of positions further in the alphabet. Julius Caesar reportedly used a shift of three.'],
+                    ['q' => 'What is ROT13?', 'a' => 'ROT13 is the Caesar cipher with a shift of 13. It is its own inverse, so applying it twice restores the original text - commonly used to hide spoilers online.'],
+                ],
+            ],
             'invoice-generator' => [
                 'how_to' => [
                     ['step' => 1, 'title' => 'Enter business & client details', 'text' => 'Fill in your company name, contact info, and recipient details.'],

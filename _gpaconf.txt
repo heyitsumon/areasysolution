@@ -1,5 +1,0 @@
-﻿39:                     ${Object.keys(GRADE_POINTS).map((g) => `<option value="${g}" ${g === grade ? 'selected' : ''}>${g} (${GRADE_POINTS[g].toFixed(1)})</option>`).join('')}
-90: =======
-127:         option.selected = optionValue === grade;
-230:                 option.selected = entry.grade === grade;
-287: >>>>>>> a24b0eb03ec88c48d172b2f0dff614d955c64da9

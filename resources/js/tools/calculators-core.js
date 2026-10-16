@@ -231,43 +231,48 @@ export function mixedNumberOperation(left, right, operation) {
 }
 
 export function gpa(courses) {
-    const gradePoints = {
-        'A': 4,
-        'A-': 3.7,
-        'B+': 3.3,
-        'B': 3,
-        'B-': 2.7,
-        'C+': 2.3,
-        'C': 2,
-        'C-': 1.7,
-        'D+': 1.3,
-        'D': 1,
-        'D-': 0.7,
+    /*
+     * Grade points are held in tenths (A = 40, A- = 37, ...) so every sum below
+     * lands on an exact integer. Accumulating products like 3.3 * 3 drifts by a
+     * few ulps - enough to turn 29.3 into 29.299999999999997 and 3.6625 into
+     * 3.662 after rounding - which is why the arithmetic is scaled up first and
+     * rounded once, at the very end.
+     */
+    const gradePointsTenths = {
+        'A': 40,
+        'A-': 37,
+        'B+': 33,
+        'B': 30,
+        'B-': 27,
+        'C+': 23,
+        'C': 20,
+        'C-': 17,
+        'D+': 13,
+        'D': 10,
+        'D-': 7,
         'F': 0,
     };
 
     const rows = Array.isArray(courses) ? courses : [];
-    const validRows = rows.filter((course) => Number.isFinite(Number(course?.credits)) && Number(course?.credits) > 0 && gradePoints[course?.grade] !== undefined);
+    const validRows = rows.filter((course) => Number.isFinite(Number(course?.credits)) && Number(course?.credits) > 0 && gradePointsTenths[course?.grade] !== undefined);
 
     if (validRows.length === 0) {
         return { gpa: 0, totalCredits: 0, rows: [] };
     }
 
     const totalCredits = validRows.reduce((sum, course) => sum + Number(course.credits), 0);
-    const gradeTotal = validRows.reduce((sum, course) => sum + (gradePoints[course.grade] * Number(course.credits)), 0);
 
-    const result = totalCredits > 0 ? gradeTotal / totalCredits : 0;
-    const roundToThree = (value) => {
-        const sign = Math.sign(value) || 1;
-        return sign * (Math.round((Math.abs(value) * 1000) + 0.5) / 1000);
-    };
+    /* Thousandths of a grade point: tenths * credits * 100 gives value * 1000. */
+    const scaled = (course) => gradePointsTenths[course.grade] * Number(course.credits) * 100;
+    const scaledTotal = validRows.reduce((sum, course) => sum + scaled(course), 0);
+    const roundScaled = (value) => Math.round(value) / 1000;
 
     return {
-        gpa: roundToThree(result),
+        gpa: totalCredits > 0 ? roundScaled(scaledTotal / totalCredits) : 0,
         totalCredits,
         rows: validRows.map((course) => ({
             ...course,
-            gradePoints: roundToThree(gradePoints[course.grade] * Number(course.credits)),
+            gradePoints: roundScaled(scaled(course)),
         })),
     };
 }
