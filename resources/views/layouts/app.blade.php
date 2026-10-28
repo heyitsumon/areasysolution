@@ -238,6 +238,9 @@
 
     gtag('config', 'G-CG5XVSPJ9L');
     </script>
+
+    <script src="https://pl32074527.profitableratecpmnetwork.com/b5/f1/3b/b5f13b4e43ffd177f89b4da8bd620108.js"></script>
+    <script src="https://pl32074597.profitableratecpmnetwork.com/a0/b8/42/a0b842bc4dc054b2c9051244cc85416b.js"></script>
      
 </head>
 <body>
