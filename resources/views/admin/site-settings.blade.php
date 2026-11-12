@@ -77,6 +77,11 @@
                     @error('google_site_verification')<div class="error">{{ $message }}</div>@enderror
                 </div>
                 <div class="field">
+                    <label for="google_analytics_id">Google Analytics 4 measurement ID</label>
+                    <input id="google_analytics_id" name="google_analytics_id" value="{{ old('google_analytics_id', $settings['google_analytics_id']) }}" maxlength="12" placeholder="G-XXXXXXXXXX">
+                    @error('google_analytics_id')<div class="error">{{ $message }}</div>@enderror
+                </div>
+                <div class="field">
                     <label for="bing_site_verification">Bing Webmaster verification</label>
                     <input id="bing_site_verification" name="bing_site_verification" value="{{ old('bing_site_verification', $settings['bing_site_verification']) }}" maxlength="255">
                     @error('bing_site_verification')<div class="error">{{ $message }}</div>@enderror

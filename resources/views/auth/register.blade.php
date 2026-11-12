@@ -1,6 +1,10 @@
 @extends('layouts.app', ['title' => 'Create account'])
 
 @section('content')
+    @php
+        $oldName = old('name');
+        $oldEmail = old('email');
+    @endphp
     <section class="card form-card">
         <div class="eyebrow">Get started</div>
         <h1 style="font-size:34px">Create your account</h1>
@@ -9,12 +13,12 @@
             @csrf
             <div class="field">
                 <label for="name">Name</label>
-                <input id="name" name="name" value="{{ old('name') }}" required maxlength="100" autocomplete="name">
+                <input id="name" name="name" value="{{ is_string($oldName) ? $oldName : '' }}" required maxlength="100" autocomplete="name">
                 @error('name')<div class="error">{{ $message }}</div>@enderror
             </div>
             <div class="field">
                 <label for="email">Email</label>
-                <input id="email" type="email" name="email" value="{{ old('email') }}" required maxlength="255" autocomplete="email">
+                <input id="email" type="email" name="email" value="{{ is_string($oldEmail) ? $oldEmail : '' }}" required maxlength="255" autocomplete="email">
                 @error('email')<div class="error">{{ $message }}</div>@enderror
             </div>
             <div class="field">

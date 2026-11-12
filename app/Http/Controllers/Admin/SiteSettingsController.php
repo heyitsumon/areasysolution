@@ -32,6 +32,7 @@ final class SiteSettingsController extends Controller
             'og_image' => ['nullable', 'url:http,https', 'max:2048'],
             'twitter_handle' => ['nullable', 'regex:/\A@?[A-Za-z0-9_]{1,15}\z/'],
             'google_site_verification' => ['nullable', 'string', 'max:255'],
+            'google_analytics_id' => ['nullable', 'string', 'regex:/\AG-[A-Z0-9]{10}\z/'],
             'bing_site_verification' => ['nullable', 'string', 'max:255'],
             'ads_enabled' => ['required', 'boolean'],
             'pages' => ['required', 'array'],

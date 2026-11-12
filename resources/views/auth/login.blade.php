@@ -1,6 +1,7 @@
 @extends('layouts.app', ['title' => 'Sign in'])
 
 @section('content')
+    @php($oldEmail = old('email'))
     <section class="card form-card">
         <div class="eyebrow">Welcome back</div>
         <h1 style="font-size:34px">Sign in</h1>
@@ -9,7 +10,7 @@
             @csrf
             <div class="field">
                 <label for="email">Email</label>
-                <input id="email" type="email" name="email" value="{{ old('email') }}" required autocomplete="username">
+                <input id="email" type="email" name="email" value="{{ is_string($oldEmail) ? $oldEmail : '' }}" required autocomplete="username">
                 @error('email')<div class="error">{{ $message }}</div>@enderror
             </div>
             <div class="field">

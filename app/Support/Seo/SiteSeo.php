@@ -20,8 +20,13 @@ final class SiteSeo
     {
         return Cache::remember(self::SITE_CACHE_KEY, now()->addMinutes(10), function (): array {
             $stored = DB::table('site_settings')->where('id', 1)->first();
+            $settings = $stored === null ? [] : (array) $stored;
 
-            return array_replace($this->defaultSiteSettings(), $stored === null ? [] : (array) $stored);
+            if (($settings['google_analytics_id'] ?? null) === null) {
+                $settings['google_analytics_id'] = $this->defaultSiteSettings()['google_analytics_id'];
+            }
+
+            return array_replace($this->defaultSiteSettings(), $settings);
         });
     }
 
@@ -205,6 +210,7 @@ final class SiteSeo
             'og_image' => '',
             'twitter_handle' => '',
             'google_site_verification' => '',
+            'google_analytics_id' => (string) config('seo.google_analytics_id', ''),
             'bing_site_verification' => '',
             'ads_enabled' => true,
         ];

@@ -92,6 +92,16 @@ final class AccountAndAnalyticsTest extends TestCase
 
         $this->assertDatabaseCount('users', 0);
 
+        $this->followingRedirects()
+            ->post(route('auth.register.store'), [
+                'name' => ['invalid'],
+                'email' => ['invalid'],
+                'password' => 'short',
+                'password_confirmation' => 'different',
+            ])
+            ->assertOk()
+            ->assertSee('Create your account');
+
         $this->get(route('login'));
         $csrfToken = $this->app['session']->token();
         $this->post(route('auth.login.store'), [
@@ -99,6 +109,14 @@ final class AccountAndAnalyticsTest extends TestCase
             'email' => str_repeat('a', 256).'@example.com',
             'password' => str_repeat('a', 256),
         ])->assertSessionHasErrors(['email', 'password']);
+
+        $this->followingRedirects()
+            ->post(route('auth.login.store'), [
+                'email' => ['invalid'],
+                'password' => 'invalid',
+            ])
+            ->assertOk()
+            ->assertSee('Sign in');
 
         $member = User::factory()->create();
         $this->actingAs($member)->get(route('profile.edit'));

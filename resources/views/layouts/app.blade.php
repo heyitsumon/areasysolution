@@ -261,15 +261,15 @@
          crossorigin="anonymous"></script>
     @endif
 
-     <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-CG5XVSPJ9L"></script>
-    <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-
-    gtag('config', 'G-CG5XVSPJ9L');
-    </script>
+    @if (auth()->guest() && $siteSettings['google_analytics_id'] !== '' && request()->routeIs('home', 'tools.index', 'tools.show'))
+        <script async src="https://www.googletagmanager.com/gtag/js?id={{ urlencode($siteSettings['google_analytics_id']) }}"></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', @json($siteSettings['google_analytics_id']));
+        </script>
+    @endif
 
 </head>
 <body>

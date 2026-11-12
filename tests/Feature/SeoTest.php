@@ -24,6 +24,7 @@ final class SeoTest extends TestCase
             ->assertSee('<link rel="canonical" href="'.config('seo.site_url').'/">', false)
             ->assertSee('<link rel="icon" href="'.url('/favicon.ico').'" sizes="any">', false)
             ->assertSee('adsbygoogle.js', false)
+            ->assertSee('googletagmanager.com/gtag/js?id=G-CG5XVSPJ9L', false)
             ->assertSee('"@type":"WebSite"', false)
             ->assertSee('"@type":"Organization"', false)
             ->assertSee('property="og:title"', false);
@@ -117,6 +118,7 @@ final class SeoTest extends TestCase
             ->assertSee('Site & SEO settings')
             ->assertSee('Page-by-page SEO')
             ->assertSee('Enable advertisements')
+            ->assertSee('Google Analytics 4 measurement ID')
             ->assertSee('pages[tool:qr-code-generator][title]', false);
 
         $settings = app(SiteSeo::class);
@@ -143,10 +145,12 @@ final class SeoTest extends TestCase
             'site_url' => 'https://example.com/',
             'twitter_handle' => '@example',
             'google_site_verification' => 'google-token',
+            'google_analytics_id' => 'G-AB12CD34EF',
             'pages' => $pages,
         ])->assertRedirect(route('admin.site-settings.edit'))
             ->assertSessionHas('status', 'Site, SEO, and advertising settings updated.');
 
+        $this->app['auth']->logout();
         $this->get(route('home'))
             ->assertOk()
             ->assertSee('<title>Custom Homepage Title · Example Tools</title>', false)
@@ -156,6 +160,7 @@ final class SeoTest extends TestCase
             ->assertSee('<meta name="twitter:card" content="summary_large_image">', false)
             ->assertSee('<meta name="twitter:site" content="@example">', false)
             ->assertSee('<meta name="google-site-verification" content="google-token">', false)
+            ->assertSee('googletagmanager.com/gtag/js?id=G-AB12CD34EF', false)
             ->assertSee('Example Tools')
             ->assertDontSee('adsbygoogle.js', false)
             ->assertDontSee('Advertisement placeholder', false);
@@ -163,6 +168,14 @@ final class SeoTest extends TestCase
         $this->get(route('tools.show', ['tool' => 'qr-code-generator']))
             ->assertSee('<title>Custom QR SEO Title · Example Tools</title>', false)
             ->assertSee('<meta name="robots" content="noindex,follow">', false);
+
+        $this->actingAs($admin)
+            ->get(route('home'))
+            ->assertDontSee('googletagmanager.com/gtag/js', false);
+
+        $this->get(route('admin.dashboard'))
+            ->assertOk()
+            ->assertDontSee('googletagmanager.com/gtag/js', false);
 
         $sitemap = $this->get(route('sitemap'))->assertOk();
         $sitemap->assertSee('https://example.com/')
