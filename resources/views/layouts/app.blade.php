@@ -94,7 +94,7 @@
             .ad-slot{min-height:82px;border-radius:14px}
             .ad-slot--fluid{min-height:110px}
         }
-        
+
         /* --- Responsive nav --- */
         .nav-toggle{display:none;place-items:center;width:44px;height:44px;border:1px solid #e4e8f0;border-radius:10px;background:#fff;color:#37415a;cursor:pointer}
         .nav-toggle-icon{width:22px;height:22px;grid-area:1/1}
@@ -257,20 +257,7 @@
         }
     </style>
 
-    @if ($siteSettings['ads_enabled'])
-        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7283499382397295"
-         crossorigin="anonymous"></script>
-    @endif
 
-    @if (auth()->guest() && $siteSettings['google_analytics_id'] !== '' && request()->routeIs('home', 'tools.index', 'tools.show'))
-        <script async src="https://www.googletagmanager.com/gtag/js?id={{ urlencode($siteSettings['google_analytics_id']) }}"></script>
-        <script>
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
-            gtag('config', @json($siteSettings['google_analytics_id']));
-        </script>
-    @endif
 
 </head>
 <body>
