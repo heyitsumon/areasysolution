@@ -4,10 +4,25 @@
     <div data-admin-analytics
          data-endpoint="{{ route('admin.analytics.data', ['period' => $period]) }}"
          data-period="{{ $period }}">
-    <div class="actions" style="justify-content:space-between">
+    <div class="admin-dashboard">
+        <aside class="dashboard-sidebar admin-sidebar">
+            <p class="dashboard-sidebar-label">Administration</p>
+            <nav aria-label="Admin dashboard navigation">
+                <a class="dashboard-sidebar-link dashboard-sidebar-link--active" href="#admin-overview">Overview</a>
+                <a class="dashboard-sidebar-link" href="#analytics-charts">Traffic &amp; tool activity</a>
+                <a class="dashboard-sidebar-link" href="#recent-registrations">Recent registrations</a>
+                <a class="dashboard-sidebar-link" href="{{ route('admin.site-settings.edit') }}">Site &amp; SEO settings</a>
+            </nav>
+            <div class="dashboard-sidebar-note">
+                <strong>Site controls</strong>
+                <span>Manage the existing SEO and advertising settings here.</span>
+            </div>
+        </aside>
+        <div class="admin-dashboard-main">
+    <div class="actions admin-heading" id="admin-overview" style="justify-content:space-between">
         <div>
             <div class="eyebrow">Admin panel</div>
-            <h1 style="font-size:42px">Analytics overview</h1>
+            <h1>Analytics overview</h1>
         </div>
         <div class="actions">
             <a class="btn secondary" href="{{ route('admin.site-settings.edit') }}">Site &amp; SEO settings</a>
@@ -51,7 +66,7 @@
         <article class="card stat"><span>All registered accounts</span><strong data-metric="totalUsers">{{ number_format($totalUsers) }}</strong></article>
     </section>
 
-    <section class="analytics-grid" aria-label="Analytics charts">
+    <section class="analytics-grid" id="analytics-charts" aria-label="Analytics charts">
         <article class="card analytics-card analytics-trend-card">
             <div class="analytics-card-heading">
                 <div><h2>Traffic &amp; tool activity</h2><p class="muted">Daily trends over the last 14 days</p></div>
@@ -81,7 +96,7 @@
         </article>
     </section>
 
-    <section class="grid" style="margin:20px 0">
+    <section class="grid" id="recent-registrations" style="margin:20px 0">
         <article class="card">
             <h2>Recent registrations</h2>
             <div class="table-wrap">
@@ -98,5 +113,7 @@
             </div>
         </article>
     </section>
+    </div>
+        </div>
     </div>
 @endsection

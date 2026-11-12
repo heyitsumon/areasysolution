@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { ageDetailsOn, ageOn, birthdayDetailsOn, gpa, mixedNumberOperation } from '../../resources/js/tools/calculators-core.js';
+import { ageDetailsOn, ageOn, birthdayDetailsOn, gpa, mixedNumberOperation, parseDateDmy } from '../../resources/js/tools/calculators-core.js';
 import { calculateBmi } from '../../resources/js/tools/bmi-calculator/model.js';
 import { calculateLoan } from '../../resources/js/tools/loan-calculator/model.js';
 import { calculatePercentage } from '../../resources/js/tools/percentage-calculator/model.js';
@@ -23,6 +23,13 @@ test('age calculator handles calendar boundaries and rejects future births', () 
     assert.deepEqual(ageOn('2000-01-31', '2000-03-01'), { years: 0, months: 1, days: 1 });
     assert.deepEqual(ageOn('2000-06-15', '2026-10-04'), { years: 26, months: 3, days: 19 });
     assert.throws(() => ageOn('2026-10-05', '2026-10-04'), /on or before/);
+});
+
+test('age calculator parses dates in day-month-year order and rejects invalid calendar dates', () => {
+    assert.equal(parseDateDmy('7', '10', '1999'), '1999-10-07');
+    assert.equal(parseDateDmy('29', '2', '2024'), '2024-02-29');
+    assert.throws(() => parseDateDmy('29', '2', '2023'), /valid date in DD-MM-YYYY format/);
+    assert.throws(() => parseDateDmy('1', '13', '2024'), /valid date in DD-MM-YYYY format/);
 });
 
 test('age details include exact elapsed totals in common units', () => {

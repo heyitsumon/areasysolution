@@ -20,7 +20,6 @@ Route::get('/tools', [ToolController::class, 'index'])->name('tools.index');
 Route::get('/tools/{tool}', [ToolController::class, 'show'])
     ->where('tool', '[a-z0-9]+(?:-[a-z0-9]+)*')
     ->name('tools.show');
-
 Route::middleware('guest')->group(function (): void {
     Route::get('/register', [RegisteredUserController::class, 'create'])->name('auth.register');
     Route::post('/register', [RegisteredUserController::class, 'store'])->middleware('throttle:5,1')

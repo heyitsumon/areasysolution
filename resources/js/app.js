@@ -6,6 +6,43 @@ import { bootToolWorkspace } from './tools/runner';
 import './ui';
 import { registerServiceWorker } from './service-worker';
 
+function bootThemeToggle() {
+    const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    let theme = systemTheme;
+
+    try {
+        const savedTheme = localStorage.getItem('site-theme');
+        theme = savedTheme === 'dark' || savedTheme === 'light' ? savedTheme : systemTheme;
+    } catch {
+        theme = systemTheme;
+    }
+
+    document.documentElement.dataset.theme = theme;
+
+    const updateLabels = () => {
+        document.querySelectorAll('[data-theme-toggle]').forEach((button) => {
+            button.setAttribute('aria-label', theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode');
+        });
+    };
+
+    document.querySelectorAll('[data-theme-toggle]').forEach((button) => {
+        button.addEventListener('click', () => {
+            theme = theme === 'dark' ? 'light' : 'dark';
+            document.documentElement.dataset.theme = theme;
+
+            try {
+                localStorage.setItem('site-theme', theme);
+            } catch {
+                // The selected theme remains active until the page is reloaded.
+            }
+
+            updateLabels();
+        });
+    });
+
+    updateLabels();
+}
+
 /*
  * Entry point.
  *
@@ -15,6 +52,7 @@ import { registerServiceWorker } from './service-worker';
  * opens that tool.
  */
 function boot() {
+    bootThemeToggle();
     bootToolWorkspace();
     bootDirectoryFilter();
     bootHomeToolFinder();

@@ -8,22 +8,27 @@ export function bootHomeToolFinder() {
 
     if (!searchInput || !resultCount || !emptyState || toolCards.length === 0) return;
 
-    let activeCategory = 'all';
+    let activeCategory = 'popular';
 
     const updateTools = () => {
         const query = searchInput.value.trim().toLocaleLowerCase();
+        const popularView = activeCategory === 'popular' && !query;
         let visibleCount = 0;
 
         toolCards.forEach((card) => {
-            const matchesCategory = activeCategory === 'all' || card.dataset.category === activeCategory;
+            const matchesCategory = activeCategory === 'all'
+                || activeCategory === 'popular'
+                || card.dataset.category === activeCategory;
             const matchesSearch = !query || (card.dataset.search || '').includes(query);
-            const visible = matchesCategory && matchesSearch;
+            const visible = matchesCategory
+                && matchesSearch
+                && (!popularView || card.dataset.featured === 'true');
 
             card.hidden = !visible;
             visibleCount += Number(visible);
         });
 
-        resultCount.textContent = `${visibleCount} ${visibleCount === 1 ? 'tool' : 'tools'}`;
+        resultCount.textContent = `${visibleCount} ${popularView ? 'popular ' : ''}${visibleCount === 1 ? 'tool' : 'tools'}`;
         emptyState.hidden = visibleCount > 0;
     };
 
@@ -51,4 +56,6 @@ export function bootHomeToolFinder() {
             document.getElementById('tool-finder')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
         });
     });
+
+    updateTools();
 }

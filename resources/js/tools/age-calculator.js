@@ -1,7 +1,7 @@
 import { button } from '../lib/controls';
 import { status } from '../lib/feedback';
 import { node } from '../lib/ui';
-import { ageDetailsOn, birthdayDetailsOn } from './calculators-core';
+import { ageDetailsOn, birthdayDetailsOn, parseDateDmy } from './calculators-core';
 
 const numberFormat = new Intl.NumberFormat('en-US');
 
@@ -9,19 +9,6 @@ function localDateString(date = new Date()) {
     return new Date(date.getTime() - date.getTimezoneOffset() * 60_000)
         .toISOString()
         .slice(0, 10);
-}
-
-function toDisplayDate(isoDate) {
-    const [year, month, day] = isoDate.split('-');
-    return `${day}-${month}-${year}`;
-}
-
-function toIsoDate(displayDate) {
-    const match = /^(\d{1,2})-(\d{1,2})-(\d{4})$/u.exec(displayDate.trim());
-    if (!match) throw new Error('Enter dates in DD-MM-YYYY format, for example 07-10-1999.');
-
-    const [, day, month, year] = match;
-    return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
 }
 
 function formatLongDate(isoDate) {
@@ -41,16 +28,16 @@ function createDateField(labelText, hint, defaultDate = '') {
     const description = node('<p class="age-cal__date-hint"></p>');
     description.textContent = hint;
 
-    const boxes = node('<div class="age-cal__date-boxes"></div>');
+    const picker = document.createElement('input');
+    picker.type = 'date';
+    picker.className = 'age-cal__date-picker';
+    picker.setAttribute('aria-label', `${labelText} date picker`);
 
-    const month = document.createElement('input');
-    month.type = 'text';
-    month.inputMode = 'numeric';
-    month.maxLength = 2;
-    month.autocomplete = 'off';
-    month.placeholder = 'mm';
-    month.className = 'age-cal__date-input';
-    month.setAttribute('aria-label', `${labelText} month`);
+    const pickerLabel = node('<label class="age-cal__picker-label">Choose from calendar</label>');
+    pickerLabel.append(picker);
+
+    const manualLabel = node('<p class="age-cal__manual-label">Or enter date (DD / MM / YYYY)</p>');
+    const boxes = node('<div class="age-cal__date-boxes"></div>');
 
     const day = document.createElement('input');
     day.type = 'text';
@@ -61,6 +48,15 @@ function createDateField(labelText, hint, defaultDate = '') {
     day.className = 'age-cal__date-input';
     day.setAttribute('aria-label', `${labelText} day`);
 
+    const month = document.createElement('input');
+    month.type = 'text';
+    month.inputMode = 'numeric';
+    month.maxLength = 2;
+    month.autocomplete = 'off';
+    month.placeholder = 'mm';
+    month.className = 'age-cal__date-input';
+    month.setAttribute('aria-label', `${labelText} month`);
+
     const year = document.createElement('input');
     year.type = 'text';
     year.inputMode = 'numeric';
@@ -70,27 +66,29 @@ function createDateField(labelText, hint, defaultDate = '') {
     year.className = 'age-cal__date-input';
     year.setAttribute('aria-label', `${labelText} year`);
 
-    const monthBox = node('<div class="age-cal__date-box"></div>');
-    monthBox.append(month, node('<small>mm</small>'));
-
     const dayBox = node('<div class="age-cal__date-box"></div>');
     dayBox.append(day, node('<small>dd</small>'));
+
+    const monthBox = node('<div class="age-cal__date-box"></div>');
+    monthBox.append(month, node('<small>mm</small>'));
 
     const yearBox = node('<div class="age-cal__date-box"></div>');
     yearBox.append(year, node('<small>yyyy</small>'));
 
-    boxes.append(monthBox, dayBox, yearBox);
-    group.append(label, description, boxes);
+    boxes.append(dayBox, monthBox, yearBox);
+    group.append(label, description, pickerLabel, manualLabel, boxes);
 
     if (defaultDate) {
-        const [defaultDay, defaultMonth, defaultYear] = defaultDate.split('-');
+        const [defaultYear, defaultMonth, defaultDay] = defaultDate.split('-');
         day.value = defaultDay || '';
         month.value = defaultMonth || '';
         year.value = defaultYear || '';
+        picker.value = defaultDate;
     }
 
     return {
         el: group,
+        picker,
         month,
         day,
         year,
@@ -102,11 +100,12 @@ function createDateField(labelText, hint, defaultDate = '') {
             };
         },
         clear() {
+            picker.value = '';
             month.value = '';
             day.value = '';
             year.value = '';
         },
-        inputEls: [month, day, year],
+        inputEls: [picker, day, month, year],
     };
 }
 
@@ -114,7 +113,7 @@ export default function mount({ root, announce, complete }) {
     root.classList.add('age-calculator');
 
     const birthDate = createDateField('Date of birth', 'Enter the day, month and year you were born.');
-    const asOfDate = createDateField('Age on', 'Choose the date you want to calculate your age for.', toDisplayDate(localDateString()));
+    const asOfDate = createDateField('Age on', 'Choose the date you want to calculate your age for.', localDateString());
 
     const dateFields = node('<div class="age-cal__date-fields"></div>');
     dateFields.append(birthDate.el, asOfDate.el);
@@ -173,8 +172,8 @@ export default function mount({ root, announce, complete }) {
             const birthValues = birthDate.values();
             const asOfValues = asOfDate.values();
 
-            const birthIsoDate = toIsoDate(`${birthValues.day}-${birthValues.month}-${birthValues.year}`);
-            const asOfIsoDate = toIsoDate(`${asOfValues.day}-${asOfValues.month}-${asOfValues.year}`);
+            const birthIsoDate = parseDateDmy(birthValues.day, birthValues.month, birthValues.year);
+            const asOfIsoDate = parseDateDmy(asOfValues.day, asOfValues.month, asOfValues.year);
             const age = ageDetailsOn(birthIsoDate, asOfIsoDate);
             const birthday = birthdayDetailsOn(birthIsoDate, asOfIsoDate);
             const comparableYears = (age.totalDays / 365.2425).toFixed(3).replace(/\.?0+$/u, '')
@@ -232,10 +231,12 @@ export default function mount({ root, announce, complete }) {
     clearButton.addEventListener('click', () => {
         birthDate.clear();
         asOfDate.clear();
-        const today = new Date();
-        asOfDate.day.value = String(today.getDate()).padStart(2, '0');
-        asOfDate.month.value = String(today.getMonth() + 1).padStart(2, '0');
-        asOfDate.year.value = String(today.getFullYear());
+        const today = localDateString();
+        const [todayYear, todayMonth, todayDay] = today.split('-');
+        asOfDate.picker.value = today;
+        asOfDate.day.value = todayDay;
+        asOfDate.month.value = todayMonth;
+        asOfDate.year.value = todayYear;
         birthDate.inputEls.concat(asOfDate.inputEls).forEach((input) => {
             input.classList.remove('age-cal__date-input--edited');
         });
@@ -243,6 +244,37 @@ export default function mount({ root, announce, complete }) {
     });
 
     calculateButton.addEventListener('click', calculate);
+    [birthDate, asOfDate].forEach((dateField) => {
+        dateField.picker.addEventListener('change', () => {
+            if (dateField.picker.value) {
+                const [year, month, day] = dateField.picker.value.split('-');
+                dateField.day.value = day;
+                dateField.month.value = month;
+                dateField.year.value = year;
+            } else {
+                dateField.day.value = '';
+                dateField.month.value = '';
+                dateField.year.value = '';
+            }
+
+            dateField.inputEls.forEach(markInputChanged);
+        });
+
+        [dateField.day, dateField.month, dateField.year].forEach((input) => {
+            input.addEventListener('input', () => {
+                try {
+                    dateField.picker.value = parseDateDmy(
+                        dateField.day.value,
+                        dateField.month.value,
+                        dateField.year.value,
+                    );
+                } catch {
+                    dateField.picker.value = '';
+                }
+            });
+        });
+    });
+
     birthDate.inputEls.concat(asOfDate.inputEls).forEach((input) => {
         input.addEventListener('input', () => {
             markInputChanged(input);

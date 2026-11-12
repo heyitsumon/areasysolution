@@ -69,9 +69,14 @@
     </nav>
 
     <section class="mb-6">
-        <div class="eyebrow">{{ $categoryName }}</div>
-        <h1 class="mt-2 text-4xl font-extrabold tracking-tight text-slate-950">{{ $tool['name'] }}</h1>
-        <p class="mt-3 max-w-2xl text-slate-600">{{ $tool['description'] }}</p>
+        <div class="flex items-start gap-4">
+            <x-category-icon :category="$tool['category']" size="lg" class="mt-1" />
+            <div>
+                <div class="eyebrow">{{ $categoryName }}</div>
+                <h1 class="mt-2 text-4xl font-extrabold tracking-tight text-slate-950">{{ $tool['name'] }}</h1>
+                <p class="mt-3 max-w-2xl text-slate-600">{{ $tool['description'] }}</p>
+            </div>
+        </div>
     </section>
 
     <section class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-8">

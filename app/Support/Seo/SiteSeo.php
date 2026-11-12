@@ -26,7 +26,7 @@ final class SiteSeo
     }
 
     /**
-     * @return array<string, string>
+     * @return array<string, mixed>
      */
     public function siteDefaults(): array
     {
@@ -72,7 +72,7 @@ final class SiteSeo
     }
 
     /**
-     * @return array<string, string>
+     * @return array<string, mixed>
      */
     public function resolvePage(
         string $pageKey,
@@ -192,7 +192,7 @@ final class SiteSeo
     }
 
     /**
-     * @return array<string, string>
+     * @return array<string, mixed>
      */
     private function defaultSiteSettings(): array
     {
@@ -206,6 +206,7 @@ final class SiteSeo
             'twitter_handle' => '',
             'google_site_verification' => '',
             'bing_site_verification' => '',
+            'ads_enabled' => true,
         ];
     }
 }

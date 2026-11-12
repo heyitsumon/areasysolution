@@ -33,6 +33,7 @@ final class SiteSettingsController extends Controller
             'twitter_handle' => ['nullable', 'regex:/\A@?[A-Za-z0-9_]{1,15}\z/'],
             'google_site_verification' => ['nullable', 'string', 'max:255'],
             'bing_site_verification' => ['nullable', 'string', 'max:255'],
+            'ads_enabled' => ['required', 'boolean'],
             'pages' => ['required', 'array'],
         ];
 
@@ -58,11 +59,12 @@ final class SiteSettingsController extends Controller
         }
 
         $site = collect($validated)
-            ->except('pages')
+            ->except(['pages', 'ads_enabled'])
             ->map(static fn (mixed $value): string => trim((string) ($value ?? '')))
             ->all();
         $site['site_url'] = rtrim($site['site_url'], '/');
         $site['twitter_handle'] = ltrim($site['twitter_handle'], '@');
+        $site['ads_enabled'] = (bool) $validated['ads_enabled'];
 
         $pages = collect($validated['pages'])
             ->map(static fn (array $page): array => [
@@ -77,6 +79,6 @@ final class SiteSettingsController extends Controller
 
         return redirect()
             ->route('admin.site-settings.edit')
-            ->with('status', 'Site and SEO settings updated.');
+            ->with('status', 'Site, SEO, and advertising settings updated.');
     }
 }

@@ -499,7 +499,6 @@ return [
             'accepts' => [],
             'multiple' => false,
         ],
-
         // --- SEO & Website Tools (9) ---
         'meta-title-length-checker' => [
             'name' => 'Meta Title Length Checker',

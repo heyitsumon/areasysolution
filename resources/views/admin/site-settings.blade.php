@@ -8,7 +8,7 @@
         </div>
         <a class="btn secondary" href="{{ route('admin.dashboard') }}">Back to analytics</a>
     </div>
-    <p class="muted">Changes update the shared site branding, search and social metadata, structured data URLs, sitemap, and page cache.</p>
+    <p class="muted">Changes update the shared site branding, search and social metadata, advertising visibility, structured data URLs, sitemap, and page cache.</p>
 
     @if ($errors->any())
         <div class="asset-warning" role="alert">
@@ -81,6 +81,19 @@
                     <input id="bing_site_verification" name="bing_site_verification" value="{{ old('bing_site_verification', $settings['bing_site_verification']) }}" maxlength="255">
                     @error('bing_site_verification')<div class="error">{{ $message }}</div>@enderror
                 </div>
+            </div>
+        </section>
+
+        <section class="card" style="margin-top:18px" aria-labelledby="advertising-settings-heading">
+            <h2 id="advertising-settings-heading">Advertising</h2>
+            <p class="muted">Control whether AdSense loads and advertisement placements appear across public pages.</p>
+            <div class="field">
+                <input type="hidden" name="ads_enabled" value="0">
+                <label for="ads_enabled" style="display:flex;align-items:center;gap:10px">
+                    <input id="ads_enabled" name="ads_enabled" type="checkbox" value="1" @checked((bool) old('ads_enabled', $settings['ads_enabled']))>
+                    Enable advertisements
+                </label>
+                @error('ads_enabled')<div class="error">{{ $message }}</div>@enderror
             </div>
         </section>
 

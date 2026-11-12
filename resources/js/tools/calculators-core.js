@@ -7,6 +7,34 @@ function addMonths(date, amount) {
     return new Date(Date.UTC(year, month, Math.min(date.getUTCDate(), lastDay)));
 }
 
+export function parseDateDmy(dayValue, monthValue, yearValue) {
+    const day = Number(dayValue);
+    const month = Number(monthValue);
+    const year = Number(yearValue);
+
+    if (
+        !/^\d{1,2}$/u.test(dayValue.trim())
+        || !/^\d{1,2}$/u.test(monthValue.trim())
+        || !/^\d{4}$/u.test(yearValue.trim())
+        || year < 1
+        || month < 1
+        || month > 12
+        || day < 1
+        || day > 31
+    ) {
+        throw new Error('Enter a valid date in DD-MM-YYYY format, for example 07-10-1999.');
+    }
+
+    const isoDate = `${String(year).padStart(4, '0')}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+    const parsed = new Date(`${isoDate}T00:00:00Z`);
+
+    if (Number.isNaN(parsed.getTime()) || parsed.toISOString().slice(0, 10) !== isoDate) {
+        throw new Error('Enter a valid date in DD-MM-YYYY format, for example 07-10-1999.');
+    }
+
+    return isoDate;
+}
+
 export function ageOn(birthDate, asOfDate) {
     const birth = new Date(`${birthDate}T00:00:00Z`);
     const asOf = new Date(`${asOfDate}T00:00:00Z`);

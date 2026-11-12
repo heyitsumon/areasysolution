@@ -23,6 +23,7 @@ final class SeoTest extends TestCase
             ->assertSee('<meta name="robots" content="index,follow">', false)
             ->assertSee('<link rel="canonical" href="'.config('seo.site_url').'/">', false)
             ->assertSee('<link rel="icon" href="'.url('/favicon.ico').'" sizes="any">', false)
+            ->assertSee('adsbygoogle.js', false)
             ->assertSee('"@type":"WebSite"', false)
             ->assertSee('"@type":"Organization"', false)
             ->assertSee('property="og:title"', false);
@@ -115,6 +116,7 @@ final class SeoTest extends TestCase
             ->assertOk()
             ->assertSee('Site & SEO settings')
             ->assertSee('Page-by-page SEO')
+            ->assertSee('Enable advertisements')
             ->assertSee('pages[tool:qr-code-generator][title]', false);
 
         $settings = app(SiteSeo::class);
@@ -136,13 +138,14 @@ final class SeoTest extends TestCase
 
         $this->put(route('admin.site-settings.update'), [
             ...$settings->siteDefaults(),
+            'ads_enabled' => false,
             'site_name' => 'Example Tools',
             'site_url' => 'https://example.com/',
             'twitter_handle' => '@example',
             'google_site_verification' => 'google-token',
             'pages' => $pages,
         ])->assertRedirect(route('admin.site-settings.edit'))
-            ->assertSessionHas('status', 'Site and SEO settings updated.');
+            ->assertSessionHas('status', 'Site, SEO, and advertising settings updated.');
 
         $this->get(route('home'))
             ->assertOk()
@@ -153,7 +156,9 @@ final class SeoTest extends TestCase
             ->assertSee('<meta name="twitter:card" content="summary_large_image">', false)
             ->assertSee('<meta name="twitter:site" content="@example">', false)
             ->assertSee('<meta name="google-site-verification" content="google-token">', false)
-            ->assertSee('Example Tools');
+            ->assertSee('Example Tools')
+            ->assertDontSee('adsbygoogle.js', false)
+            ->assertDontSee('Advertisement placeholder', false);
 
         $this->get(route('tools.show', ['tool' => 'qr-code-generator']))
             ->assertSee('<title>Custom QR SEO Title · Example Tools</title>', false)

@@ -265,4 +265,3 @@ final class ToolSeoContent
         return $registry[$slug] ?? [];
     }
 }
-

@@ -66,10 +66,34 @@
     <style>
         :root{font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#162033;background:#f6f8fc;font-synthesis:none}
         *{box-sizing:border-box}body{margin:0;min-height:100vh;display:flex;flex-direction:column}a{color:inherit;text-decoration:none}
-        .topbar{position:relative;background:#fff;border-bottom:1px solid #e6eaf1}
-        .nav{max-width:1120px;margin:auto;padding:18px 24px;display:flex;align-items:center;justify-content:space-between;gap:20px}
+        .topbar{position:sticky;top:0;z-index:1000;background:#fff;border-bottom:1px solid #e6eaf1}
+        .nav{max-width:1100px;margin:auto;padding:18px 24px;display:flex;align-items:center;justify-content:space-between;gap:20px}
         .brand{font-size:20px;font-weight:800;letter-spacing:-.05em;color:#3446d3}
-        .links{display:flex;align-items:center;gap:18px;color:#5b6578;font-size:14px}
+        .links{display:flex;align-items:center;gap:14px;color:#5b6578;font-size:13px}
+        .links>a{white-space:nowrap}
+        .nav-search,.theme-toggle{display:inline-grid;width:40px;height:40px;place-items:center;border:1px solid #e6eaf1;border-radius:11px;background:#fff;color:#5b6578;cursor:pointer}
+        .nav-search svg,.theme-toggle svg{width:18px;height:18px}
+        .theme-toggle .theme-icon-sun{display:none}
+        .nav-theme-mobile{display:none}
+        .nav-action-link{display:inline-flex;align-items:center;min-height:40px;padding:0 12px;border-radius:10px;color:#536078;font-weight:650}
+        .nav-action-link:hover{background:#f5f6fb;color:#3446d3}
+        .nav-action-link--active{background:#eef0ff;color:#3446d3}
+        .ad-shell{width:min(1100px,calc(100% - 24px));margin:18px auto 0}
+        .ad-shell--top{padding-top:6px}
+        .ad-slot{position:relative;display:flex;align-items:center;justify-content:center;min-height:90px;padding:12px 16px;border:1px solid #dde5f5;border-radius:18px;background:linear-gradient(180deg,#f7f9ff 0%,#eef3ff 100%);box-shadow:0 10px 22px rgba(27,42,95,.04);overflow:hidden}
+        .ad-slot::before{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(255,255,255,.15),rgba(255,255,255,.45),rgba(255,255,255,.15));transform:translateX(-100%);animation:adShimmer 3.8s linear infinite}
+        @keyframes adShimmer{0%{transform:translateX(-100%)}100%{transform:translateX(100%)}}
+        .ad-slot--fluid{min-height:120px}
+        .ad-slot--sidebar{min-height:280px}
+        .ad-slot__inner{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:8px;color:#586680}
+        .ad-slot__label{font-size:10px;letter-spacing:.14em;text-transform:uppercase;font-weight:800;color:#7b88a5}
+        .ad-slot__content{font-size:13px;font-weight:700;padding:9px 18px;border-radius:999px;background:rgba(255,255,255,.8);border:1px solid rgba(127,146,217,.25);color:#404d84}
+        .ad-slot__content small{font-size:12px;font-weight:600;color:#66728d}
+        @media (max-width: 768px){
+            .ad-shell{width:min(100% - 20px, 1100px)}
+            .ad-slot{min-height:82px;border-radius:14px}
+            .ad-slot--fluid{min-height:110px}
+        }
         /* --- Responsive nav --- */
         .nav-toggle{display:none;place-items:center;width:44px;height:44px;border:1px solid #e4e8f0;border-radius:10px;background:#fff;color:#37415a;cursor:pointer}
         .nav-toggle-icon{width:22px;height:22px;grid-area:1/1}
@@ -79,7 +103,7 @@
         .nav-toggle:focus-visible{outline:3px solid #9fa8ff;outline-offset:2px}
         .nav-mobile{border-top:1px solid #eef1f6;background:#fff;box-shadow:0 18px 30px #1b2c4b14}
         .nav-mobile[hidden]{display:none}
-        .nav-mobile-inner{display:grid;gap:2px;max-width:1120px;margin:0 auto;padding:10px 24px 18px}
+        .nav-mobile-inner{display:grid;gap:2px;max-width:1100px;margin:0 auto;padding:10px 24px 18px}
         .nav-mobile-link{display:flex;align-items:center;justify-content:space-between;gap:10px;min-height:48px;padding:0 14px;border-radius:10px;color:#37415a;font-size:15px;font-weight:550}
         .nav-mobile-link>span{color:#a6afc2}
         .nav-mobile-link:hover{background:#f3f5fb;color:#3446d3}
@@ -87,19 +111,23 @@
         .nav-mobile-link--ghost{color:#71809a}
         .nav-mobile-cta{display:flex;align-items:center;justify-content:center;min-height:46px;margin-top:8px;border-radius:10px;background:#eef0ff;color:#394bc9;font-size:15px;font-weight:700}
         .nav-mobile-cta:hover{background:#e3e6ff}
-        @media(max-width:760px){
+        @media(max-width:1080px){
             .nav-links-desktop{display:none}
             .nav-toggle{display:grid}
-            .nav{padding:12px 20px;gap:12px}
+            .nav-theme-mobile{display:grid}
+            .nav{padding:12px 24px;gap:12px}
             .brand{font-size:18px}
-            .nav-mobile-inner{padding:10px 20px 16px}
+            .nav-mobile-inner{padding:10px 24px 16px}
         }
+        .nav-mobile-primary{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:4px}
+        .nav-mobile-categories{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0;padding-top:14px;border-top:1px solid #eef1f6}
+        .nav-mobile-category{display:inline-flex;align-items:center;gap:7px;min-height:40px;padding:0 12px;border:1px solid #e7eaf1;border-radius:999px;color:#4b5870;font-size:13px;font-weight:600}
         @media(max-width:400px){
             .nav{padding:10px 16px}
             .brand{font-size:17px}
             .nav-mobile-inner{padding:8px 16px 14px}
         }
-        .container{max-width:1120px;margin:0 auto;padding:42px 24px 72px}.hero{padding:38px 0 44px;max-width:760px}.eyebrow{font-size:12px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:#5364df}
+        .container{width:100%;max-width:1100px;margin:0 auto;padding:42px 24px 72px}.hero{padding:38px 0 44px;max-width:760px}.eyebrow{font-size:12px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:#5364df}
         h1{font-size:clamp(34px,6vw,58px);line-height:1.06;letter-spacing:-.055em;margin:12px 0 18px}h2{font-size:23px;letter-spacing:-.03em;margin:0 0 10px}
         p{color:#657086;line-height:1.7}.muted{color:#738096;font-size:14px}.card{background:#fff;border:1px solid #e6eaf1;border-radius:16px;padding:24px;box-shadow:0 10px 30px #263c6608}
         .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px}.btn{display:inline-flex;justify-content:center;align-items:center;border:0;border-radius:9px;padding:11px 16px;background:#4658df;color:white;font-weight:700;font-size:14px;cursor:pointer}
@@ -135,7 +163,7 @@
         .analytics-empty{display:grid;min-height:180px;place-items:center;margin:0;color:#788399;font-size:14px}
         main.container{width:100%;flex:1 0 auto}
         .site-footer{position:relative;overflow:hidden;border-top:1px solid #202b47;background:radial-gradient(ellipse at 18% 0%,#202d52 0,transparent 42%),#111a30;color:#c2cbe0}
-        .footer-inner{width:min(1120px,100%);margin:0 auto;padding:54px 24px 22px}
+        .footer-inner{width:min(1100px,100%);margin:0 auto;padding:54px 24px 22px}
         .footer-grid{display:grid;grid-template-columns:minmax(240px,1.6fr) repeat(2,minmax(130px,.7fr));gap:48px;padding-bottom:42px}
         .footer-brand{display:inline-flex;align-items:center;gap:11px;color:#fff;font-size:18px;font-weight:800;letter-spacing:-.045em}
         .footer-mark{display:grid;width:38px;height:38px;place-items:center;border:1px solid #aeb8ff35;border-radius:12px;background:linear-gradient(145deg,#7180ff,#4658df);box-shadow:0 8px 22px #5364df30;color:#fff}
@@ -154,6 +182,8 @@
         .footer-bottom a:hover{color:#fff}
         .asset-warning{padding:14px 16px;border:1px solid #f1c879;border-radius:10px;background:#fff8df;color:#72520c;font-size:14px;line-height:1.6}
         .container.home-shell{max-width:none;padding:0 0 72px}
+        .brand-mark{display:grid;width:36px;height:36px;place-items:center;border:1px solid #aeb8ff35;border-radius:12px;background:linear-gradient(145deg,#7180ff,#4658df);box-shadow:0 5px 14px #5364df30;color:#fff}
+        .brand-mark svg{width:22px;height:22px}
         @media(max-width:650px){.nav{align-items:flex-start}.links{gap:10px;flex-wrap:wrap;justify-content:flex-end}.container{padding-top:28px}.card{padding:18px}.analytics-grid{grid-template-columns:1fr}.analytics-trend-card{grid-column:auto}.analytics-chart{height:250px}.analytics-chart-tall{height:300px}.analytics-livebar{flex-wrap:wrap}.analytics-refresh-button{margin-left:auto}.footer-inner{padding:40px 24px 18px}.footer-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:32px 22px;padding-bottom:30px}.footer-brand-block{grid-column:1/-1}.footer-bottom{align-items:flex-start;flex-direction:column;gap:8px}}
         img,svg,video,canvas{max-width:100%}
         @media(max-width:760px){
@@ -226,8 +256,10 @@
         }
     </style>
 
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7283499382397295"
-     crossorigin="anonymous"></script>
+    @if ($siteSettings['ads_enabled'])
+        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7283499382397295"
+         crossorigin="anonymous"></script>
+    @endif
 
      <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-CG5XVSPJ9L"></script>
@@ -239,21 +271,37 @@
     gtag('config', 'G-CG5XVSPJ9L');
     </script>
 
-    <script src="https://pl32074527.profitableratecpmnetwork.com/b5/f1/3b/b5f13b4e43ffd177f89b4da8bd620108.js"></script>
-    <script src="https://pl32074597.profitableratecpmnetwork.com/a0/b8/42/a0b842bc4dc054b2c9051244cc85416b.js"></script>
-     
 </head>
 <body>
     <header class="topbar">
         <nav class="nav" aria-label="Main navigation">
             <a class="brand" href="{{ route('home') }}" style="display:inline-flex;align-items:center;gap:10px;">
-                <span style="display:grid;place-items:center;width:32px;height:32px;border-radius:10px;background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;font-weight:900;font-size:14px;box-shadow:0 3px 10px #4f46e535;">A</span>
+                <span class="brand-mark" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none">
+                        <path d="M5 18 10.2 6.8a2 2 0 0 1 3.6 0L19 18M7.5 13h9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M17.5 7.5h3m-1.5-1.5v3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+                    </svg>
+                </span>
                 <span>{{ $siteName }}</span>
             </a>
 
             @php
+                $categoryLinks = [
+                    'pdf-tools' => ['label' => 'PDFs', 'icon' => 'pdf-tools'],
+                    'image-tools' => ['label' => 'Images', 'icon' => 'image-tools'],
+                    'calculators' => ['label' => 'Calculators', 'icon' => 'calculators'],
+                    'text-tools' => ['label' => 'Text', 'icon' => 'text-tools'],
+                ];
+                $categoryUrl = static fn (string $slug): string => request()->routeIs('home')
+                    ? '#home-category-'.$slug
+                    : route('tools.index').'#category-'.$slug;
                 $navLinks = [
-                    'tools' => ['label' => 'Tools', 'url' => route('tools.index'), 'active' => request()->routeIs('tools.*')],
+                    'home' => ['label' => 'Home', 'url' => route('home'), 'active' => request()->routeIs('home')],
+                    'tools' => ['label' => 'All tools', 'url' => route('tools.index'), 'active' => request()->routeIs('tools.*')],
+                    'pdf-tools' => ['label' => 'PDFs', 'url' => $categoryUrl('pdf-tools'), 'active' => false],
+                    'image-tools' => ['label' => 'Images', 'url' => $categoryUrl('image-tools'), 'active' => false],
+                    'calculators' => ['label' => 'Calculators', 'url' => $categoryUrl('calculators'), 'active' => false],
+                    'text-tools' => ['label' => 'Text', 'url' => $categoryUrl('text-tools'), 'active' => false],
                     'dashboard' => ['label' => 'Dashboard', 'url' => route('dashboard'), 'active' => request()->routeIs('dashboard'), 'auth' => true],
                     'profile' => ['label' => 'Profile', 'url' => route('profile.edit'), 'active' => request()->routeIs('profile.*'), 'auth' => true],
                     'admin' => ['label' => 'Admin', 'url' => route('admin.dashboard'), 'active' => request()->routeIs('admin.*'), 'auth' => true, 'admin' => true],
@@ -263,10 +311,18 @@
             {{-- Desktop links --}}
             <div class="links nav-links-desktop">
                 @foreach ($navLinks as $key => $link)
-                    @if (($link['auth'] ?? false) && !auth()->check()) @continue @endif
+                @if (in_array($key, ['dashboard', 'profile'], true)) @continue @endif
+                @if (($link['auth'] ?? false) && !auth()->check()) @continue @endif
                     @if (($link['admin'] ?? false) && !(auth()->check() && auth()->user()->is_admin)) @continue @endif
-                    <a style="{{ $link['active'] ? 'color:#4f46e5;font-weight:700;' : '' }}" href="{{ $link['url'] }}">{{ $link['label'] }}</a>
+                    <a class="{{ $link['active'] ? 'nav-action-link nav-action-link--active' : 'nav-action-link' }}" href="{{ $link['url'] }}">{{ $link['label'] }}</a>
                 @endforeach
+                <a class="nav-search" href="{{ route('tools.index') }}#tool-search" aria-label="Search all tools" title="Search all tools">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 4.2 4.2"/></svg>
+                </a>
+                <button class="theme-toggle" type="button" data-theme-toggle aria-label="Switch to dark mode" title="Switch theme">
+                    <svg class="theme-icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.2 15.2A8.5 8.5 0 0 1 8.8 3.8 8.5 8.5 0 1 0 20.2 15.2Z"/></svg>
+                    <svg class="theme-icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M4.93 4.93l1.42 1.42m11.3 11.3 1.42 1.42M2 12h2m16 0h2M4.93 19.07l1.42-1.42m11.3-11.3 1.42-1.42"/></svg>
+                </button>
                 @auth
                     <form method="POST" action="{{ route('auth.logout') }}">
                         @csrf
@@ -287,19 +343,35 @@
                     <path d="m6 6 12 12M18 6 6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
                 </svg>
             </button>
+            <button class="theme-toggle nav-theme-mobile" type="button" data-theme-toggle aria-label="Switch to dark mode" title="Switch theme">
+                <svg class="theme-icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.2 15.2A8.5 8.5 0 0 1 8.8 3.8 8.5 8.5 0 1 0 20.2 15.2Z"/></svg>
+                <svg class="theme-icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M4.93 4.93l1.42 1.42m11.3 11.3 1.42 1.42M2 12h2m16 0h2M4.93 19.07l1.42-1.42m11.3-11.3 1.42-1.42"/></svg>
+            </button>
         </nav>
 
         {{-- Mobile slide-down menu --}}
         <div class="nav-mobile" id="nav-mobile-menu" data-nav-mobile hidden>
             <div class="nav-mobile-inner">
-                @foreach ($navLinks as $key => $link)
-                    @if (($link['auth'] ?? false) && !auth()->check()) @continue @endif
-                    @if (($link['admin'] ?? false) && !(auth()->check() && auth()->user()->is_admin)) @continue @endif
-                    <a href="{{ $link['url'] }}" data-nav-mobile-link class="nav-mobile-link {{ $link['active'] ? 'nav-mobile-link--active' : '' }}">
-                        {{ $link['label'] }}
-                        <span aria-hidden="true">›</span>
-                    </a>
-                @endforeach
+                <div class="nav-mobile-primary">
+                    @foreach (['home', 'tools', 'dashboard', 'profile', 'admin'] as $key)
+                        @php($link = $navLinks[$key])
+                        @if (($link['auth'] ?? false) && !auth()->check()) @continue @endif
+                        @if (($link['admin'] ?? false) && !(auth()->check() && auth()->user()->is_admin)) @continue @endif
+                        <a href="{{ $link['url'] }}" data-nav-mobile-link class="nav-mobile-link {{ $link['active'] ? 'nav-mobile-link--active' : '' }}">
+                            {{ $link['label'] }}
+                            <span aria-hidden="true">›</span>
+                        </a>
+                    @endforeach
+                    <a href="{{ route('tools.index') }}#tool-search" data-nav-mobile-link class="nav-mobile-link">Search tools <span aria-hidden="true">⌕</span></a>
+                </div>
+                <div class="nav-mobile-categories" aria-label="Tool categories">
+                    @foreach ($categoryLinks as $slug => $category)
+                        <a href="{{ $categoryUrl($slug) }}" data-nav-mobile-link class="nav-mobile-category">
+                            <x-category-icon :category="$category['icon']" size="sm" />
+                            {{ $category['label'] }}
+                        </a>
+                    @endforeach
+                </div>
                 @auth
                     <form method="POST" action="{{ route('auth.logout') }}" class="nav-mobile-form">
                         @csrf
@@ -342,11 +414,22 @@
                 if (!menu.hidden && !event.target.closest('.topbar')) setMenu(false);
             });
 
-            // Auto-close if resized up to desktop
-            var mq = window.matchMedia('(min-width: 761px)');
+            var mq = window.matchMedia('(min-width: 1081px)');
             mq.addEventListener('change', function (e) { if (e.matches) setMenu(false); });
         })();
+
     </script>
+    @if (request()->routeIs('home') && $siteSettings['ads_enabled'])
+        <div class="ad-shell ad-shell--top" aria-label="Advertisement placeholder">
+            <div class="ad-slot ad-slot--fluid">
+                <div class="ad-slot__inner">
+                    <span class="ad-slot__label">Advertisement</span>
+                    <div class="ad-slot__content">Responsive AdSense Banner<br><small>728 × 90 / 970 × 90</small></div>
+                </div>
+            </div>
+        </div>
+    @endif
+
     <main class="container{{ request()->routeIs('home') ? ' home-shell' : '' }}">
         @if (session('status'))
             <div class="notice" role="status">{{ session('status') }}</div>

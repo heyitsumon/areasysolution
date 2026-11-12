@@ -81,7 +81,10 @@ export function bootDirectoryFilter() {
         }
 
         category = null;
-        categoryButtons.forEach((button) => button.classList.remove('bg-slate-900', 'text-white'));
+        categoryButtons.forEach((button) => {
+            button.classList.remove('bg-slate-900', 'text-white');
+            button.setAttribute('aria-pressed', 'false');
+        });
         apply();
     });
 
@@ -95,6 +98,7 @@ export function bootDirectoryFilter() {
                 const active = other === button && category !== null;
                 other.classList.toggle('bg-slate-900', active);
                 other.classList.toggle('text-white', active);
+                other.setAttribute('aria-pressed', String(active));
             });
 
             apply();

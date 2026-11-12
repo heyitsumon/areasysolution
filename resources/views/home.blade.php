@@ -39,13 +39,13 @@
         $categories = config('tools.categories', []);
         $toolCount = count($allTools);
         $categoryCount = count($categories);
-        $featuredSlugs = ['scientific-calculator', 'word-counter', 'image-compressor', 'merge-pdf', 'business-name-generator', 'qr-code-generator'];
+        $featuredSlugs = ['scientific-calculator', 'word-counter', 'image-compressor', 'merge-pdf', 'business-name-generator', 'qr-code-generator', 'age-calculator', 'png-to-jpg'];
     @endphp
 
     <style>
         .home-page{--home-ink:#17223b;--home-muted:#64718a;--home-line:#e8ebf2;--home-violet:#5965e8;color:var(--home-ink)}
         .home-page *{box-sizing:border-box}
-        .home-wrap{width:min(1160px,100% - 48px);margin-inline:auto}
+        .home-wrap{width:min(1100px,100% - 48px);margin-inline:auto}
         .home-hero{position:relative;isolation:isolate;overflow:hidden;background:radial-gradient(ellipse at 83% 14%,#5966d955,transparent 31%),linear-gradient(125deg,#111a35 0%,#202c57 57%,#303e90 100%);color:#fff}
         .home-hero:before,.home-hero:after{position:absolute;z-index:-1;border:1px solid #ffffff12;border-radius:50%;content:"";pointer-events:none}
         .home-hero:before{width:620px;height:620px;right:-160px;top:-420px}
@@ -70,12 +70,24 @@
         .home-showcase-count{border-radius:999px;background:#ffffff18;padding:6px 9px;color:#dce2ff;font-size:11px;white-space:nowrap}
         .home-mini-tool{display:flex;align-items:center;gap:13px;margin-top:10px;border:1px solid #ffffff16;border-radius:13px;background:#ffffff0b;padding:13px;color:#fff;transition:background .18s,transform .18s}
         .home-mini-tool:hover{transform:translateX(3px);background:#ffffff16}
-        .home-mini-badge{display:grid;width:42px;height:42px;flex:0 0 42px;place-items:center;border-radius:12px;background:#ffffff17;color:#cdd4ff;font-size:12px;font-weight:800}
+        .home-mini-badge{width:42px;height:42px;flex:0 0 42px}
         .home-mini-copy{min-width:0;flex:1}
         .home-mini-copy strong{display:block;font-size:13px}
         .home-mini-copy small{display:block;margin-top:3px;overflow:hidden;color:#c2cbe2;font-size:11px;text-overflow:ellipsis;white-space:nowrap}
         .home-mini-arrow{color:#c2caff;font-size:19px}
         .home-section{padding-top:67px}
+        .home-category-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
+        .home-category-card{display:flex;min-width:0;align-items:center;gap:14px;border:1px solid var(--home-line);border-radius:16px;background:#fff;padding:18px;box-shadow:0 5px 18px #1b2c4b08;transition:transform .18s,border-color .18s,box-shadow .18s}
+        .home-category-card:hover{transform:translateY(-3px);border-color:#c7cbff;box-shadow:0 14px 28px #1b2c4b12}
+        .home-category-card .category-icon{flex:0 0 auto}
+        .home-category-card-copy{min-width:0}
+        .home-category-card h3{margin:0;color:var(--home-ink);font-size:14px;font-weight:800}
+        .home-category-card p{margin:4px 0 0;color:var(--home-muted);font-size:12px;line-height:1.45}
+        .home-how-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:15px}
+        .home-how-step{position:relative;border:1px solid var(--home-line);border-radius:16px;background:#fff;padding:22px}
+        .home-how-number{display:grid;width:36px;height:36px;place-items:center;border-radius:11px;background:#eef0ff;color:#4855d3;font-size:14px;font-weight:850}
+        .home-how-step h3{margin:16px 0 6px;font-size:15px;font-weight:800}
+        .home-how-step p{margin:0;color:var(--home-muted);font-size:13px;line-height:1.6}
         .home-section-head{display:flex;align-items:end;justify-content:space-between;gap:24px;margin-bottom:22px}
         .home-section-title{margin:8px 0 0;font-size:clamp(26px,3vw,36px);font-weight:800;letter-spacing:-.045em}
         .home-section-copy{max-width:540px;margin:9px 0 0;color:var(--home-muted);font-size:14px;line-height:1.65}
@@ -106,32 +118,26 @@
         .home-tool-card[data-new="true"]{border-color:#dcd6ff;background:linear-gradient(160deg,#fbfaff,#fff 55%)}
         .home-new-tag{display:inline-block;border-radius:999px;background:#505de0;padding:2px 8px;color:#fff;font-size:9px;font-weight:800;letter-spacing:.08em;text-transform:uppercase}
         .home-tool-card-top{display:flex;align-items:center;justify-content:space-between}
-        .home-tool-badge{display:grid;width:38px;height:38px;place-items:center;border-radius:11px;background:#eef0ff;color:#4855d3;font-size:11px;font-weight:850;letter-spacing:.02em}
-        .home-tool-card[data-category="image-tools"] .home-tool-badge{background:#e9f7f4;color:#13846e}
-        .home-tool-card[data-category="text-tools"] .home-tool-badge{background:#fff4e8;color:#b86b1d}
-        .home-tool-card[data-category="calculators"] .home-tool-badge{background:#f2edff;color:#7554c9}
-        .home-tool-card[data-category="business-tools"] .home-tool-badge{background:#ecf8ef;color:#1e7c46}
-        .home-tool-card[data-category="developer-tools"] .home-tool-badge{background:#eef4ff;color:#2563eb}
-        .home-tool-card[data-category="seo-tools"] .home-tool-badge{background:#fdf2ec;color:#c2540a}
-        .home-tool-card[data-category="utility-tools"] .home-tool-badge{background:#f5f6f8;color:#475569}
+        .home-tool-badge{width:40px;height:40px}
         .home-tool-open{color:#9099ad;font-size:18px}
         .home-tool-category{margin-top:16px;color:#78839a;font-size:10px;font-weight:750;letter-spacing:.08em;text-transform:uppercase}
         .home-tool-card h3{margin:5px 0 6px;font-size:15px;font-weight:800;letter-spacing:-.025em}
         .home-tool-card p{margin:0;color:var(--home-muted);font-size:12px;line-height:1.55}
         .home-no-results{margin:16px 0 0;border:1px dashed #dfe3ed;border-radius:13px;padding:25px;text-align:center;color:var(--home-muted);font-size:14px}
         .home-no-results[hidden]{display:none}
-        .home-benefits{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:15px}
+        .home-benefits{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:15px}
         .home-benefit{border:1px solid var(--home-line);border-radius:16px;background:#fff;padding:22px}
-        .home-benefit-icon{display:grid;width:40px;height:40px;place-items:center;border-radius:12px;background:#eff0ff;color:#4855d3;font-size:14px;font-weight:800}
+        .home-benefit-icon{display:grid;width:42px;height:42px;place-items:center;border-radius:13px;background:#eff0ff;color:#4855d3}
+        .home-benefit-icon svg{width:21px;height:21px}
         .home-benefit h3{margin:16px 0 7px;font-size:16px;font-weight:800}
         .home-benefit p{margin:0;color:var(--home-muted);font-size:13px;line-height:1.65}
         .home-bottom-cta{display:flex;align-items:center;justify-content:space-between;gap:24px;margin-top:65px;border:1px solid #dfe3ff;border-radius:20px;background:linear-gradient(110deg,#f1f2ff,#fafaff);padding:30px}
         .home-bottom-cta h2{margin:0;font-size:24px;font-weight:800;letter-spacing:-.04em}
         .home-bottom-cta p{margin:7px 0 0;color:var(--home-muted);font-size:14px}
         .home-bottom-cta .btn{gap:8px}
-        @media(max-width:900px){.home-hero-inner{grid-template-columns:minmax(0,1fr) minmax(250px,.78fr);gap:32px;padding-block:64px}.home-tool-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
-        @media(max-width:700px){.home-hero-inner{grid-template-columns:1fr;gap:30px;padding-block:54px}.home-title{font-size:clamp(43px,11vw,60px)}.home-lead{font-size:15px}.home-showcase{max-width:520px}.home-section{padding-top:49px}.home-section-head{align-items:flex-start;flex-direction:column;gap:12px}.home-tool-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.home-benefits{grid-template-columns:1fr}.home-bottom-cta{align-items:flex-start;flex-direction:column;margin-top:49px;padding:23px}}
-        @media(max-width:480px){.home-wrap{width:min(100% - 32px,520px)}.home-finder{padding:14px}.home-finder-controls{align-items:flex-start;flex-direction:column;gap:10px}.home-result-count{align-self:flex-end}.home-tool-grid{grid-template-columns:1fr}.home-tool-card{min-height:170px}.home-actions{align-items:stretch;flex-direction:column}.home-cta{width:100%}}
+        @media(max-width:900px){.home-hero-inner{grid-template-columns:minmax(0,1fr) minmax(250px,.78fr);gap:32px;padding-block:64px}.home-tool-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.home-category-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.home-benefits{grid-template-columns:repeat(2,minmax(0,1fr))}}
+        @media(max-width:700px){.home-hero-inner{grid-template-columns:1fr;gap:30px;padding-block:54px}.home-title{font-size:clamp(43px,11vw,60px)}.home-lead{font-size:15px}.home-showcase{max-width:520px}.home-section{padding-top:49px}.home-section-head{align-items:flex-start;flex-direction:column;gap:12px}.home-tool-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.home-how-grid{grid-template-columns:1fr}.home-bottom-cta{align-items:flex-start;flex-direction:column;margin-top:49px;padding:23px}}
+        @media(max-width:480px){.home-wrap{width:min(100% - 32px,520px)}.home-finder{padding:14px}.home-finder-controls{align-items:flex-start;flex-direction:column;gap:10px}.home-result-count{align-self:flex-end}.home-tool-grid{grid-template-columns:1fr}.home-category-grid,.home-benefits{grid-template-columns:1fr}.home-tool-card{min-height:170px}.home-actions{align-items:stretch;flex-direction:column}.home-cta{width:100%}}
         @media(prefers-reduced-motion:reduce){.home-page *{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
     </style>
 
@@ -164,7 +170,7 @@
                                 $categoryName = $categories[$tool['category']]['name'] ?? 'Online tool';
                             @endphp
                             <a class="home-mini-tool" href="{{ route('tools.show', ['tool' => $slug]) }}">
-                                <span class="home-mini-badge" aria-hidden="true">{{ strtoupper(substr($categoryName, 0, 2)) }}</span>
+                                <x-category-icon :category="$tool['category']" size="md" variant="dark" class="home-mini-badge" />
                                 <span class="home-mini-copy">
                                     <strong>{{ $tool['name'] }}</strong>
                                     <small>{{ $categoryName }}</small>
@@ -178,17 +184,42 @@
         </section>
 
         <div class="home-wrap">
+            <section class="home-section" id="home-categories" aria-labelledby="home-categories-title">
+                <div class="home-section-head">
+                    <div>
+                        <div class="home-eyebrow">Browse by category</div>
+                        <h2 class="home-section-title" id="home-categories-title">A useful tool for every kind of task.</h2>
+                        <p class="home-section-copy">Jump into a category to explore focused, practical utilities.</p>
+                    </div>
+                    <a class="home-text-link" href="{{ route('tools.index') }}">See all {{ $toolCount }} tools <span aria-hidden="true">→</span></a>
+                </div>
+                <div class="home-category-grid">
+                    @foreach ($categories as $slug => $category)
+                        @php
+                            $categoryToolCount = collect($allTools)->where('category', $slug)->count();
+                        @endphp
+                        <a class="home-category-card" id="home-category-{{ $slug }}" href="{{ route('tools.index') }}#category-{{ $slug }}">
+                            <x-category-icon :category="$slug" size="md" />
+                            <span class="home-category-card-copy">
+                                <h3>{{ $category['name'] }}</h3>
+                                <p>{{ $categoryToolCount }} {{ \Illuminate\Support\Str::plural('tool', $categoryToolCount) }}</p>
+                            </span>
+                        </a>
+                    @endforeach
+                </div>
+            </section>
+
             <section class="home-section" id="tool-finder" aria-labelledby="tool-finder-title">
                 <div class="home-section-head">
                     <div>
-                        <div class="home-eyebrow">The tool library</div>
+                        <div class="home-eyebrow">Search and discover</div>
                         <h2 class="home-section-title" id="tool-finder-title">Find the right tool for the job.</h2>
-                        <p class="home-section-copy">Search by name or task, or narrow things down by category. Every tool is one click away.</p>
+                        <p class="home-section-copy">Start with popular picks, search all {{ $toolCount }} tools, or browse by category.</p>
                     </div>
                     <a class="home-text-link" href="{{ route('tools.index') }}">Explore all tools <span aria-hidden="true">→</span></a>
                 </div>
 
-                    <div class="home-finder">
+                <div class="home-finder">
                     <div class="home-finder-controls">
                         <label class="home-search-wrap">
                             <svg class="home-search-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
@@ -197,7 +228,7 @@
                             </svg>
                             <input class="home-search" type="search" data-tool-search-input placeholder="Try “compress an image” or “word counter”" autocomplete="off" aria-label="Search online tools">
                         </label>
-                        <span class="home-result-count" data-tool-result-count aria-live="polite">{{ $toolCount }} tools</span>
+                        <span class="home-result-count" data-tool-result-count aria-live="polite">{{ count($featuredSlugs) }} popular tools</span>
                     </div>
                     <div class="home-quick-searches" role="group" aria-label="Quick searches">
                         <span class="home-quick-searches-label">Popular:</span>
@@ -206,7 +237,8 @@
                         @endforeach
                     </div>
                     <div class="home-filters" role="group" aria-label="Filter tools by category">
-                        <button class="home-filter" type="button" data-tool-filter="all" aria-pressed="true">All tools <span class="home-filter-count">{{ $toolCount }}</span></button>
+                        <button class="home-filter" type="button" data-tool-filter="popular" aria-pressed="true">Popular picks <span class="home-filter-count">{{ count($featuredSlugs) }}</span></button>
+                        <button class="home-filter" type="button" data-tool-filter="all" aria-pressed="false">All tools <span class="home-filter-count">{{ $toolCount }}</span></button>
                         @foreach ($categories as $slug => $category)
                             @php
                                 $categoryToolCount = collect($allTools)->where('category', $slug)->count();
@@ -216,6 +248,17 @@
                     </div>
                 </div>
 
+                @if (app(\App\Support\Seo\SiteSeo::class)->site()['ads_enabled'])
+                    <div class="ad-shell" aria-label="Advertisement placeholder">
+                        <div class="ad-slot ad-slot--fluid">
+                            <div class="ad-slot__inner">
+                                <span class="ad-slot__label">Advertisement</span>
+                                <div class="ad-slot__content">Leaderboard Ad Space<br><small>970 × 90 / 728 × 90</small></div>
+                            </div>
+                        </div>
+                    </div>
+                @endif
+
                 <div class="home-tool-grid" data-tool-grid>
                     @php
                         $newSlugs = ['salary-tax-calculator', 'aspect-ratio-calculator', 'final-grade-calculator', 'sleep-cycle-calculator', 'running-pace-calculator', 'shipping-cost-calculator', 'bill-split-calculator'];
@@ -224,12 +267,12 @@
                         @php
                             $categorySlug = $tool['category'];
                             $categoryName = $categories[$categorySlug]['name'] ?? 'Online tool';
-                            $badge = strtoupper(substr($categoryName, 0, 2));
                             $isNew = in_array($slug, $newSlugs, true);
+                            $isFeatured = in_array($slug, $featuredSlugs, true);
                         @endphp
-                        <a class="home-tool-card" href="{{ route('tools.show', ['tool' => $slug]) }}" data-category="{{ $categorySlug }}" data-search="{{ strtolower($tool['name'].' '.$tool['description'].' '.$categoryName) }}" @if($isNew) data-new="true" @endif>
+                        <a class="home-tool-card" href="{{ route('tools.show', ['tool' => $slug]) }}" data-category="{{ $categorySlug }}" data-search="{{ strtolower($tool['name'].' '.$tool['description'].' '.$categoryName) }}" @if($isNew) data-new="true" @endif @if($isFeatured) data-featured="true" @endif>
                             <span class="home-tool-card-top">
-                                <span class="home-tool-badge" aria-hidden="true">{{ $badge }}</span>
+                                <x-category-icon :category="$categorySlug" class="home-tool-badge" />
                                 @if ($isNew)
                                     <span class="home-new-tag">New</span>
                                 @else
@@ -245,6 +288,20 @@
                 <p class="home-no-results" data-tool-empty hidden>No matching tools yet. Try another search or choose a different category.</p>
             </section>
 
+            <section class="home-section" aria-labelledby="home-how-title">
+                <div class="home-section-head">
+                    <div>
+                        <div class="home-eyebrow">How it works</div>
+                        <h2 class="home-section-title" id="home-how-title">Three steps. No fuss.</h2>
+                    </div>
+                </div>
+                <div class="home-how-grid">
+                    <article class="home-how-step"><span class="home-how-number">01</span><h3>Choose a tool</h3><p>Search by name or browse categories to find the right utility.</p></article>
+                    <article class="home-how-step"><span class="home-how-number">02</span><h3>Enter or upload</h3><p>Provide the information or files the selected tool needs.</p></article>
+                    <article class="home-how-step"><span class="home-how-number">03</span><h3>Get your result</h3><p>Review your result and copy or download it when available.</p></article>
+                </div>
+            </section>
+
             <section class="home-section" aria-labelledby="home-benefits-title">
                 <div class="home-section-head">
                     <div>
@@ -254,17 +311,30 @@
                 </div>
                 <div class="home-benefits">
                     <article class="home-benefit">
-                        <span class="home-benefit-icon" aria-hidden="true">01</span>
+                        <span class="home-benefit-icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18M17 7H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                        </span>
+                        <h3>Free to use</h3>
+                        <p>Access useful everyday tools without a subscription or payment.</p>
+                    </article>
+                    <article class="home-benefit">
+                        <span class="home-benefit-icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 19 6v5c0 4.6-2.9 8-7 10-4.1-2-7-5.4-7-10V6l7-3Z"/><path d="m9 12 2 2 4-4"/></svg>
+                        </span>
                         <h3>Privacy is part of the experience</h3>
                         <p>Many file tools process your files directly in your browser, so they stay on your device.</p>
                     </article>
                     <article class="home-benefit">
-                        <span class="home-benefit-icon" aria-hidden="true">02</span>
+                        <span class="home-benefit-icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.5"/><path d="M3 20v-1.5A4.5 4.5 0 0 1 7.5 14h3a4.5 4.5 0 0 1 4.5 4.5V20M16 5a3.5 3.5 0 0 1 0 6.8M18 14.5a4.5 4.5 0 0 1 3 4.2V20"/></svg>
+                        </span>
                         <h3>Start without signing up</h3>
                         <p>Open a tool and get going. An account isn't required for everyday utilities.</p>
                     </article>
                     <article class="home-benefit">
-                        <span class="home-benefit-icon" aria-hidden="true">03</span>
+                        <span class="home-benefit-icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
+                        </span>
                         <h3>Everything in one place</h3>
                         <p>Browse {{ $categoryCount }} categories of practical PDF, image, text, calculator and developer tools.</p>
                     </article>

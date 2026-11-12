@@ -165,6 +165,32 @@
     line-height: 1.5;
 }
 
+.age-cal__picker-label {
+    display: grid;
+    gap: 6px;
+    color: #64748b;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.age-cal__date-picker {
+    width: 100%;
+    min-height: 44px;
+    border: 1px solid #cbd5e1;
+    border-radius: 10px;
+    background: #fff;
+    padding: 8px 10px;
+    color: #0f172a;
+    font: inherit;
+}
+
+.age-cal__manual-label {
+    margin: 0;
+    color: #64748b;
+    font-size: 12px;
+    font-weight: 600;
+}
+
 .age-cal__date-boxes {
     display: grid;
     grid-template-columns: 0.85fr 0.85fr 1.3fr;
@@ -192,6 +218,7 @@
     transition: border-color 0.15s ease, box-shadow 0.15s ease;
 }
 
+.age-cal__date-picker:focus,
 .age-cal__date-input:focus,
 .age-cal__date-input--edited {
     border-color: #4f46e5;
@@ -359,6 +386,546 @@
     border-radius: 9px;
     background: #f8fafc;
     padding: 9px 12px;
+}
+
+.member-dashboard,
+.admin-dashboard {
+    display: grid;
+    grid-template-columns: 220px minmax(0, 1fr);
+    align-items: start;
+    gap: 24px;
+}
+
+.dashboard-sidebar {
+    position: sticky;
+    top: 96px;
+    display: grid;
+    gap: 8px;
+    border: 1px solid #e6eaf1;
+    border-radius: 16px;
+    background: #fff;
+    padding: 16px 12px;
+}
+
+.dashboard-sidebar nav {
+    display: grid;
+    gap: 3px;
+}
+
+.dashboard-sidebar-label {
+    margin: 8px 10px 4px;
+    color: #8a95a9;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+}
+
+.dashboard-sidebar-link {
+    display: block;
+    border-radius: 9px;
+    padding: 10px;
+    color: #536078;
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 1.4;
+}
+
+.dashboard-sidebar-link:hover,
+.dashboard-sidebar-link--active {
+    background: #eef0ff;
+    color: #414fd2;
+}
+
+.dashboard-sidebar-note {
+    display: grid;
+    gap: 5px;
+    margin-top: 8px;
+    border: 1px solid #e7e9ff;
+    border-radius: 11px;
+    background: #f7f7ff;
+    padding: 13px 11px;
+}
+
+.dashboard-sidebar-note strong {
+    color: #3945bb;
+    font-size: 12px;
+}
+
+.dashboard-sidebar-note span {
+    color: #68748a;
+    font-size: 11px;
+    line-height: 1.55;
+}
+
+.member-dashboard-main,
+.admin-dashboard-main {
+    min-width: 0;
+}
+
+.dashboard-welcome {
+    display: flex;
+    align-items: end;
+    justify-content: space-between;
+    gap: 20px;
+    padding: 20px 0 6px;
+}
+
+.dashboard-welcome h1 {
+    margin: 10px 0;
+    font-size: clamp(32px, 4vw, 46px);
+}
+
+.dashboard-welcome p,
+.member-card-heading p,
+.member-account-card p {
+    margin: 0;
+}
+
+.member-stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    margin: 18px 0;
+}
+
+.member-stats .card {
+    min-height: 116px;
+}
+
+.member-stats .stat strong {
+    color: #263a9d;
+    font-size: 34px;
+}
+
+.member-content-grid {
+    grid-template-columns: minmax(0, 1.2fr) minmax(280px, .8fr);
+    margin: 18px 0;
+}
+
+.member-card-heading {
+    justify-content: space-between;
+    margin-bottom: 16px;
+}
+
+.member-card-heading h2 {
+    margin-bottom: 5px;
+}
+
+.member-card-heading > a {
+    white-space: nowrap;
+}
+
+.member-recent-tool {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    border-top: 1px solid #edf0f5;
+    padding: 14px 0;
+}
+
+.member-recent-tool strong,
+.member-recent-tool .muted {
+    display: block;
+}
+
+.member-recent-tool strong {
+    margin-bottom: 4px;
+    color: #26324a;
+    font-size: 14px;
+}
+
+.member-recent-tool .muted {
+    font-size: 12px;
+}
+
+.member-empty-state {
+    border: 1px dashed #dce2ec;
+    border-radius: 12px;
+    padding: 24px;
+    text-align: center;
+}
+
+.member-empty-state p {
+    margin: 0 0 12px;
+}
+
+.activity-days-grid {
+    display: grid;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+    gap: 12px 8px;
+    margin-top: 20px;
+}
+
+.activity-day {
+    text-align: center;
+}
+
+.activity-day-indicator {
+    display: block;
+    width: 24px;
+    height: 24px;
+    margin: 0 auto 6px;
+    border-radius: 8px;
+    background: #edf0f5;
+}
+
+.activity-day-indicator.is-active {
+    background: #5364df;
+    box-shadow: 0 3px 9px #5364df35;
+}
+
+.activity-day > span:last-child {
+    color: #738096;
+    font-size: 10px;
+}
+
+.activity-legend {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    margin-top: 22px;
+    color: #738096;
+    font-size: 12px;
+}
+
+.activity-legend span {
+    width: 10px;
+    height: 10px;
+    border-radius: 3px;
+    background: #5364df;
+}
+
+.member-account-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin: 18px 0;
+}
+
+.member-account-card h2 {
+    margin-bottom: 5px;
+}
+
+.member-account-meta {
+    display: grid;
+    justify-items: end;
+    gap: 6px;
+    color: #738096;
+    font-size: 12px;
+}
+
+.member-account-meta a {
+    color: #414fd2;
+    font-weight: 700;
+}
+
+.admin-heading {
+    align-items: end;
+    margin-bottom: 16px;
+}
+
+.admin-heading h1 {
+    margin-bottom: 0;
+}
+
+@media (max-width: 850px) {
+    .member-dashboard,
+    .admin-dashboard {
+        grid-template-columns: 1fr;
+    }
+
+    .dashboard-sidebar {
+        position: static;
+    }
+
+    .dashboard-sidebar nav {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .admin-sidebar .dashboard-sidebar-note,
+    .member-dashboard .dashboard-sidebar-note {
+        display: none;
+    }
+}
+
+@media (max-width: 620px) {
+    .member-stats {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .member-content-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .dashboard-welcome,
+    .member-account-card {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .member-account-meta {
+        justify-items: start;
+    }
+}
+
+html[data-theme="dark"] {
+    color-scheme: dark;
+    background: #0c1220;
+    color: #e6eaf3;
+}
+
+html[data-theme="dark"] body {
+    background: #0c1220;
+    color: #e6eaf3;
+}
+
+html[data-theme="dark"] .topbar,
+html[data-theme="dark"] .nav-mobile,
+html[data-theme="dark"] .nav-search,
+html[data-theme="dark"] .theme-toggle,
+html[data-theme="dark"] .nav-toggle {
+    border-color: #27344a;
+    background: #111a2a;
+    color: #d3daf0;
+}
+
+html[data-theme="dark"] .nav-mobile {
+    border-top-color: #27344a;
+}
+
+html[data-theme="dark"] .nav-action-link,
+html[data-theme="dark"] .nav-mobile-link,
+html[data-theme="dark"] .nav-mobile-category {
+    color: #c3cce0;
+}
+
+html[data-theme="dark"] .nav-action-link:hover,
+html[data-theme="dark"] .nav-mobile-link:hover,
+html[data-theme="dark"] .nav-mobile-link--active {
+    background: #202b49;
+    color: #aab4ff;
+}
+
+html[data-theme="dark"] .nav-mobile-categories {
+    border-top-color: #27344a;
+}
+
+html[data-theme="dark"] .nav-mobile-category {
+    border-color: #334159;
+}
+
+html[data-theme="dark"] .nav-theme-mobile .theme-icon-moon,
+html[data-theme="dark"] .nav-links-desktop .theme-icon-moon {
+    display: none;
+}
+
+html[data-theme="dark"] .nav-theme-mobile .theme-icon-sun,
+html[data-theme="dark"] .nav-links-desktop .theme-icon-sun {
+    display: block;
+}
+
+html[data-theme="dark"] .container .card,
+html[data-theme="dark"] .dashboard-sidebar {
+    border-color: #27344a;
+    background: #111a2a;
+    color: #e6eaf3;
+    box-shadow: 0 10px 30px #00000020;
+}
+
+html[data-theme="dark"] .container h1,
+html[data-theme="dark"] .container h2,
+html[data-theme="dark"] .container h3,
+html[data-theme="dark"] .container strong,
+html[data-theme="dark"] .member-recent-tool strong {
+    color: #e6eaf3;
+}
+
+html[data-theme="dark"] .container p,
+html[data-theme="dark"] .muted,
+html[data-theme="dark"] .dashboard-sidebar-label,
+html[data-theme="dark"] .dashboard-sidebar-note span {
+    color: #9daac0;
+}
+
+html[data-theme="dark"] .field input,
+html[data-theme="dark"] .field select,
+html[data-theme="dark"] .field textarea,
+html[data-theme="dark"] .field-input,
+html[data-theme="dark"] input,
+html[data-theme="dark"] select,
+html[data-theme="dark"] textarea {
+    border-color: #35435c;
+    background-color: #0e1726;
+    color: #e6eaf3;
+}
+
+html[data-theme="dark"] .btn.secondary,
+html[data-theme="dark"] .btn-secondary {
+    border-color: #35435c;
+    background: #202b49;
+    color: #c8d0ff;
+}
+
+html[data-theme="dark"] th,
+html[data-theme="dark"] td,
+html[data-theme="dark"] .member-recent-tool {
+    border-bottom-color: #27344a;
+}
+
+html[data-theme="dark"] .periods a,
+html[data-theme="dark"] .analytics-refresh-button {
+    border-color: #35435c;
+    background: #111a2a;
+    color: #c3cce0;
+}
+
+html[data-theme="dark"] .online-stat:first-child {
+    border-color: #1d5a48;
+    background: linear-gradient(145deg, #11271f, #111a2a);
+}
+
+html[data-theme="dark"] .home-page {
+    --home-ink: #e6eaf3;
+    --home-muted: #a2aec3;
+    --home-line: #27344a;
+    color: #e6eaf3;
+}
+
+html[data-theme="dark"] .home-category-card,
+html[data-theme="dark"] .home-finder,
+html[data-theme="dark"] .home-tool-card,
+html[data-theme="dark"] .home-benefit,
+html[data-theme="dark"] .home-how-step {
+    border-color: #27344a;
+    background: #111a2a;
+}
+
+html[data-theme="dark"] .home-search,
+html[data-theme="dark"] .home-quick-chip,
+html[data-theme="dark"] .home-filter {
+    border-color: #35435c;
+    background: #0e1726;
+    color: #d2daf0;
+}
+
+html[data-theme="dark"] .home-quick-chip,
+html[data-theme="dark"] .home-text-link {
+    color: #aab4ff;
+}
+
+html[data-theme="dark"] .home-filter[aria-pressed="true"] {
+    border-color: #6975f5;
+    background: #505de0;
+    color: #fff;
+}
+
+html[data-theme="dark"] .home-bottom-cta {
+    border-color: #343d70;
+    background: linear-gradient(110deg, #171d3a, #111a2a);
+}
+
+html[data-theme="dark"] .home-benefit-icon,
+html[data-theme="dark"] .home-how-number {
+    background: #202b49;
+    color: #b6beff;
+}
+
+html[data-theme="dark"] .bg-white {
+    background-color: #111a2a !important;
+}
+
+html[data-theme="dark"] .bg-slate-50,
+html[data-theme="dark"] .bg-slate-100 {
+    background-color: #172235 !important;
+}
+
+html[data-theme="dark"] .text-slate-900,
+html[data-theme="dark"] .text-slate-800,
+html[data-theme="dark"] .text-slate-700 {
+    color: #dbe2f1 !important;
+}
+
+html[data-theme="dark"] .text-slate-600,
+html[data-theme="dark"] .text-slate-500,
+html[data-theme="dark"] .text-slate-400 {
+    color: #9daac0 !important;
+}
+
+html[data-theme="dark"] .border-slate-200,
+html[data-theme="dark"] .border-slate-300 {
+    border-color: #334159 !important;
+}
+
+html[data-theme="dark"] .age-cal__controls,
+html[data-theme="dark"] .age-cal__date-group,
+html[data-theme="dark"] .age-cal__result {
+    border-color: #334159;
+    background: #111a2a;
+    color: #dbe2f1;
+}
+
+html[data-theme="dark"] .age-cal__controls-title,
+html[data-theme="dark"] .age-cal__date-label,
+html[data-theme="dark"] .age-cal__birthday-title,
+html[data-theme="dark"] .age-cal__units-title {
+    color: #e6eaf3;
+}
+
+html[data-theme="dark"] .age-cal__date-picker,
+html[data-theme="dark"] .age-cal__date-input,
+html[data-theme="dark"] .age-cal__birthday-ages p,
+html[data-theme="dark"] .age-cal__unit-lines p {
+    border-color: #35435c;
+    background: #0e1726;
+    color: #e6eaf3;
+}
+
+html[data-theme="dark"] .dashboard-sidebar-note {
+    border-color: #343d70;
+    background: #171d3a;
+}
+
+html[data-theme="dark"] .dashboard-sidebar-note strong,
+html[data-theme="dark"] .member-account-meta a {
+    color: #aab4ff;
+}
+
+html[data-theme="dark"] .member-recent-tool {
+    border-top-color: #27344a;
+}
+
+html[data-theme="dark"] .member-empty-state {
+    border-color: #35435c;
+}
+
+html[data-theme="dark"] [data-directory-group] > .grid > a {
+    border-color: #27344a;
+    background: #111a2a;
+}
+
+html[data-theme="dark"] [data-directory-group] > .grid > a:hover {
+    border-color: #6975f5;
+}
+
+[data-directory-group],
+#tool-finder,
+#home-categories,
+#analytics-charts,
+#recent-tools,
+#recent-registrations {
+    scroll-margin-top: 100px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        scroll-behavior: auto !important;
+        animation-duration: .01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: .01ms !important;
+    }
 }
 
 .age-cal__result[hidden] {
