@@ -94,6 +94,7 @@
             .ad-slot{min-height:82px;border-radius:14px}
             .ad-slot--fluid{min-height:110px}
         }
+        
         /* --- Responsive nav --- */
         .nav-toggle{display:none;place-items:center;width:44px;height:44px;border:1px solid #e4e8f0;border-radius:10px;background:#fff;color:#37415a;cursor:pointer}
         .nav-toggle-icon{width:22px;height:22px;grid-area:1/1}
